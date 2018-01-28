@@ -329,3 +329,12 @@ class Regions(Page):
     @property
     def outlets(self):
         return [YMRegion(region) for region in self.resp.get('regions')]
+
+class Region(Base):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def region(self):
+        return YMRegion(self.resp.get('region'))
