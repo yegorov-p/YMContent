@@ -327,7 +327,7 @@ class Regions(Page):
         self.resp = r.json()
 
     @property
-    def outlets(self):
+    def regions(self):
         return [YMRegion(region) for region in self.resp.get('regions')]
 
 class Region(Base):
