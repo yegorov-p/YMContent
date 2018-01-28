@@ -596,3 +596,15 @@ class YMAPI(object):
             params['fields'] = fields
 
         return Shops(self.request('shops', None, params))
+
+    def geo_regions_shops_summary(self, req_id, fields='DELIVERY_COUNT,HOME_COUNT'):
+        params = {}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in ('DELIVERY_COUNT', 'HOME_COUNT',
+                                 'TOTAL_COUNT', 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return ShopsSummary(self.request('geo/regions/{id}/shops/summary', req_id, params))

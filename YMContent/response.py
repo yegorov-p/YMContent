@@ -292,3 +292,21 @@ class Shops(Page):
     @property
     def shops(self):
         return [YMShop(shop) for shop in self.resp['shops']]
+
+
+class ShopsSummary(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def homeCount(self):
+        return self.resp.get('homeCount')
+
+    @property
+    def deliveryCount(self):
+        return self.resp.get('deliveryCount')
+
+    @property
+    def totalCount(self):
+        return self.resp.get('totalCount')
