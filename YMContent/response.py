@@ -312,7 +312,7 @@ class ShopsSummary(Page):
         return self.resp.get('totalCount')
 
 
-class ModelOutlets(Page):
+class Outlets(Page):
     def __init__(self, r):
         self.req = r
         self.resp = r.json()

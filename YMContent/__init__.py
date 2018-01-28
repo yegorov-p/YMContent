@@ -675,7 +675,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOutlets(self.request('models/{id}/outlets', req_id, params))
+        return Outlets(self.request('models/{id}/outlets', req_id, params))
 
     def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
                        page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
@@ -740,7 +740,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOutlets(self.request('shops/{id}/outlets', req_id, params))
+        return Outlets(self.request('shops/{id}/outlets', req_id, params))
 
     def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
                        page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
@@ -805,4 +805,4 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOutlets(self.request('offers/{id}/outlets', req_id, params))
+        return Outlets(self.request('offers/{id}/outlets', req_id, params))
