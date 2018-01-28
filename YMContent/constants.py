@@ -39,7 +39,6 @@ RESOURCES = [
 
     # Товарные предложения
     'offers/{id}',
-
     # Отзывы
     # 'shop/{shop_id}/opinion'
     # 'model/{model_id}/opinion'
@@ -48,6 +47,7 @@ RESOURCES = [
     'shops/{id}/opinions',
     'shops/{id}',
     'shops',
+    'shops/{id}/outlets',
     # 'shop/{shop_id}',
     # 'shop/{shop_id}/outlets',
 
