@@ -27,7 +27,8 @@ RESOURCES = [
     'models/{id}/offers/default',
     'models/{id}/offers/stat',
     'models/{id}/offers/filters',
-    'models/{id}/opinions'
+    'models/{id}/opinions',
+    'models/{id}/outlets'
     # 'model/{model_id}/info',
     # 'model/{model_id}/offers',
     # 'model/{model_id}/outlets',

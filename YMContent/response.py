@@ -310,3 +310,13 @@ class ShopsSummary(Page):
     @property
     def totalCount(self):
         return self.resp.get('totalCount')
+
+
+class ModelOutlets(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def outlets(self):
+        return [YMOutlet(outlet) for outlet in self.resp.get('outlets')]

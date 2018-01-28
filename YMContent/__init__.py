@@ -36,6 +36,9 @@ class YMAPI(object):
     class MatchTypeParamError(BaseException):
         pass
 
+    class TypeParamError(BaseException):
+        pass
+
     class FilterSetParamError(BaseException):
         pass
 
@@ -608,3 +611,68 @@ class YMAPI(object):
             params['fields'] = fields
 
         return ShopsSummary(self.request('geo/regions/{id}/shops/summary', req_id, params))
+
+    def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
+                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+        params = {}
+
+        # ToDO нужно добавить преобразование типа в эталонный
+        if boundary:
+            params['boundary'] = boundary
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'OFFER', 'OFFER_ACTIVE_FILTERS',
+                        'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
+                        'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
+                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
+                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if type:
+            for field in type.split(','):
+                if field not in (
+                        'PICKUP', 'STORE',
+                        'ALL'):
+                    raise YMAPI.TypeParamError('"fields" param is wrong')
+            params['type'] = type
+
+        if filters:
+            for (k, v) in filters.items():
+                params[k] = v
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        if how:
+            if how not in ('ASC', 'DESC'):
+                raise YMAPI.HowParamError('"how" param is wrong')
+
+        if sort:
+            if sort not in (
+                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
+                    'QUALITY',
+                    'RATING', 'RELEVANCY'):
+                raise YMAPI.SortParamError('"sort" param is wrong')
+
+        # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
+
+        # todo Ограничение. Оба парметра должны быть определены совместно. Не допускается указывать один без другого.
+
+        if latitude:
+            if latitude < -90 or latitude > 90:
+                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+            params['latitude'] = latitude
+
+        if longitude:
+            if longitude < -180 or longitude > 180:
+                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+            params['longitude'] = longitude
+
+        return ModelOutlets(self.request('models/{id}/outlets', req_id, params))

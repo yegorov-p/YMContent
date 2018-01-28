@@ -1579,3 +1579,163 @@ class YMShopOpinion(YMBase):
     @property
     def shop(self):
         return YMModelOpinionShop(self.data.get('model'))
+
+
+class YMAddress(YMBase):
+    def __repr__(self):
+        return '<{}>'.format(self.__class__.__name__)
+
+    @property
+    def regionId(self):
+        return self.data.get('regionId')
+
+    @property
+    def type(self):
+        return self.data.get('type')
+
+    @property
+    def country(self):
+        return self.data.get('country')
+
+    @property
+    def region(self):
+        return self.data.get('region')
+
+    @property
+    def subRegion(self):
+        return self.data.get('subRegion')
+
+    @property
+    def locality(self):
+        return self.data.get('locality')
+
+    @property
+    def subLocality(self):
+        return self.data.get('subLocality')
+
+    @property
+    def thoroughfare(self):
+        return self.data.get('thoroughfare')
+
+    @property
+    def premiseNumber(self):
+        return self.data.get('premiseNumber')
+
+    @property
+    def fullAddress(self):
+        return self.data.get('fullAddress')
+
+    @property
+    def block(self):
+        return self.data.get('block')
+
+    @property
+    def wing(self):
+        return self.data.get('wing')
+
+    @property
+    def estate(self):
+        return self.data.get('estate')
+
+    @property
+    def entrance(self):
+        return self.data.get('entrance')
+
+    @property
+    def floor(self):
+        return self.data.get('floor')
+
+    @property
+    def room(self):
+        return self.data.get('room')
+
+    @property
+    def note(self):
+        return self.data.get('note')
+
+    @property
+    def distance(self):
+        return self.data.get('distance')
+
+    @property
+    def latitude(self):
+        return self.data.get('latitude')
+
+    @property
+    def longitude(self):
+        return self.data.get('longitude')
+
+    @property
+    def postcode(self):
+        return self.data.get('postcode')
+
+
+class YMSchedule(YMBase):
+    def __repr__(self):
+        return '<{}>'.format(self.__class__.__name__)
+
+    @property
+    def daysFrom(self):
+        return self.data.get('daysFrom')
+
+    @property
+    def daysTill(self):
+        return self.data.get('daysTill')
+
+    @property
+    def timeFrom(self):
+        return self.data.get('from')
+
+    @property
+    def timeTill(self):
+        return self.data.get('till')
+
+
+class YMOutlet(YMBase):
+    def __repr__(self):
+        return '<{}>'.format(self.__class__.__name__)
+
+    @property
+    def id(self):
+        return self.data.get('id')
+
+    @property
+    def name(self):
+        return self.data.get('name')
+
+    @property
+    def type(self):
+        return self.data.get('type')
+
+    @property
+    def shop(self):
+        return YMShop(self.data.get('shop'))
+
+    @property
+    def phones(self):
+        return [YMPhone(phone) for phone in self.data.get('phones')]
+
+    @property
+    def address(self):
+        return YMAddress(self.data.get('address'))
+
+    @property
+    def schedule(self):
+        return [YMSchedule(s) for s in self.data.get('schedule')]
+
+    @property
+    def distance(self):
+        return self.data.get('distance')
+
+    @property
+    def latitude(self):
+        return self.data.get('latitude')
+
+    @property
+    def longitude(self):
+        return self.data.get('longitude')
+
+    @property
+    def offer(self):
+        return YMOffer(self.data.get('offer'))
+
