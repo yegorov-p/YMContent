@@ -567,7 +567,7 @@ class YMAPI(object):
 
         return ShopOpinions(self.request('shops/{id}', req_id, params))
 
-    def shops(self, req_id, fields=None):
+    def shop(self, req_id, fields=None):
         params = {}
 
         if fields:
@@ -578,3 +578,21 @@ class YMAPI(object):
             params['fields'] = fields
 
         return Shop(self.request('shops/{id}', req_id, params))
+
+    def shops(self, host, fields=None, geo_id=None):
+        params = {'host': host}
+
+        if geo_id is None:
+            raise YMAPI.NoGeoIdOrIP(
+                "You must provide geo_id")
+        else:
+            params['geo_id'] = geo_id
+
+        if fields:
+            for field in fields.split(','):
+                if field not in ('ORGANIZATION', 'RATING',
+                                 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return Shops(self.request('shops', None, params))

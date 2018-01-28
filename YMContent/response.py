@@ -282,3 +282,13 @@ class Shop(Page):
     @property
     def shop(self):
         return YMShop(self.resp['shop'])
+
+
+class Shops(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def shops(self):
+        return [YMShop(shop) for shop in self.resp['shops']]
