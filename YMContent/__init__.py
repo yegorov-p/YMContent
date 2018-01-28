@@ -566,3 +566,15 @@ class YMAPI(object):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
         return ShopOpinions(self.request('shops/{id}', req_id, params))
+
+    def shops(self, req_id, fields=None):
+        params = {}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in ('ORGANIZATION', 'RATING',
+                                 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return Shop(self.request('shops/{id}', req_id, params))

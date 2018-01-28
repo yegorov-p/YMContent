@@ -45,6 +45,7 @@ RESOURCES = [
 
     # Магазины
     'shops/{id}/opinions',
+    'shops/{id}',
     # 'shop/{shop_id}',
     # 'shop/{shop_id}/outlets',
 
