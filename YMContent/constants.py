@@ -53,7 +53,8 @@ RESOURCES = [
     # 'shop/{shop_id}/outlets',
 
     # Регионы
-    'geo/regions/{id}/shops/summary'
+    'geo/regions/{id}/shops/summary',
+    'geo/regions'
     # 'georegion',
     # 'georegion/{geo_id}',
     # 'georegion/{geo_id}/children',

@@ -678,7 +678,7 @@ class YMAPI(object):
         return Outlets(self.request('models/{id}/outlets', req_id, params))
 
     def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
-                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+                     page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         params = {}
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -743,7 +743,7 @@ class YMAPI(object):
         return Outlets(self.request('shops/{id}/outlets', req_id, params))
 
     def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
-                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         params = {}
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -806,3 +806,22 @@ class YMAPI(object):
             params['longitude'] = longitude
 
         return Outlets(self.request('offers/{id}/outlets', req_id, params))
+
+    def geo_regions(self, req_id, fields='STANDART', count=10, page=1):
+        params = {'count': count,
+                  'page': page}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'DECLENSIONS', 'PARENT', 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        return Regions(self.request('geo/regions', req_id, params))

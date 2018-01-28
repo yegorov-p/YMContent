@@ -320,3 +320,12 @@ class Outlets(Page):
     @property
     def outlets(self):
         return [YMOutlet(outlet) for outlet in self.resp.get('outlets')]
+
+class Regions(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def outlets(self):
+        return [YMRegion(region) for region in self.resp.get('regions')]
