@@ -54,7 +54,8 @@ RESOURCES = [
 
     # Регионы
     'geo/regions/{id}/shops/summary',
-    'geo/regions'
+    'geo/regions',
+    'geo/regions/{id}/children'
     # 'georegion',
     # 'georegion/{geo_id}',
     # 'georegion/{geo_id}/children',
