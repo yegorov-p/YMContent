@@ -939,3 +939,17 @@ class YMAPI(object):
             params['fields'] = fields
 
         return Vendor(self.request('vendors/{id}', req_id, params))
+
+    def vendors_match(self, name, fields=None):
+        params = {'name': name}
+
+        if fields:
+            for field in fields.split(','):
+                # todo добавить всюду CATEGORY_ALL
+                if field not in (
+                        'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
+                        'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return Vendor(self.request('vendors/match', None, params))
