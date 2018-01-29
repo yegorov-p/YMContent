@@ -370,3 +370,21 @@ class Vendor(Base):
     @property
     def vendor(self):
         return YMVendor(self.resp.get('vendor'))
+
+
+class Search(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def items(self):
+        return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in self.resp['items']]
+
+    @property
+    def categories(self):
+        return [YMSearchCategory(category) for category in self.resp['categories']]
+
+    @property
+    def sorts(self):
+        return [YMSort(sort) for sort in self.resp['sorts']]

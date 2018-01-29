@@ -127,6 +127,12 @@ class YMCategory(YMBase):
         return [YMWarning(warning) for warning in self.data.get('warnings')]
 
 
+class YMSearchCategory(YMCategory):
+    @property
+    def findCount(self):
+        return self.data.get('findCount')
+
+
 class YMSortOption(YMBase):
 
     def __repr__(self):
@@ -1738,4 +1744,3 @@ class YMOutlet(YMBase):
     @property
     def offer(self):
         return YMOffer(self.data.get('offer'))
-

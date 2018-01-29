@@ -39,6 +39,12 @@ class YMAPI(object):
     class TypeParamError(BaseException):
         pass
 
+    class ResultTypeParamError(BaseException):
+        pass
+
+    class SearchTypeParamError(BaseException):
+        pass
+
     class FilterSetParamError(BaseException):
         pass
 
@@ -953,3 +959,125 @@ class YMAPI(object):
             params['fields'] = fields
 
         return Vendor(self.request('vendors/match', None, params))
+
+    def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
+               price_min=None, result_type='ALL', shop_id=None, warranty=0, filters={}, barcode=False, search_type=None,
+               category_id=None, hid=None, count=10, page=1, how=None, sort=None, latitude=None, longitude=None,
+               geo_id=None, remote_ip=None):
+
+        params = {'text': text}
+
+        if geo_id is None and remote_ip is None:
+            raise YMAPI.NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
+
+        # ToDO нужно добавить преобразование типа в эталонный
+        if delivery_included:
+            #     if delivery_included in [0,'0','F','FALSE','N','NO'
+            params['delivery_included'] = delivery_included
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'FILTERS', 'FOUND_CATEGORIES',
+                        'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
+                        'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA', 'MODEL_NAVIGATION_NODE',
+                        'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
+                        'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
+                        'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
+                        'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'ALL', 'MODEL_ALL',
+                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        # ToDO нужно добавить преобразование типа в эталонный
+        if onstock:
+            #     if onstock in [0,'0','F','FALSE','N','NO'
+            params['onstock'] = onstock
+
+        if outlet_types:
+            for field in outlet_types.split(','):
+                if field not in (
+                        'DELIVERY', 'PICKUP', 'STORE', 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['outlet_types'] = outlet_types
+
+        if price_max:
+            params['price_max'] = price_max
+
+        if price_min:
+            params['price_min'] = price_min
+
+        if result_type:
+            if result_type not in (
+                    'ALL', 'MODELS', 'OFFERS'):
+                raise YMAPI.ResultTypeParamError('"result_type" param is wrong')
+            params['fields'] = fields
+
+        if shop_id:
+            params['shop_id'] = shop_id
+
+        # ToDO нужно добавить преобразование типа в эталонный
+        if warranty:
+            #     if onstock in [0,'0','F','FALSE','N','NO'
+            params['warranty'] = warranty
+
+        if filters:
+            for (k, v) in filters.items():
+                params[k] = v
+
+        if barcode:
+            params['barcode'] = barcode
+            # todo Параметр действует только, если не указан search_type
+
+        if search_type:
+            if search_type not in (
+                    'BARCODE', 'ISBN', 'TEXT'):
+                raise YMAPI.SearchTypeParamError('"search_type" param is wrong')
+            params['search_type'] = search_type
+
+        if category_id:
+            params['category_id'] = category_id
+
+        if hid:
+            params['hid'] = hid
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        if how:
+            if how not in ('ASC', 'DESC'):
+                raise YMAPI.HowParamError('"how" param is wrong')
+
+        if sort:
+            if sort not in (
+                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
+                    'QUALITY',
+                    'RATING', 'RELEVANCY'):
+                raise YMAPI.SortParamError('"sort" param is wrong')
+
+        # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
+
+        # todo Ограничение. Оба парметра должны быть определены совместно. Не допускается указывать один без другого.
+
+        if latitude:
+            if latitude < -90 or latitude > 90:
+                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+            params['latitude'] = latitude
+
+        if longitude:
+            if longitude < -180 or longitude > 180:
+                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+            params['longitude'] = longitude
+
+        return Search(self.request('search', None, params))

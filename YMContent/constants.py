@@ -66,11 +66,11 @@ RESOURCES = [
     # Производители
     'vendor',
     'vendors/{id}',
-    'vendors/match'
+    'vendors/match',
     # 'vendor/{vendor_id}',
 
     # Сервисы
-    # 'search',
+    'search',
     # 'model/match',
     # 'vendor/match',
     # 'filter/{category_id}',
