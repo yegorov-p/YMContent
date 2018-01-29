@@ -406,7 +406,8 @@ class YMAPI(object):
 
     def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters={},
                       count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
-        params = {}
+        params = {'count': count,
+                  'page': page}
 
         # ToDO нужно добавить преобразование типа в эталонный
         if delivery_included:

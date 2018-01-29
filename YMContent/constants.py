@@ -16,7 +16,7 @@ RESOURCES = [
     'categories/{id}/filters',
     'categories/match',
     'categories/{id}/bestdeals',
-    'categories/{id}/populars'
+    'categories/{id}/populars',
 
     # Модели товаров
     'models/{id}',
