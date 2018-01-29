@@ -57,14 +57,14 @@ RESOURCES = [
     'geo/regions',
     'geo/regions/{id}/children',
     'geo/regions/{id}',
-    'geo/suggest'
+    'geo/suggest',
     # 'georegion',
     # 'georegion/{geo_id}',
     # 'georegion/{geo_id}/children',
     # 'georegion/suggest',
 
     # Производители
-    # 'vendor',
+    'vendor',
     # 'vendor/{vendor_id}',
 
     # Сервисы

@@ -906,3 +906,23 @@ class YMAPI(object):
             raise YMAPI.PageParamError('"page" param must be larger than 1')
 
         return Suggests(self.request('geo/suggest', None, params))
+
+    def vendors(self, fields=None, count=10, page=1):
+        params = {'count': count,
+                  'page': page}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
+                        'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        return Vendors(self.request('vendors', None, params))
