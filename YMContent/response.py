@@ -321,6 +321,7 @@ class Outlets(Page):
     def outlets(self):
         return [YMOutlet(outlet) for outlet in self.resp.get('outlets')]
 
+
 class Regions(Page):
     def __init__(self, r):
         self.req = r
@@ -330,6 +331,7 @@ class Regions(Page):
     def regions(self):
         return [YMRegion(region) for region in self.resp.get('regions')]
 
+
 class Region(Base):
     def __init__(self, r):
         self.req = r
@@ -338,3 +340,12 @@ class Region(Base):
     @property
     def region(self):
         return YMRegion(self.resp.get('region'))
+
+class Suggests(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def suggests(self):
+        return [YMRegion(region) for region in self.resp.get('suggests')]

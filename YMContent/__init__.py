@@ -845,6 +845,25 @@ class YMAPI(object):
 
         return Regions(self.request('geo/regions/{id}/children', req_id, params))
 
+    def geo_regions_children(self, req_id, fields=None, count=10, page=1):
+        params = {'count': count,
+                  'page': page}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'DECLENSIONS', 'PARENT', 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        return Regions(self.request('geo/regions/{id}/children', req_id, params))
+
     def geo_regions(self, req_id, fields=None, count=10, page=1):
         params = {'count': count,
                   'page': page}
@@ -857,3 +876,33 @@ class YMAPI(object):
             params['fields'] = fields
 
         return Region(self.request('geo/regions/{id}', req_id, params))
+
+    def geo_regions_children(self, fields=None,
+                             types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
+                             count=10, page=1):
+        params = {'count': count,
+                  'page': page}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'DECLENSIONS', 'PARENT', 'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if types:
+            for field in types.split(','):
+                if field not in (
+                        'AIRPORT', 'CITY', 'CITY_DISTRICT', 'CONTINENT', 'COUNTRY', 'COUNTRY_DISTRICT', 'METRO_STATION',
+                        'MONORAIL_STATION', 'OVERSEAS_TERRITORY', 'REGION', 'RURAL_SETTLEMENT', 'SECONDARY_DISTRICT',
+                        'SUBJECT_FEDERATION', 'SUBJECT_FEDERATION_DISTRICT', 'VILLAGE', 'ALL'):
+                    raise YMAPI.TypeParamError('"type" param is wrong')
+            params['fields'] = fields
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        return Suggests(self.request('geo/suggest', None, params))

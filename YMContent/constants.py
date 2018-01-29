@@ -56,7 +56,8 @@ RESOURCES = [
     'geo/regions/{id}/shops/summary',
     'geo/regions',
     'geo/regions/{id}/children',
-    'geo/regions/{id}'
+    'geo/regions/{id}',
+    'geo/suggest'
     # 'georegion',
     # 'georegion/{geo_id}',
     # 'georegion/{geo_id}/children',
