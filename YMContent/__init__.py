@@ -1082,3 +1082,57 @@ class YMAPI(object):
             params['longitude'] = longitude
 
         return Search(self.request('search', None, params))
+
+    def categories_search(self, req_id, fields=None, result_type='ALL', rs=None, shop_regions=None, filters={},
+                          count=10, page=1, how=None, sort=None):
+
+        params = {}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
+                        'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA', 'MODEL_NAVIGATION_NODE',
+                        'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
+                        'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
+                        'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
+                        'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL', 'MODEL_ALL',
+                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if result_type:
+            if result_type not in (
+                    'ALL', 'MODELS', 'OFFERS'):
+                raise YMAPI.ResultTypeParamError('"result_type" param is wrong')
+            params['result_type'] = result_type
+
+        if rs:
+            params['rs'] = rs
+
+        if shop_regions:
+            params['shop_regions'] = shop_regions
+
+        if filters:
+            for (k, v) in filters.items():
+                params[k] = v
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        if how:
+            if how not in ('ASC', 'DESC'):
+                raise YMAPI.HowParamError('"how" param is wrong')
+
+        if sort:
+            if sort not in (
+                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
+                    'QUALITY',
+                    'RATING', 'RELEVANCY'):
+                raise YMAPI.SortParamError('"sort" param is wrong')
+
+        return Search(self.request('categories/{id}/search', req_id, params))
