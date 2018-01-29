@@ -360,3 +360,13 @@ class Vendors(Page):
     @property
     def vendors(self):
         return [YMVendor(vendor) for vendor in self.resp.get('vendors')]
+
+
+class Vendor(Base):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def vendor(self):
+        return YMVendor(self.resp.get('vendor'))

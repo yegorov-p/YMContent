@@ -65,6 +65,7 @@ RESOURCES = [
 
     # Производители
     'vendor',
+    'vendors/{id}'
     # 'vendor/{vendor_id}',
 
     # Сервисы

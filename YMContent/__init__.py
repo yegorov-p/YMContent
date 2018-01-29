@@ -926,3 +926,16 @@ class YMAPI(object):
             raise YMAPI.PageParamError('"page" param must be larger than 1')
 
         return Vendors(self.request('vendors', None, params))
+
+    def vendor(self, req_id, fields=None):
+        params = {}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
+                        'ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return Vendor(self.request('vendors/{id}', req_id, params))
