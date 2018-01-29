@@ -1136,3 +1136,16 @@ class YMAPI(object):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
         return Search(self.request('categories/{id}/search', req_id, params))
+
+    def search_filters(self, text, fields=None):
+        params = {'text': text}
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'ALLVENDORS', 'DESCRIPTION', 'FOUND',
+                        'SORTS', 'ALL', 'STANDARD'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        return CategoriesFilters(self.request('search/filters', None, params))
