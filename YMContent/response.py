@@ -388,3 +388,21 @@ class Search(Page):
     @property
     def sorts(self):
         return [YMSort(sort) for sort in self.resp['sorts']]
+
+
+class Redirect(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def redirect(self):
+        if self.resp.get('redirect')['type'] == 'MODEL':
+            return YMRedirectModel(self.resp.get('redirect'))
+        elif self.resp.get('redirect')['type'] == 'CATALOG':
+            return YMRedirectCatalog(self.resp.get('redirect'))
+        elif self.resp.get('redirect')['type'] == 'VENDOR':
+            return YMRedirectVendor(self.resp.get('redirect'))
+        elif self.resp.get('redirect')['type'] == 'SEARCH':
+            return YMRedirectSearch(self.resp.get('redirect'))
+        # return YMRedirect(self.resp['redirect'])

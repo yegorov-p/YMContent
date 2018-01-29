@@ -42,6 +42,9 @@ class YMAPI(object):
     class ResultTypeParamError(BaseException):
         pass
 
+    class RedirectTypesParamError(BaseException):
+        pass
+
     class SearchTypeParamError(BaseException):
         pass
 
@@ -1083,10 +1086,21 @@ class YMAPI(object):
 
         return Search(self.request('search', None, params))
 
-    def categories_search(self, req_id, fields=None, result_type='ALL', rs=None, shop_regions=None, filters={},
+    def categories_search(self, req_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
+                          shop_regions=None, filters={},
                           count=10, page=1, how=None, sort=None):
 
         params = {}
+
+        if geo_id is None and remote_ip is None:
+            raise YMAPI.NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             for field in fields.split(','):
@@ -1149,3 +1163,78 @@ class YMAPI(object):
             params['fields'] = fields
 
         return CategoriesFilters(self.request('search/filters', None, params))
+
+    def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
+                 fields=None, user_agent=None, count=10, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
+        params = {'text': text}
+
+        if geo_id is None and remote_ip is None:
+            raise YMAPI.NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
+
+        if redirect_types:
+            for field in redirect_types.split(','):
+                if field not in (
+                        'CATALOG', 'MODEL', 'SEARCH',
+                        'VENDOR', 'ALL'):
+                    raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+            params['redirect_types'] = redirect_types
+
+        # todo Ограничение. Параметр действует только, если не указан search_type
+        if barcode:
+            params['barcode'] = barcode
+
+        if search_type:
+            if search_type not in (
+                    'BARCODE', 'ISBN', 'TEXT'):
+                raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+            params['search_type'] = search_type
+
+        if category_id:
+            params['category_id'] = category_id
+
+        if hid:
+            params['hid'] = hid
+
+        if fields:
+            for field in fields.split(','):
+                if field not in (
+                        'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS',
+                        'FILTERS', 'FOUND_CATEGORIES', 'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
+                        'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA', 'MODEL_NAVIGATION_NODE', 'MODEL_OFFERS',
+                        'MODEL_PHOTO', 'MODEL_PHOTOS', 'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
+                        'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO', 'OFFER_SHOP',
+                        'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'VENDOR_CATEGORIES',
+                        'VENDOR_TOP_CATEGORIES', 'ALL', 'CATEGORY_ALL', 'MODEL_ALL', 'OFFER_ALL', 'SHOP_ALL',
+                        'STANDARD', 'VENDOR_ALL'):
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
+
+        if user_agent:
+            params['user_agent'] = user_agent
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        if how:
+            if how not in ('ASC', 'DESC'):
+                raise YMAPI.HowParamError('"how" param is wrong')
+
+        if sort:
+            if sort not in (
+                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
+                    'QUALITY',
+                    'RATING', 'RELEVANCY'):
+                raise YMAPI.SortParamError('"sort" param is wrong')
+
+        return Redirect(self.request('redirect', None, params))
