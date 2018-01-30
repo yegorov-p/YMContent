@@ -124,7 +124,7 @@ class YMCategory(YMBase):
 
     @property
     def warnings(self):
-        return [YMWarning(warning) for warning in self.data.get('warnings')]
+        return [YMWarning(warning) for warning in self.data.get('warnings', [])]
 
 
 class YMSearchCategory(YMCategory):
@@ -166,7 +166,7 @@ class YMSort(YMBase):
 
     @property
     def options(self):
-        return [YMSortOption(option) for option in self.data.get('options')]
+        return [YMSortOption(option) for option in self.data.get('options', [])]
 
 
 class YMFilterValue(YMBase):
@@ -322,7 +322,7 @@ class YMNavigationNode(YMBase):
 
     @property
     def icons(self):
-        return [YMIcon(icon) for icon in self.data.get('icons')]
+        return [YMIcon(icon) for icon in self.data.get('icons', [])]
 
     @property
     def parents(self):
@@ -480,7 +480,7 @@ class YMVendorCategory(YMCategory):
 
     @property
     def children(self):
-        return [YMVendorCategory(category) for category in self.data.get('children')]
+        return [YMVendorCategory(category) for category in self.data.get('children', [])]
 
 
 class YMVendor(YMBase):
@@ -514,11 +514,11 @@ class YMVendor(YMBase):
 
     @property
     def categories(self):
-        return [YMVendorCategory(category) for category in self.data.get('categories')]
+        return [YMVendorCategory(category) for category in self.data.get('categories', [])]
 
     @property
     def topCategories(self):
-        return [YMVendorCategory(category) for category in self.data.get('topCategories')]
+        return [YMVendorCategory(category) for category in self.data.get('topCategories', [])]
 
 
 class YMRatingDistribution(YMBase):
@@ -648,7 +648,7 @@ class YMSpecification(YMBase):
 
     @property
     def features(self):
-        return [YMSpecificationFeature(feature) for feature in self.data.get('features')]
+        return [YMSpecificationFeature(feature) for feature in self.data.get('features', [])]
 
 
 class YMParameterOption(YMBase):
@@ -700,7 +700,7 @@ class YMParameter(YMBase):
 
     @property
     def options(self):
-        return [YMParameterOption(parameter) for parameter in self.data.get('options')]
+        return [YMParameterOption(parameter) for parameter in self.data.get('options', [])]
 
 
 class YMUserRelated(YMBase):
@@ -796,7 +796,7 @@ class YMModel(YMBase):
 
     @property
     def photos(self):
-        return [YMModelPhoto(photo) for photo in self.data.get('photos')]
+        return [YMModelPhoto(photo) for photo in self.data.get('photos', [])]
 
     @property
     def category(self):
@@ -828,23 +828,23 @@ class YMModel(YMBase):
 
     @property
     def warnings(self):
-        return [YMModelWarning(warning) for warning in self.data.get('warnings')]
+        return [YMModelWarning(warning) for warning in self.data.get('warnings', [])]
 
     @property
     def filters(self):
-        return [YMFilter(filter) for filter in self.data.get('filters')]
+        return [YMFilter(filter) for filter in self.data.get('filters', [])]
 
     @property
     def modifications(self):
-        return [YMModification(modification) for modification in self.data.get('modifications')]
+        return [YMModification(modification) for modification in self.data.get('modifications', [])]
 
     @property
     def specification(self):
-        return [YMSpecification(specification) for specification in self.data.get('specification')]
+        return [YMSpecification(specification) for specification in self.data.get('specification', [])]
 
     @property
     def parameters(self):
-        return [YMParameter(parameter) for parameter in self.data.get('parameters')]
+        return [YMParameter(parameter) for parameter in self.data.get('parameters', [])]
 
     @property
     def userRelated(self):
@@ -934,7 +934,7 @@ class YMShop(YMBase):
 
     @property
     def organizations(self):
-        return [YMOrganization(organization) for organization in self.data.get('organizations')]
+        return [YMOrganization(organization) for organization in self.data.get('organizations', [])]
 
 
 class YMPhone(YMBase):
@@ -1106,11 +1106,11 @@ class YMDelivery(YMBase):
 
     @property
     def options(self):
-        return [YMDeliveryOption(option) for option in self.data.get('options')]
+        return [YMDeliveryOption(option) for option in self.data.get('options', [])]
 
     @property
     def pickupOptions(self):
-        return [YMDeliveryPickupOption(option) for option in self.data.get('pickupOptions')]
+        return [YMDeliveryPickupOption(option) for option in self.data.get('pickupOptions', [])]
 
 
 class YMPaymentOption(YMBase):
@@ -1234,7 +1234,7 @@ class YMOffer(YMBase):
 
     @property
     def photos(self):
-        return [YMModelPhoto(photo) for photo in self.data.get('photos')]
+        return [YMModelPhoto(photo) for photo in self.data.get('photos', [])]
 
     @property
     def photo(self):
@@ -1242,11 +1242,12 @@ class YMOffer(YMBase):
 
     @property
     def previewPhotos(self):
-        return [YMModelPhoto(photo) for photo in self.data.get('previewPhotos')]
+        return [YMModelPhoto(photo) for photo in self.data.get('previewPhotos', [])]
 
     @property
     def activeFilters(self):
-        return [YMFilter(filter) for filter in self.data.get('activeFilters')]
+        # todo надо добавить везде []
+        return [YMFilter(filter) for filter in self.data.get('activeFilters', [])]
 
     @property
     def delivery(self):
@@ -1304,7 +1305,7 @@ class YMStatistics(YMBase):
 
     @property
     def regions(self):
-        return [YMStatisticsRegion(region) for region in self.data.get('regions')]
+        return [YMStatisticsRegion(region) for region in self.data.get('regions', [])]
 
 
 class YMOpinionAuthorSocial(YMBase):
@@ -1342,7 +1343,7 @@ class YMOpinionAuthor(YMBase):
 
     @property
     def social(self):
-        return [YMOpinionAuthorSocial(social) for social in self.data.get('social')]
+        return [YMOpinionAuthorSocial(social) for social in self.data.get('social', [])]
 
 
 class YMModelOpinionUser(YMBase):
@@ -1408,7 +1409,7 @@ class YMOpinionComment(YMBase):
 
     @property
     def children(self):
-        return [YMOpinionComment(comment) for comment in self.data.get('children')]
+        return [YMOpinionComment(comment) for comment in self.data.get('children', [])]
 
 
 class YMModelOpinionModel(YMBase):
@@ -1499,7 +1500,7 @@ class YMModelOpinion(YMBase):
 
     @property
     def comments(self):
-        return [YMOpinionComment(comment) for comment in self.data.get('comments')]
+        return [YMOpinionComment(comment) for comment in self.data.get('comments', [])]
 
     @property
     def region(self):
@@ -1576,7 +1577,7 @@ class YMShopOpinion(YMBase):
 
     @property
     def comments(self):
-        return [YMOpinionComment(comment) for comment in self.data.get('comments')]
+        return [YMOpinionComment(comment) for comment in self.data.get('comments', [])]
 
     @property
     def region(self):
@@ -1719,7 +1720,7 @@ class YMOutlet(YMBase):
 
     @property
     def phones(self):
-        return [YMPhone(phone) for phone in self.data.get('phones')]
+        return [YMPhone(phone) for phone in self.data.get('phones', [])]
 
     @property
     def address(self):
@@ -1727,7 +1728,7 @@ class YMOutlet(YMBase):
 
     @property
     def schedule(self):
-        return [YMSchedule(s) for s in self.data.get('schedule')]
+        return [YMSchedule(s) for s in self.data.get('schedule', [])]
 
     @property
     def distance(self):
@@ -1805,7 +1806,7 @@ class YMRedirectCatalog(YMBase):
 
     @property
     def criteria(self):
-        return [YMDatasourceCriteria(c) for c in self.data.get('criteria')]
+        return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 
 
 class YMRedirectVendor(YMBase):
@@ -1859,4 +1860,4 @@ class YMRedirectSearch(YMBase):
 
     @property
     def criteria(self):
-        return [YMDatasourceCriteria(c) for c in self.data.get('criteria')]
+        return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
