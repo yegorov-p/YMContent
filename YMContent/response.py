@@ -3,6 +3,9 @@ from .objects import *
 
 
 class Base(object):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
 
     def json(self):
         return self.resp
@@ -89,9 +92,6 @@ class Page(Base):
 
 
 class Categories(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def categories(self):
@@ -99,19 +99,12 @@ class Categories(Page):
 
 
 class CategoriesChildren(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
-
     @property
     def categories(self):
         return [YMCategory(category) for category in self.resp['categories']]
 
 
 class Category(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def category(self):
@@ -119,9 +112,6 @@ class Category(Base):
 
 
 class CategoriesFilters(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def sorts(self):
@@ -133,9 +123,6 @@ class CategoriesFilters(Base):
 
 
 class Model(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def model(self):
@@ -143,9 +130,6 @@ class Model(Base):
 
 
 class ModelReview(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def reviews(self):
@@ -153,9 +137,6 @@ class ModelReview(Page):
 
 
 class Models(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def models(self):
@@ -163,9 +144,6 @@ class Models(Base):
 
 
 class ModelsLookas(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def models(self):
@@ -173,9 +151,6 @@ class ModelsLookas(Base):
 
 
 class CategoriesLookas(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def models(self):
@@ -183,9 +158,6 @@ class CategoriesLookas(Page):
 
 
 class CategoriesPopular(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def models(self):
@@ -193,9 +165,6 @@ class CategoriesPopular(Page):
 
 
 class ModelOffers(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def sorts(self):
@@ -211,9 +180,6 @@ class ModelOffers(Page):
 
 
 class ModelOffersDefault(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def offer(self):
@@ -221,9 +187,6 @@ class ModelOffersDefault(Base):
 
 
 class ModelOffersStat(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def statistics(self):
@@ -231,9 +194,6 @@ class ModelOffersStat(Base):
 
 
 class ModelOffersFilters(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def sorts(self):
@@ -245,9 +205,6 @@ class ModelOffersFilters(Base):
 
 
 class Offers(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def offer(self):
@@ -255,9 +212,6 @@ class Offers(Base):
 
 
 class ModelOpinions(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def opinions(self):
@@ -265,9 +219,6 @@ class ModelOpinions(Page):
 
 
 class ShopOpinions(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def opinions(self):
@@ -275,9 +226,6 @@ class ShopOpinions(Page):
 
 
 class Shop(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def shop(self):
@@ -285,9 +233,6 @@ class Shop(Page):
 
 
 class Shops(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def shops(self):
@@ -295,9 +240,6 @@ class Shops(Page):
 
 
 class ShopsSummary(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def homeCount(self):
@@ -313,9 +255,6 @@ class ShopsSummary(Page):
 
 
 class Outlets(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def outlets(self):
@@ -323,9 +262,6 @@ class Outlets(Page):
 
 
 class Regions(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def regions(self):
@@ -333,9 +269,6 @@ class Regions(Page):
 
 
 class Region(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def region(self):
@@ -343,9 +276,6 @@ class Region(Base):
 
 
 class Suggests(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def suggests(self):
@@ -353,9 +283,6 @@ class Suggests(Page):
 
 
 class Vendors(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def vendors(self):
@@ -363,9 +290,6 @@ class Vendors(Page):
 
 
 class Vendor(Base):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def vendor(self):
@@ -373,9 +297,6 @@ class Vendor(Base):
 
 
 class Search(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def items(self):
@@ -391,9 +312,6 @@ class Search(Page):
 
 
 class Redirect(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def redirect(self):
@@ -408,9 +326,6 @@ class Redirect(Page):
 
 
 class Suggestions(Page):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
 
     @property
     def input(self):
