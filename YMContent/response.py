@@ -319,7 +319,7 @@ class Outlets(Page):
 
     @property
     def outlets(self):
-        return [YMOutlet(outlet) for outlet in self.resp.get('outlets')]
+        return [YMOutlet(outlet) for outlet in self.resp.get('outlets', [])]
 
 
 class Regions(Page):
@@ -329,7 +329,7 @@ class Regions(Page):
 
     @property
     def regions(self):
-        return [YMRegion(region) for region in self.resp.get('regions')]
+        return [YMRegion(region) for region in self.resp.get('regions', [])]
 
 
 class Region(Base):
@@ -349,7 +349,7 @@ class Suggests(Page):
 
     @property
     def suggests(self):
-        return [YMRegion(region) for region in self.resp.get('suggests')]
+        return [YMRegion(region) for region in self.resp.get('suggests', [])]
 
 
 class Vendors(Page):
@@ -359,7 +359,7 @@ class Vendors(Page):
 
     @property
     def vendors(self):
-        return [YMVendor(vendor) for vendor in self.resp.get('vendors')]
+        return [YMVendor(vendor) for vendor in self.resp.get('vendors', [])]
 
 
 class Vendor(Base):
@@ -405,6 +405,7 @@ class Redirect(Page):
             return YMRedirectVendor(self.resp.get('redirect'))
         elif self.resp.get('redirect')['type'] == 'SEARCH':
             return YMRedirectSearch(self.resp.get('redirect'))
+
 
 class Suggestions(Page):
     def __init__(self, r):
