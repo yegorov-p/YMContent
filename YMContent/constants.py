@@ -73,7 +73,8 @@ RESOURCES = [
     # Сервисы
     'search',
     'search/filters',
-    'redirect'
+    'redirect',
+    'suggestions'
     # 'model/match',
     # 'vendor/match',
     # 'filter/{category_id}',

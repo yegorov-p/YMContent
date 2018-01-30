@@ -405,4 +405,20 @@ class Redirect(Page):
             return YMRedirectVendor(self.resp.get('redirect'))
         elif self.resp.get('redirect')['type'] == 'SEARCH':
             return YMRedirectSearch(self.resp.get('redirect'))
-        # return YMRedirect(self.resp['redirect'])
+
+class Suggestions(Page):
+    def __init__(self, r):
+        self.req = r
+        self.resp = r.json()
+
+    @property
+    def input(self):
+        return YMSuggestion(self.resp['input'])
+
+    @property
+    def completions(self):
+        return [YMSuggestionCompletion(c) for c in self.resp['completions']]
+
+    @property
+    def pages(self):
+        return [YMSuggestion(c) for c in self.resp['pages']]

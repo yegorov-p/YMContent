@@ -1861,3 +1861,29 @@ class YMRedirectSearch(YMBase):
     @property
     def criteria(self):
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
+
+
+class YMSuggestion(YMBase):
+    def __repr__(self):
+        return '<{}>'.format(self.__class__.__name__)
+
+    @property
+    def value(self):
+        return self.data.get('value')
+
+    @property
+    def url(self):
+        return self.data.get('url')
+
+
+class YMSuggestionCompletion(YMBase):
+    def __repr__(self):
+        return '<{}>'.format(self.__class__.__name__)
+
+    @property
+    def completion(self):
+        return self.data.get('completion')
+
+    @property
+    def value(self):
+        return self.data.get('value')

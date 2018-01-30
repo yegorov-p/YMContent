@@ -1238,3 +1238,26 @@ class YMAPI(object):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
         return Redirect(self.request('redirect', None, params))
+
+    def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT'):
+        params = {'text': text,
+                  'count': count}
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+
+        if pos:
+            params['pos'] = pos
+
+        if suggest_types:
+            for field in suggest_types.split(','):
+                if field not in (
+                        'CATALOG', 'MODEL', 'SEARCH',
+                        'VENDOR', 'ALL', 'DEFAULT'):
+                    raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+            params['suggest_types'] = suggest_types
+
+        return Suggestions(self.request('redirect', None, params))
