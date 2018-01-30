@@ -30,28 +30,16 @@ RESOURCES = [
     'models/{id}/offers/filters',
     'models/{id}/opinions',
     'models/{id}/outlets'
-    # 'model/{model_id}/info',
-    # 'model/{model_id}/offers',
-    # 'model/{model_id}/outlets',
-
-    # Популярные модели
-    # 'popular',
-    # 'popular/{category_id}',
 
     # Товарные предложения
     'offers/{id}',
     'offers/{id}/outlets',
-    # Отзывы
-    # 'shop/{shop_id}/opinion'
-    # 'model/{model_id}/opinion'
 
     # Магазины
     'shops/{id}/opinions',
     'shops/{id}',
     'shops',
     'shops/{id}/outlets',
-    # 'shop/{shop_id}',
-    # 'shop/{shop_id}/outlets',
 
     # Регионы
     'geo/regions/{id}/shops/summary',
@@ -59,23 +47,15 @@ RESOURCES = [
     'geo/regions/{id}/children',
     'geo/regions/{id}',
     'geo/suggest',
-    # 'georegion',
-    # 'georegion/{geo_id}',
-    # 'georegion/{geo_id}/children',
-    # 'georegion/suggest',
 
     # Производители
     'vendor',
     'vendors/{id}',
     'vendors/match',
-    # 'vendor/{vendor_id}',
 
     # Сервисы
     'search',
     'search/filters',
     'redirect',
     'suggestions'
-    # 'model/match',
-    # 'vendor/match',
-    # 'filter/{category_id}',
 ]

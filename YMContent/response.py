@@ -95,6 +95,9 @@ class Categories(Page):
 
     @property
     def categories(self):
+        """
+        Список категорий
+        """
         return [YMCategory(category) for category in self.resp['categories']]
 
 

@@ -54,21 +54,36 @@ class YMRegion(YMBase):
 
 
 class YMWarning(YMBase):
-    """Категория"""
+    """Предупреждение"""
 
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__, self.data.get('shortText'))
 
     @property
     def text(self):
+        """
+
+        :return: Текст предупреждения
+        :rtype: str
+        """
         return self.data.get('text')
 
     @property
     def shortText(self):
+        """
+
+        :return: Краткий текст предупреждения
+        :rtype: str
+        """
         return self.data.get('shortText')
 
     @property
     def age(self):
+        """
+
+        :return: Возрастное ограничение для категории
+        :rtype: int
+        """
         return self.data.get('age')
 
 
@@ -80,50 +95,110 @@ class YMCategory(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор категории
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование категории
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def fullName(self):
+        """
+
+        :return: Полное наименование категории
+        :rtype: str
+        """
         return self.data.get('fullName')
 
     @property
     def parent(self):
+        """
+
+        :return: Идентификатор родительской категории
+        :rtype: int
+        """
         return self.data.get('parent')
 
     @property
     def adult(self):
+        """
+
+        :return: Признак категории, имеющей возрастное ограничение (18+)
+        :rtype: bool
+        """
         return self.data.get('adult')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на карточку категории на Яндекс.Маркете
+        :rtype: str
+        """
         return self.data.get('link')
 
     @property
     def childCount(self):
+        """
+
+        :return: Количество дочерних категорий
+        :rtype: int
+        """
         return self.data.get('childCount')
 
     @property
     def modelCount(self):
+        """
+
+        :return: Количество моделей в категории
+        :rtype: int
+        """
         return self.data.get('modelCount')
 
     @property
     def offerCount(self):
+        """
+
+        :return: Количество товарных предложений в категории
+        :rtype: int
+        """
         return self.data.get('offerCount')
 
     @property
     def advertisingModel(self):
+        """
+
+        :return: Тип размещения товарных предложений в категории
+        :rtype: str
+        """
         return self.data.get('advertisingModel')
 
     @property
     def viewType(self):
+        """
+
+        :return: Тип отображения товаров в категории
+        :rtype: str
+        """
         return self.data.get('viewType')
 
     @property
     def warnings(self):
+        """
+
+        :return: Предупреждения, связанные с категорией
+        :rtype: list
+        """
         return [YMWarning(warning) for warning in self.data.get('warnings', [])]
 
 
