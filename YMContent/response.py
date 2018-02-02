@@ -169,7 +169,9 @@ class Categories(Page):
     @property
     def categories(self):
         """
-        Список категорий
+
+        :return: Список категорий
+        :rtype: list
         """
         return [YMCategory(category) for category in self.resp['categories']]
 
@@ -177,6 +179,11 @@ class Categories(Page):
 class CategoriesChildren(Page):
     @property
     def categories(self):
+        """
+
+        :return: Список подкатегорий
+        :rtype: list
+        """
         return [YMCategory(category) for category in self.resp['categories']]
 
 

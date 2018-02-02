@@ -172,19 +172,57 @@ class YMAPI(object):
 
         return Categories(self.request('categories', None, params))
 
-    def categories_children(self, req_id=None, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10, page=1):
+    def categories_children(self, category_id=None, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10,
+                            page=1):
+        """
+        Список подкатегорий
+
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :type fields: str
+
+        :param sort: Тип сортировки категорий
+        :type sort: str
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :param count: IP-адрес пользователя
+        :type count: str
+
+        :param page: Номер страницы
+        :type page: int
+
+        :return: Список категорий товарного дерева, вложенных в категорию с указанным в запросе идентификатором
+        :rtype: object
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-children-categories-docpage/
+        """
+        params = {}
         if geo_id is None and remote_ip is None:
             raise YMAPI.NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             for field in fields.split(','):
                 if field not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
 
         if sort:
             if sort not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
@@ -196,13 +234,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        params = {'fields': fields,
-                  'sort': sort,
-                  'geo_id': geo_id,
-                  'remote_ip': remote_ip,
-                  'count': count,
-                  'page': page}
-        return CategoriesChildren(self.request('categories/{id}/children', req_id, params))
+        return CategoriesChildren(self.request('categories/{}/children', category_id, params))
 
     def category(self, req_id=None, fields=None, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
