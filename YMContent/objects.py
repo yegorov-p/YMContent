@@ -215,14 +215,29 @@ class YMSortOption(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор варианта сортировки
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def how(self):
+        """
+
+        :return: Направление сортировки
+        :rtype: str
+        """
         return self.data.get('how')
 
     @property
     def text(self):
+        """
+
+        :return: Наименование данного варианта сортировки
+        :rtype: str
+        """
         return self.data.get('text')
 
 
@@ -233,14 +248,29 @@ class YMSort(YMBase):
 
     @property
     def text(self):
+        """
+
+        :return: Наименование типа сортировки
+        :rtype: str
+        """
         return self.data.get('text')
 
     @property
     def field(self):
+        """
+
+        :return: Тип сортировки
+        :rtype: str
+        """
         return self.data.get('field')
 
     @property
     def options(self):
+        """
+
+        :return: Доступные варианты для данного типа сортировки
+        :rtype: [objects.YMSortOption]
+        """
         return [YMSortOption(option) for option in self.data.get('options', [])]
 
 
@@ -251,35 +281,68 @@ class YMFilterValue(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор значения фильтра, используется для установки значения фильтра
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Текстовое описание значение фильтра
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def initialFound(self):
+        """
+
+        :return: Количество моделей/офферов в выдаче, попадающих под значение фильтра, при отсутствии других фильтров
+        :rtype: int
+        """
         return self.data.get('initialFound')
 
     @property
     def found(self):
+        """
+
+        :return: Количество моделей/офферов в выдаче, попадающих под значение фильтра, при текущих условиях фильтрации
+        :rtype: int
+        """
         return self.data.get('found')
 
     @property
     def checked(self):
+        """
+
+        :return: Признак того, что значение выбрано в соответствии с текущими условиями фильтрации
+        :rtype: bool
+        """
         return self.data.get('checked')
 
     @property
     def color(self):
+        """
+
+        .. note:: Только для фильтра типа COLOR
+        :return: Значение цвета
+        :rtype: str
+        """
         return self.data.get('color')
 
     @property
     def unitId(self):
-        return self.data.get('unitId')
+        """
 
-    @property
-    def id(self):
-        return self.data.get('id')
+        .. note:: Только для фильтра типа SIZE
+        :return: Код единицы измерения размера значения фильтра
+        :rtype: str
+        """
+        return self.data.get('unitId')
 
 
 class YMDatasourceOrder(YMBase):
@@ -415,46 +478,101 @@ class YMFilter(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор фильтра
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование фильтра
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def type(self):
+        """
+
+        :return: Тип фильтра
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def description(self):
+        """
+
+        :return: Описание фильтра
+        :rtype: str
+        """
         return self.data.get('description')
 
     @property
     def unit(self):
+        """
+
+        :return: Единицы измерения значений фильтра
+        :rtype: str
+        """
         return self.data.get('unit')
 
     @property
     def defaultUnit(self):
+        """
+
+        :return: Код единиц измерения значений фильтра, используемых по умолчанию
+        :rtype: str
+        """
         return self.data.get('defaultUnit')
 
     @property
     def values(self):
+        """
+
+        :return: Список значений фильтра
+        :rtype: list[objects.YMFilterValue]
+        """
         return [YMFilterValue(value) for value in self.data.get('values', [])]
 
     @property
     def max(self):
+        """
+
+        :return: Максимальное значение числового фильтра
+        :rtype: str
+        """
         return self.data.get('max')
 
     @property
     def min(self):
+        """
+
+        :return: Минимальное значение числового фильтра
+        :rtype: str
+        """
         return self.data.get('min')
 
     @property
     def value(self):
+        """
+
+        :return: Выбранное значение числового фильтра
+        :rtype: str
+        """
         return self.data.get('value')
 
     @property
     def precision(self):
+        """
+
+        :return: Количество знаков поле запятой у значений фильтра
+        :rtype: int
+        """
         return self.data.get('precision')
 
 

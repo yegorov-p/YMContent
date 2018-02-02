@@ -201,10 +201,20 @@ class CategoriesFilters(Base):
 
     @property
     def sorts(self):
+        """
+
+        :return: Список сортировок
+        :rtype: list[objects.YMSort]
+        """
         return [YMSort(sort) for sort in self.resp['sorts']]
 
     @property
     def filters(self):
+        """
+
+        :return: Список фильтров
+        :rtype: list[objects.YMFilter]
+        """
         return [YMFilter(filter) for filter in self.resp['filters']]
 
 

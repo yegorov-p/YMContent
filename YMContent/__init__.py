@@ -297,32 +297,70 @@ class YMAPI(object):
 
         return Category(self._request('categories/{}', category_id, params))
 
-    def categories_filters(self, req_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR', rs=None,
+    def categories_filters(self, category_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR',
+                           rs=None,
                            sort='NONE', filters={}):
+        """
+        Список фильтров категории
+
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :param filter_set: Набор фильтров в выходных данных
+        :type filter_set: str or list[str]
+
+        :param rs: Поле содержащее закодированную информацию о текстовом запросе после редиректа, на которую будет ориентироваться поиск
+        :type rs: str
+
+        :param sort: Тип сортировки категорий
+        :type sort: str
+
+        :param filters: Условия фильтрации моделей и предложений на модель
+        :type filters:
+
+        :return: Cписок фильтров для фильтрации моделей и товарных предложений в указанной категории
+        :rtype: response.CategoriesFilters
+
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-category-filters-docpage/
+        """
+        params = {}
         if geo_id is None and remote_ip is None:
             raise YMAPI.NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             for field in fields.split(','):
                 if field not in ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
 
         if filter_set:
             for field in filter_set.split(','):
                 if field not in ('ALL', 'BASIC', 'POPULAR'):
                     raise YMAPI.FilterSetParamError('"filter_set" param is wrong')
+            params['filter_set'] = filter_set
 
         if sort:
             if sort not in ('NAME', 'NONE'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
-
-        params = {'fields': fields,
-                  'filter_set': filter_set,
-                  'sort': sort,
-                  'geo_id': geo_id,
-                  'remote_ip': remote_ip
-                  }
+            params['sort'] = sort
 
         if rs:
             params['rs'] = rs
@@ -331,7 +369,7 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return CategoriesFilters(self._request('categories/{id}/filters', req_id, params))
+        return CategoriesFilters(self._request('categories/{}/filters', category_id, params))
 
     # Todo Не готов
     def categories_match(self, name, category_name=None, description=None, locale='RU_ru', price=None,
