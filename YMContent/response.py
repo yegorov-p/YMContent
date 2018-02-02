@@ -27,68 +27,141 @@ class Base(object):
 
     @property
     def http_status_code(self):
-        """HTTP статус обработки запроса"""
+        """
+
+        :return: HTTP статус обработки запроса
+        :rtype: int
+        """
         return self.req.status_code
 
     @property
     def status(self):
-        """Статус обработки запроса"""
+        """
+
+        :return: Статус обработки запроса
+        :rtype: str
+        """
         return self.resp.get('status')
 
     @property
     def id(self):
-        """Уникальный идентификатор запроса"""
+        """
+
+        :return: Уникальный идентификатор запроса
+        :rtype: str
+        """
         return self.resp['context'].get('id')
 
     @property
     def time(self):
-        """Дата и время выполнения запроса в формате ISO 8601"""
+        """
+
+        :return: Дата и время выполнения запроса в формате ISO 8601
+        :rtype: str
+        """
         return self.resp['context'].get('time')
 
     @property
     def link(self):
-        """Ссылка на текущий запрос"""
+        """
+
+        :return: Ссылка на текущий запрос
+        :rtype: str
+        """
         return self.resp['context'].get('link')
 
     @property
     def marketUrl(self):
-        """Ссылка на Яндекс.Маркет"""
+        """
+
+        :return: Ссылка на Яндекс.Маркет
+        :rtype: str
+        """
         return self.resp['context'].get('marketUrl')
 
     @property
     def region(self):
-        """Информация о регионе запроса"""
+        """
+
+        :return: Информация о регионе запроса
+        :rtype: object
+        """
         if self.resp['context'].get('region'):
             return YMRegion(self.resp['context'].get('region'))
 
     @property
     def currency_id(self):
-        """Код валюты"""
+        """
+
+        :return: Код валюты
+        :rtype: str
+        """
         return self.resp['context']['currency']['id']
 
     @property
     def currency_name(self):
-        """Название валюты"""
+        """
+
+        :return: Название валюты
+        :rtype: str
+        """
         return self.resp['context']['currency']['name']
+
+    @property
+    def alt_currency_id(self):
+        """
+
+        :return: Код валюты
+        :rtype: str
+        """
+        return self.resp['context']['alternateCurrency']['id']
+
+    @property
+    def alt_currency_name(self):
+        """
+
+        :return: Название валюты
+        :rtype: str
+        """
+        return self.resp['context']['alternateCurrency']['name']
 
 
 class Page(Base):
     @property
     def page_number(self):
+        """
+
+        :return: Номер страницы
+        :rtype: int
+        """
         return self.resp['context']['page'].get('number')
 
     @property
     def page_count(self):
+        """
+
+        :return: Размер страницы
+        :rtype: int
+        """
         return self.resp['context']['page'].get('count')
 
     @property
     def page_total(self):
+        """
+
+        :return: Количество страниц в результате
+        :rtype: int
+        """
         return self.resp['context']['page'].get('total')
 
     @property
     def page_last(self):
+        """
+
+        :return: Признак последней страницы
+        :rtype: bool
+        """
         return self.resp['context']['page']['number'] == self.resp['context']['page']['total']
-        # return self.resp['context']['page']['last']
 
 
 class Categories(Page):
