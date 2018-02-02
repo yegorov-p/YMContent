@@ -165,7 +165,6 @@ class Page(Base):
 
 
 class Categories(Page):
-
     @property
     def categories(self):
         """
@@ -188,9 +187,13 @@ class CategoriesChildren(Page):
 
 
 class Category(Base):
-
     @property
     def category(self):
+        """
+
+        :return: Категория
+        :rtype: object
+        """
         return YMCategory(self.resp['category'])
 
 

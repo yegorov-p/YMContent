@@ -236,21 +236,44 @@ class YMAPI(object):
 
         return CategoriesChildren(self.request('categories/{}/children', category_id, params))
 
-    def category(self, req_id=None, fields=None, geo_id=None, remote_ip=None):
+    def category(self, category_id=None, fields=None, geo_id=None, remote_ip=None):
+        """
+        Информация о категории
+
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :type fields: str
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :return: Информация о категории
+        :rtype: object
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-category-docpage/
+        """
+        params = {}
         if geo_id is None and remote_ip is None:
             raise YMAPI.NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             for field in fields.split(','):
                 if field not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = fields
 
-        params = {'fields': fields,
-                  'geo_id': geo_id,
-                  'remote_ip': remote_ip}
-
-        return Category(self.request('categories/{id}', req_id, params))
+        return Category(self.request('categories/{}', category_id, params))
 
     def categories_filters(self, req_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR', rs=None,
                            sort='NONE', filters={}):
