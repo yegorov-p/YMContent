@@ -86,7 +86,7 @@ class YMAPI(object):
     def _prepare_resource_path(self, resource_path, params=None):
         return resource_path.format(**params)
 
-    def request(self, resource, req_id, params):
+    def _request(self, resource, req_id, params):
         if resource not in RESOURCES:
             raise Exception('Resource "%s" unsupported' % resource)
 
@@ -183,7 +183,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Categories(self.request('categories', None, params))
+        return Categories(self._request('categories', None, params))
 
     def categories_children(self, category_id=None, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10,
                             page=1):
@@ -253,7 +253,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return CategoriesChildren(self.request('categories/{}/children', category_id, params))
+        return CategoriesChildren(self._request('categories/{}/children', category_id, params))
 
     def category(self, category_id=None, fields=None, geo_id=None, remote_ip=None):
         """
@@ -292,7 +292,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Category(self.request('categories/{}', category_id, params))
+        return Category(self._request('categories/{}', category_id, params))
 
     def categories_filters(self, req_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR', rs=None,
                            sort='NONE', filters={}):
@@ -328,7 +328,7 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return CategoriesFilters(self.request('categories/{id}/filters', req_id, params))
+        return CategoriesFilters(self._request('categories/{id}/filters', req_id, params))
 
     # Todo Не готов
     def categories_match(self, name, category_name=None, description=None, locale='RU_ru', price=None,
@@ -347,7 +347,7 @@ class YMAPI(object):
         if shop_name:
             params['shop_name'] = shop_name
 
-        return Category(self.request('categories/match', None, params))
+        return Category(self._request('categories/match', None, params))
 
     def models(self, req_id, fields='CATEGORY,PHOTO', filters={}, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
@@ -377,7 +377,7 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return Model(self.request('models/{id}', req_id, params))
+        return Model(self._request('models/{id}', req_id, params))
 
     def models_reviews(self, req_id, count=10, page=1):
         params = {'count': count,
@@ -393,7 +393,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return ModelReview(self.request('models/{id}/reviews', req_id, params))
+        return ModelReview(self._request('models/{id}/reviews', req_id, params))
 
     def models_match(self, name, category_count=1, fields='CATEGORY,PHOTO', match_types='MULTI,REPORT',
                      category_name=None, description=None, locale='RU_ru', price=None, shop_name=None, category_id=None,
@@ -442,7 +442,7 @@ class YMAPI(object):
         if hid:
             params['hid'] = hid
 
-        return Models(self.request('models/match', None, params))
+        return Models(self._request('models/match', None, params))
 
     def models_lookas(self, req_id, count=10, fields='CATEGORY,PHOTO'):
         params = {'count': count,
@@ -466,7 +466,7 @@ class YMAPI(object):
                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
 
-        return ModelsLookas(self.request('models/{id}/looksas', req_id, params))
+        return ModelsLookas(self._request('models/{id}/looksas', req_id, params))
 
     def categories_bestdeals(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1):
         params = {'count': count,
@@ -497,7 +497,7 @@ class YMAPI(object):
                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
 
-        return CategoriesLookas(self.request('categories/{id}/bestdeals', req_id, params))
+        return CategoriesLookas(self._request('categories/{id}/bestdeals', req_id, params))
 
     def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
@@ -538,7 +538,7 @@ class YMAPI(object):
                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
 
-        return CategoriesPopular(self.request('categories/{id}/populars', req_id, params))
+        return CategoriesPopular(self._request('categories/{id}/populars', req_id, params))
 
     def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters={},
                       count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
@@ -609,7 +609,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOffers(self.request('models/{id}/offers', req_id, params))
+        return ModelOffers(self._request('models/{id}/offers', req_id, params))
 
     def models_offers_default(self, req_id, fields='STANDARD', filters={}):
         params = {}
@@ -629,12 +629,12 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return ModelOffersDefault(self.request('models/{id}/offers/default', req_id, params))
+        return ModelOffersDefault(self._request('models/{id}/offers/default', req_id, params))
 
     def models_offers_stat(self, req_id):
         params = {}
 
-        return ModelOffersStat(self.request('models/{id}/offers/default', req_id, params))
+        return ModelOffersStat(self._request('models/{id}/offers/default', req_id, params))
 
     def models_offers_filters(self, req_id, fields=None, filter_set=None, sort='NONE'):
         params = {}
@@ -654,7 +654,7 @@ class YMAPI(object):
             if sort not in ('NAME', 'NONE'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
-        return ModelOffersFilters(self.request('models/{id}/offers/filters', req_id, params))
+        return ModelOffersFilters(self._request('models/{id}/offers/filters', req_id, params))
 
     def offers(self, req_id, delivery_included=0, fields='STANDARD'):
         params = {}
@@ -674,7 +674,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Offers(self.request('offers/{id}', req_id, params))
+        return Offers(self._request('offers/{id}', req_id, params))
 
     def models_opinions(self, req_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
         params = {}
@@ -701,7 +701,7 @@ class YMAPI(object):
             if sort not in ('DATE', 'GRADE', 'RANK'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
-        return ModelOpinions(self.request('offers/{id}', req_id, params))
+        return ModelOpinions(self._request('offers/{id}', req_id, params))
 
     def shops_opinions(self, req_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
         params = {}
@@ -730,7 +730,7 @@ class YMAPI(object):
             if sort not in ('DATE', 'GRADE', 'RANK'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
-        return ShopOpinions(self.request('shops/{id}/opinions', req_id, params))
+        return ShopOpinions(self._request('shops/{id}/opinions', req_id, params))
 
     def shop(self, req_id, fields=None):
         params = {}
@@ -742,7 +742,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Shop(self.request('shops/{id}', req_id, params))
+        return Shop(self._request('shops/{id}', req_id, params))
 
     def shops(self, host, fields=None, geo_id=None):
         params = {'host': host}
@@ -760,7 +760,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Shops(self.request('shops', None, params))
+        return Shops(self._request('shops', None, params))
 
     def geo_regions_shops_summary(self, req_id, fields='DELIVERY_COUNT,HOME_COUNT'):
         params = {}
@@ -772,7 +772,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return ShopsSummary(self.request('geo/regions/{id}/shops/summary', req_id, params))
+        return ShopsSummary(self._request('geo/regions/{id}/shops/summary', req_id, params))
 
     def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
                        page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
@@ -840,7 +840,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self.request('models/{id}/outlets', req_id, params))
+        return Outlets(self._request('models/{id}/outlets', req_id, params))
 
     def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
@@ -909,7 +909,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self.request('shops/{id}/outlets', req_id, params))
+        return Outlets(self._request('shops/{id}/outlets', req_id, params))
 
     def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
@@ -978,7 +978,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self.request('offers/{id}/outlets', req_id, params))
+        return Outlets(self._request('offers/{id}/outlets', req_id, params))
 
     def geo_regions(self, req_id, fields='STANDART', count=10, page=1):
         params = {'count': count,
@@ -1001,7 +1001,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Regions(self.request('geo/regions', req_id, params))
+        return Regions(self._request('geo/regions', req_id, params))
 
     def geo_regions_children(self, req_id, fields=None, count=10, page=1):
         params = {'count': count,
@@ -1024,7 +1024,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Regions(self.request('geo/regions/{id}/children', req_id, params))
+        return Regions(self._request('geo/regions/{id}/children', req_id, params))
 
     def geo_regions_children(self, req_id, fields=None, count=10, page=1):
         params = {'count': count,
@@ -1047,7 +1047,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Regions(self.request('geo/regions/{id}/children', req_id, params))
+        return Regions(self._request('geo/regions/{id}/children', req_id, params))
 
     def geo_regions(self, req_id, fields=None, count=10, page=1):
         params = {}
@@ -1069,7 +1069,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Region(self.request('geo/regions/{id}', req_id, params))
+        return Region(self._request('geo/regions/{id}', req_id, params))
 
     def geo_regions_children(self, fields=None,
                              types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
@@ -1102,7 +1102,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Suggests(self.request('geo/suggest', None, params))
+        return Suggests(self._request('geo/suggest', None, params))
 
     def vendors(self, fields=None, count=10, page=1):
         params = {}
@@ -1125,7 +1125,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Vendors(self.request('vendors', None, params))
+        return Vendors(self._request('vendors', None, params))
 
     def vendor(self, req_id, fields=None):
         params = {}
@@ -1138,7 +1138,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Vendor(self.request('vendors/{id}', req_id, params))
+        return Vendor(self._request('vendors/{id}', req_id, params))
 
     def vendors_match(self, name, fields=None):
         params = {'name': name}
@@ -1152,7 +1152,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Vendor(self.request('vendors/match', None, params))
+        return Vendor(self._request('vendors/match', None, params))
 
     def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
                price_min=None, result_type='ALL', shop_id=None, warranty=0, filters={}, barcode=False, search_type=None,
@@ -1278,7 +1278,7 @@ class YMAPI(object):
                 raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Search(self.request('search', None, params))
+        return Search(self._request('search', None, params))
 
     def categories_search(self, req_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
                           shop_regions=None, filters={},
@@ -1347,7 +1347,7 @@ class YMAPI(object):
                     'RATING', 'RELEVANCY'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
-        return Search(self.request('categories/{id}/search', req_id, params))
+        return Search(self._request('categories/{id}/search', req_id, params))
 
     def search_filters(self, text, fields=None):
         params = {'text': text}
@@ -1360,7 +1360,7 @@ class YMAPI(object):
                     raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return CategoriesFilters(self.request('search/filters', None, params))
+        return CategoriesFilters(self._request('search/filters', None, params))
 
     def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
                  fields=None, user_agent=None, count=10, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
@@ -1439,7 +1439,7 @@ class YMAPI(object):
                     'RATING', 'RELEVANCY'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
 
-        return Redirect(self.request('redirect', None, params))
+        return Redirect(self._request('redirect', None, params))
 
     def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT'):
         params = {'text': text,
@@ -1466,4 +1466,4 @@ class YMAPI(object):
                     raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
             params['suggest_types'] = suggest_types
 
-        return Suggestions(self.request('redirect', None, params))
+        return Suggestions(self._request('redirect', None, params))
