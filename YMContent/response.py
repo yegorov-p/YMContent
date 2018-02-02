@@ -181,7 +181,7 @@ class CategoriesChildren(Page):
         """
 
         :return: Список подкатегорий
-        :rtype: list
+        :rtype: list[objects.YMCategory]
         """
         return [YMCategory(category) for category in self.resp['categories']]
 

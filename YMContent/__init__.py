@@ -194,7 +194,7 @@ class YMAPI(object):
         :type category_id: int
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных
-        :type fields: str
+        :type fields: str or list[str]
 
         :param sort: Тип сортировки категорий
         :type sort: str
@@ -212,7 +212,13 @@ class YMAPI(object):
         :type page: int
 
         :return: Список категорий товарного дерева, вложенных в категорию с указанным в запросе идентификатором
-        :rtype: object
+        :rtype: list[response.CategoriesChildren]
+
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises SortParamError: неверное значение параметра sort
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-children-categories-docpage/
         """
@@ -257,7 +263,7 @@ class YMAPI(object):
         :type category_id: int
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных
-        :type fields: str
+        :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
         :type geo_id: int
