@@ -188,9 +188,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         params = {'fields': fields,
                   'sort': sort,
@@ -307,9 +311,13 @@ class YMAPI(object):
                   }
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return ModelReview(self.request('models/{id}/reviews', req_id, params))
 
@@ -392,9 +400,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if fields:
             for field in fields.split(','):
@@ -413,15 +425,29 @@ class YMAPI(object):
 
         return CategoriesLookas(self.request('categories/{id}/bestdeals', req_id, params))
 
-    def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1):
+    def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
+        if geo_id is None and remote_ip is None:
+            raise YMAPI.NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
         params = {'count': count,
                   'fields': fields}
 
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
+
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if fields:
             for field in fields.split(','):
@@ -442,8 +468,17 @@ class YMAPI(object):
 
     def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters={},
                       count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
-        params = {'count': count,
-                  'page': page}
+        params = {}
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         # ToDO нужно добавить преобразование типа в эталонный
         if delivery_included:
@@ -575,9 +610,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ['ASC', 'DESC']:
@@ -602,10 +641,12 @@ class YMAPI(object):
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
+
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
+
         if how:
             if how not in ['ASC', 'DESC']:
                 raise YMAPI.HowParamError('"how" param is wrong')
@@ -693,10 +734,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
-
+        else:
+            params['page'] = page
         if how:
             if how not in ('ASC', 'DESC'):
                 raise YMAPI.HowParamError('"how" param is wrong')
@@ -758,9 +802,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
@@ -823,9 +871,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
@@ -867,9 +919,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return Regions(self.request('geo/regions', req_id, params))
 
@@ -886,9 +942,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return Regions(self.request('geo/regions/{id}/children', req_id, params))
 
@@ -905,15 +965,28 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return Regions(self.request('geo/regions/{id}/children', req_id, params))
 
     def geo_regions(self, req_id, fields=None, count=10, page=1):
-        params = {'count': count,
-                  'page': page}
+        params = {}
+
+        if count < 1 or count > 30:
+            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
+
+        if page < 1:
+            raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if fields:
             for field in fields.split(','):
@@ -927,8 +1000,7 @@ class YMAPI(object):
     def geo_regions_children(self, fields=None,
                              types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
                              count=10, page=1):
-        params = {'count': count,
-                  'page': page}
+        params = {}
 
         if fields:
             for field in fields.split(','):
@@ -948,15 +1020,18 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return Suggests(self.request('geo/suggest', None, params))
 
     def vendors(self, fields=None, count=10, page=1):
-        params = {'count': count,
-                  'page': page}
+        params = {}
 
         if fields:
             for field in fields.split(','):
@@ -968,9 +1043,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         return Vendors(self.request('vendors', None, params))
 
@@ -1092,9 +1171,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
@@ -1171,9 +1254,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
@@ -1259,9 +1346,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
@@ -1282,9 +1373,13 @@ class YMAPI(object):
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
 
         if page < 1:
             raise YMAPI.PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if pos:
             params['pos'] = pos
