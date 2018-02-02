@@ -197,7 +197,7 @@ class YMCategory(YMBase):
         """
 
         :return: Предупреждения, связанные с категорией
-        :rtype: list
+        :rtype: list[objects.YMWarning]
         """
         return [YMWarning(warning) for warning in self.data.get('warnings', [])]
 

@@ -114,7 +114,7 @@ class YMAPI(object):
         """
         Список категорий
 
-        :param fields: 	Параметры категории, которые необходимо показать в выходных данных
+        :param fields: Параметры категории, которые необходимо показать в выходных данных
         :type fields: str
 
         :param sort: Тип сортировки категорий
@@ -132,21 +132,34 @@ class YMAPI(object):
         :param page: Номер страницы
         :type page: int
 
-        :return: Список категорий первого уровня (корневых) товарного дерева
-        :rtype: object
+        :return: Список категорий первого уровня (корневых) товарного дерева :class:`response.Categories`
+        :rtype: list[response.Categories]
+
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises SortParamError: неверное значение параметра sort
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-root-categories-docpage/
         """
         params = {}
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            if fields is list:
+                for field in fields:
+                    if field.upper() not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
+                        raise YMAPI.FieldsParamError('"fields" param is wrong')
+            elif fields is str:
+                for field in fields.split(','):
+                    if field.strip() not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
+                        raise YMAPI.FieldsParamError('"fields" param is wrong')
+            else:
+                raise YMAPI.FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         if sort:
-            if sort not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
+            if sort.upper() not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
                 raise YMAPI.SortParamError('"sort" param is wrong')
             params['sort'] = sort
 

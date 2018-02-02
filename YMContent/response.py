@@ -170,7 +170,7 @@ class Categories(Page):
         """
 
         :return: Список категорий
-        :rtype: list
+        :rtype: list[objects.YMCategory]
         """
         return [YMCategory(category) for category in self.resp['categories']]
 
