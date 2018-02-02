@@ -272,7 +272,13 @@ class YMAPI(object):
         :type remote_ip: int
 
         :return: Информация о категории
-        :rtype: object
+        :rtype: response.Category
+
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises SortParamError: неверное значение параметра sort
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-category-docpage/
         """

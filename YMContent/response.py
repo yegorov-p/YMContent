@@ -192,7 +192,7 @@ class Category(Base):
         """
 
         :return: Категория
-        :rtype: object
+        :rtype: objects.YMCategory
         """
         return YMCategory(self.resp['category'])
 
