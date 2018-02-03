@@ -110,6 +110,19 @@ class YMAPI(object):
                 socket.error) as exception:
             pass
 
+    def _validate_fields(self, fields, values):
+        if type(fields) == list:
+            for field in fields:
+                if field.upper() not in values:
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+        elif type(fields) == str:
+            for field in fields.split(','):
+                if field.strip() not in values:
+                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+        else:
+            raise YMAPI.FieldsParamError('"fields" param is wrong')
+        return fields
+
     def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10, page=1):
         """
         Список категорий
@@ -146,17 +159,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            if fields is list:
-                for field in fields:
-                    if field.upper() not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
-                        raise YMAPI.FieldsParamError('"fields" param is wrong')
-            elif fields is str:
-                for field in fields.split(','):
-                    if field.strip() not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
-                        raise YMAPI.FieldsParamError('"fields" param is wrong')
-            else:
-                raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
 
         if sort:
             if sort.upper() not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
@@ -233,10 +236,7 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
 
         if sort:
             if sort not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
@@ -290,10 +290,7 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
 
         return Category(self._request('categories/{}', category_id, params))
 
@@ -346,10 +343,8 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'))
 
         if filter_set:
             for field in filter_set.split(','):
@@ -396,19 +391,25 @@ class YMAPI(object):
                 "You must provide either geo_id or remote_ip")
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_COLOR',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA', 'MODIFICATIONS',
-                        'NAVIGATION_NODE',
-                        'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS', 'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK',
-                        'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR', 'PHOTO', 'PHOTOS', 'PRICE',
-                        'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION', 'VENDOR', 'ALL', 'FILTER_ALL',
-                        'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                         'FILTER_ALLVENDORS',
+                                                         'FILTER_COLOR',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                         'MODIFICATIONS',
+                                                         'NAVIGATION_NODE',
+                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK',
+                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'PHOTO', 'PHOTOS', 'PRICE',
+                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                         'VENDOR', 'ALL', 'FILTER_ALL',
+                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                         'VENDOR_ALL'))
 
         params = {'fields': fields,
                   'geo_id': geo_id,
@@ -445,19 +446,25 @@ class YMAPI(object):
                   'name': name, 'locale': locale}
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_COLOR',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA', 'MODIFICATIONS',
-                        'NAVIGATION_NODE',
-                        'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS', 'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK',
-                        'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR', 'PHOTO', 'PHOTOS', 'PRICE',
-                        'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION', 'VENDOR', 'ALL', 'FILTER_ALL',
-                        'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                         'FILTER_ALLVENDORS',
+                                                         'FILTER_COLOR',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                         'MODIFICATIONS',
+                                                         'NAVIGATION_NODE',
+                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK',
+                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'PHOTO', 'PHOTOS', 'PRICE',
+                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                         'VENDOR', 'ALL', 'FILTER_ALL',
+                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                         'VENDOR_ALL'))
 
         if match_types:
             for match_type in match_types.split(','):
@@ -493,19 +500,25 @@ class YMAPI(object):
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_COLOR',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA', 'MODIFICATIONS',
-                        'NAVIGATION_NODE',
-                        'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS', 'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK',
-                        'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR', 'PHOTO', 'PHOTOS', 'PRICE',
-                        'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION', 'VENDOR', 'ALL', 'FILTER_ALL',
-                        'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                         'FILTER_ALLVENDORS',
+                                                         'FILTER_COLOR',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                         'MODIFICATIONS',
+                                                         'NAVIGATION_NODE',
+                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK',
+                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'PHOTO', 'PHOTOS', 'PRICE',
+                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                         'VENDOR', 'ALL', 'FILTER_ALL',
+                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                         'VENDOR_ALL'))
 
         return ModelsLookas(self._request('models/{id}/looksas', req_id, params))
 
@@ -524,19 +537,25 @@ class YMAPI(object):
             params['page'] = page
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_COLOR',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA', 'MODIFICATIONS',
-                        'NAVIGATION_NODE',
-                        'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS', 'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK',
-                        'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR', 'PHOTO', 'PHOTOS', 'PRICE',
-                        'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION', 'VENDOR', 'ALL', 'FILTER_ALL',
-                        'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                         'FILTER_ALLVENDORS',
+                                                         'FILTER_COLOR',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                         'MODIFICATIONS',
+                                                         'NAVIGATION_NODE',
+                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK',
+                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'PHOTO', 'PHOTOS', 'PRICE',
+                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                         'VENDOR', 'ALL', 'FILTER_ALL',
+                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                         'VENDOR_ALL'))
 
         return CategoriesLookas(self._request('categories/{id}/bestdeals', req_id, params))
 
@@ -565,19 +584,25 @@ class YMAPI(object):
             params['page'] = page
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_COLOR',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA', 'MODIFICATIONS',
-                        'NAVIGATION_NODE',
-                        'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS', 'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK',
-                        'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR', 'PHOTO', 'PHOTOS', 'PRICE',
-                        'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION', 'VENDOR', 'ALL', 'FILTER_ALL',
-                        'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                         'FILTER_ALLVENDORS',
+                                                         'FILTER_COLOR',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                         'MODIFICATIONS',
+                                                         'NAVIGATION_NODE',
+                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK',
+                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'PHOTO', 'PHOTOS', 'PRICE',
+                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                         'VENDOR', 'ALL', 'FILTER_ALL',
+                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                         'VENDOR_ALL'))
 
         return CategoriesPopular(self._request('categories/{id}/populars', req_id, params))
 
@@ -601,17 +626,17 @@ class YMAPI(object):
             params['delivery_included'] = delivery_included
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'FILTERS', 'FILTER_ALLVENDORS',
-                        'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS',
-                        'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                        'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'ALL', 'FILTER_ALL',
-                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'FILTERS', 'FILTER_ALLVENDORS',
+                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS',
+                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                         'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
+                                                         'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'ALL',
+                                                         'FILTER_ALL',
+                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'))
 
         if groupBy:
             if groupBy not in ('NONE', 'OFFER', 'SHOP'):
@@ -656,15 +681,13 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'ACTIVE_FILTERS', 'CATEGORY',
-                        'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
-                        'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
-                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
-                        'ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'ACTIVE_FILTERS', 'CATEGORY',
+                                                         'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
+                                                         'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
+                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
+                                                         'ALL', 'SHOP_ALL', 'STANDARD'))
 
         if filters:
             for (k, v) in filters.items():
@@ -681,10 +704,8 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'))
 
         if filter_set:
             if filter_set not in ('ALL', 'BASIC', 'POPULAR'):
@@ -706,14 +727,12 @@ class YMAPI(object):
             params['delivery_included'] = delivery_included
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ACTIVE_FILTERS', 'CATEGORY',
-                                 'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
-                                 'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
-                                 'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
-                                 'ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('ACTIVE_FILTERS', 'CATEGORY',
+                                                      'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
+                                                      'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
+                                                      'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
+                                                      'ALL', 'SHOP_ALL', 'STANDARD'))
 
         return Offers(self._request('offers/{id}', req_id, params))
 
@@ -777,11 +796,9 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ORGANIZATION', 'RATING',
-                                 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('ORGANIZATION', 'RATING',
+                                                      'ALL'))
 
         return Shop(self._request('shops/{id}', req_id, params))
 
@@ -795,11 +812,9 @@ class YMAPI(object):
             params['geo_id'] = geo_id
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('ORGANIZATION', 'RATING',
-                                 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('ORGANIZATION', 'RATING',
+                                                      'ALL'))
 
         return Shops(self._request('shops', None, params))
 
@@ -807,11 +822,9 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            for field in fields.split(','):
-                if field not in ('DELIVERY_COUNT', 'HOME_COUNT',
-                                 'TOTAL_COUNT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     ('DELIVERY_COUNT', 'HOME_COUNT',
+                                                      'TOTAL_COUNT', 'ALL'))
 
         return ShopsSummary(self._request('geo/regions/{id}/shops/summary', req_id, params))
 
@@ -824,16 +837,15 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'OFFER', 'OFFER_ACTIVE_FILTERS',
-                        'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
-                        'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
+                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
+                                                         'OFFER_PHOTO',
+                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
+                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
+                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
 
         if type:
             for field in type.split(','):
@@ -892,16 +904,15 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'OFFER', 'OFFER_ACTIVE_FILTERS',
-                        'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
-                        'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
+                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
+                                                         'OFFER_PHOTO',
+                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
+                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
+                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
 
         if type:
             for field in type.split(','):
@@ -961,16 +972,15 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'OFFER', 'OFFER_ACTIVE_FILTERS',
-                        'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                        'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
-                        'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                        'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                        'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
+                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
+                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
+                                                         'OFFER_PHOTO',
+                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
+                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
+                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
 
         if type:
             for field in type.split(','):
@@ -1026,11 +1036,9 @@ class YMAPI(object):
                   'page': page}
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'DECLENSIONS', 'PARENT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
@@ -1049,11 +1057,9 @@ class YMAPI(object):
                   'page': page}
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'DECLENSIONS', 'PARENT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
@@ -1072,11 +1078,9 @@ class YMAPI(object):
                   'page': page}
 
         if fields:
-            for field in fields.split(','):
-                if field not in (
-                        'DECLENSIONS', 'PARENT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
-            params['fields'] = fields
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
             raise YMAPI.CountParamError('"count" param must be between 1 and 30')
