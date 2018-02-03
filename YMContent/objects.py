@@ -1755,7 +1755,6 @@ class YMOffer(YMBase):
 
     @property
     def activeFilters(self):
-        # todo надо добавить везде []
         return [YMFilter(filter) for filter in self.data.get('activeFilters', [])]
 
     @property
@@ -2299,15 +2298,15 @@ class YMRedirectCatalog(YMBase):
 
     @property
     def items(self):
-        return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in self.resp['items']]
+        return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in self.get('items',[])]
 
     @property
     def categories(self):
-        return [YMSearchCategory(category) for category in self.resp['categories']]
+        return [YMSearchCategory(category) for category in self.resp.get('categories',[])]
 
     @property
     def sorts(self):
-        return [YMSort(sort) for sort in self.resp['sorts']]
+        return [YMSort(sort) for sort in self.resp.get('sorts',[])]
 
     @property
     def navigationNode(self):
@@ -2361,11 +2360,11 @@ class YMRedirectSearch(YMBase):
 
     @property
     def filters(self):
-        return [YMFilter(f) for f in self.resp['filters']]
+        return [YMFilter(f) for f in self.resp.get('filters',[])]
 
     @property
     def sorts(self):
-        return [YMSort(sort) for sort in self.resp['sorts']]
+        return [YMSort(sort) for sort in self.resp.get('sorts',[])]
 
     @property
     def criteria(self):
