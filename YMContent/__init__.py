@@ -12,59 +12,10 @@ from requests.packages.urllib3.exceptions import ReadTimeoutError, ProtocolError
 import socket
 import ssl
 from .response import *
+from .exceptions import *
 
 
 class YMAPI(object):
-    class BaseAPIError(BaseException):
-        pass
-
-    class FieldsParamError(BaseException):
-        pass
-
-    class NotAuthorized(BaseException):
-        pass
-
-    class GroupByParamError(BaseException):
-        pass
-
-    class HowParamError(BaseException):
-        pass
-
-    class MatchTypeParamError(BaseException):
-        pass
-
-    class TypeParamError(BaseException):
-        pass
-
-    class ResultTypeParamError(BaseException):
-        pass
-
-    class RedirectTypesParamError(BaseException):
-        pass
-
-    class SearchTypeParamError(BaseException):
-        pass
-
-    class FilterSetParamError(BaseException):
-        pass
-
-    class SortParamError(BaseException):
-        pass
-
-    class GradeParamError(BaseException):
-        pass
-
-    class CountParamError(BaseException):
-        pass
-
-    class PageParamError(BaseException):
-        pass
-
-    class GeoParamError(BaseException):
-        pass
-
-    class NoGeoIdOrIP(BaseException):
-        pass
 
     def __init__(self, authorization_key=None):
         """
@@ -73,7 +24,7 @@ class YMAPI(object):
         :type authorization_key: str
         """
         if not authorization_key:
-            raise YMAPI.NotAuthorized(
+            raise NotAuthorized(
                 "You must provide authorization key to access Yandex.Market API!")
         self.session = requests.Session()
         self.session.headers = {
@@ -104,7 +55,7 @@ class YMAPI(object):
             data = response.json()
 
             if response.status_code in (401, 404, 422):
-                raise YMAPI.BaseAPIError(
+                raise BaseAPIError(
                     data['errors'][0]['message'])
             return response
 
@@ -116,13 +67,13 @@ class YMAPI(object):
         if type(fields) == list:
             for field in fields:
                 if field.upper() not in values:
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
         elif type(fields) == str:
             for field in fields.split(','):
                 if field.strip() not in values:
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
         else:
-            raise YMAPI.FieldsParamError('"fields" param is wrong')
+            raise FieldsParamError('"fields" param is wrong')
         return fields
 
     def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10, page=1):
@@ -165,11 +116,11 @@ class YMAPI(object):
 
         if sort:
             if sort.upper() not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
 
         if geo_id:
@@ -179,12 +130,12 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -229,7 +180,7 @@ class YMAPI(object):
         """
         params = {}
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
         if geo_id:
             params['geo_id'] = geo_id
@@ -242,16 +193,16 @@ class YMAPI(object):
 
         if sort:
             if sort not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -283,7 +234,7 @@ class YMAPI(object):
         """
         params = {}
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
         if geo_id:
             params['geo_id'] = geo_id
@@ -336,7 +287,7 @@ class YMAPI(object):
         """
         params = {}
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
         if geo_id:
             params['geo_id'] = geo_id
@@ -351,12 +302,12 @@ class YMAPI(object):
         if filter_set:
             for field in filter_set.split(','):
                 if field not in ('ALL', 'BASIC', 'POPULAR'):
-                    raise YMAPI.FilterSetParamError('"filter_set" param is wrong')
+                    raise FilterSetParamError('"filter_set" param is wrong')
             params['filter_set'] = filter_set
 
         if sort:
             if sort not in ('NAME', 'NONE'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
         if rs:
@@ -438,7 +389,7 @@ class YMAPI(object):
         """
         params = {}
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
         if geo_id:
             params['geo_id'] = geo_id
@@ -477,12 +428,12 @@ class YMAPI(object):
                   'page': page
                   }
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -521,7 +472,7 @@ class YMAPI(object):
             for match_type in match_types.split(','):
                 if match_type not in (
                         'BATCH', 'MULTI', 'MULTI_STRING', 'REPORT', 'STRING', 'ALL'):
-                    raise YMAPI.MatchTypeParamError('"match_types" param is wrong')
+                    raise MatchTypeParamError('"match_types" param is wrong')
 
         if category_name:
             params['category_name'] = category_name
@@ -548,7 +499,7 @@ class YMAPI(object):
                   'fields': fields}
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
 
         if fields:
             params['fields'] = self._validate_fields(fields,
@@ -578,12 +529,12 @@ class YMAPI(object):
                   'fields': fields}
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -612,7 +563,7 @@ class YMAPI(object):
 
     def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
 
         params = {'count': count,
@@ -625,12 +576,12 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -662,12 +613,12 @@ class YMAPI(object):
         params = {}
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -691,7 +642,7 @@ class YMAPI(object):
 
         if groupBy:
             if groupBy not in ('NONE', 'OFFER', 'SHOP'):
-                raise YMAPI.GroupByParamError('"groupBy" param is wrong')
+                raise GroupByParamError('"groupBy" param is wrong')
             params['groupBy'] = groupBy
 
         if shop_regions:
@@ -703,14 +654,14 @@ class YMAPI(object):
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -718,12 +669,12 @@ class YMAPI(object):
 
         if latitude:
             if latitude < -90 or latitude > 90:
-                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+                raise GeoParamError('"latitude" param must be between -90 and 90')
             params['latitude'] = latitude
 
         if longitude:
             if longitude < -180 or longitude > 180:
-                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+                raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
         return ModelOffers(self._request('models/{id}/offers', req_id, params))
@@ -760,12 +711,12 @@ class YMAPI(object):
 
         if filter_set:
             if filter_set not in ('ALL', 'BASIC', 'POPULAR'):
-                raise YMAPI.FilterSetParamError('"filter_set" param is wrong')
+                raise FilterSetParamError('"filter_set" param is wrong')
             params['filter_set'] = filter_set
 
         if sort:
             if sort not in ('NAME', 'NONE'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         return ModelOffersFilters(self._request('models/{id}/offers/filters', req_id, params))
 
@@ -791,26 +742,26 @@ class YMAPI(object):
         params = {}
 
         if grade < 1 or grade > 5:
-            raise YMAPI.CountParamError('"grade" param must be between 1 and 5')
+            raise CountParamError('"grade" param must be between 1 and 5')
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ['ASC', 'DESC']:
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
             params['how'] = how
 
         if sort:
             if sort not in ('DATE', 'GRADE', 'RANK'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         return ModelOpinions(self._request('offers/{id}', req_id, params))
 
@@ -819,27 +770,27 @@ class YMAPI(object):
 
         if grade:
             if grade < 1 or grade > 5:
-                raise YMAPI.CountParamError('"grade" param must be between 1 and 5')
+                raise CountParamError('"grade" param must be between 1 and 5')
             params['grade'] = grade
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ['ASC', 'DESC']:
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
             params['how'] = how
 
         if sort:
             if sort not in ('DATE', 'GRADE', 'RANK'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         return ShopOpinions(self._request('shops/{id}/opinions', req_id, params))
 
@@ -857,7 +808,7 @@ class YMAPI(object):
         params = {'host': host}
 
         if geo_id is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide geo_id")
         else:
             params['geo_id'] = geo_id
@@ -903,7 +854,7 @@ class YMAPI(object):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise YMAPI.TypeParamError('"fields" param is wrong')
+                    raise TypeParamError('"fields" param is wrong')
             params['type'] = type
 
         if filters:
@@ -911,24 +862,24 @@ class YMAPI(object):
                 params[k] = v
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -936,12 +887,12 @@ class YMAPI(object):
 
         if latitude:
             if latitude < -90 or latitude > 90:
-                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+                raise GeoParamError('"latitude" param must be between -90 and 90')
             params['latitude'] = latitude
 
         if longitude:
             if longitude < -180 or longitude > 180:
-                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+                raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
         return Outlets(self._request('models/{id}/outlets', req_id, params))
@@ -970,7 +921,7 @@ class YMAPI(object):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise YMAPI.TypeParamError('"fields" param is wrong')
+                    raise TypeParamError('"fields" param is wrong')
             params['type'] = type
 
         if filters:
@@ -978,25 +929,25 @@ class YMAPI(object):
                 params[k] = v
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -1004,12 +955,12 @@ class YMAPI(object):
 
         if latitude:
             if latitude < -90 or latitude > 90:
-                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+                raise GeoParamError('"latitude" param must be between -90 and 90')
             params['latitude'] = latitude
 
         if longitude:
             if longitude < -180 or longitude > 180:
-                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+                raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
         return Outlets(self._request('shops/{id}/outlets', req_id, params))
@@ -1038,7 +989,7 @@ class YMAPI(object):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise YMAPI.TypeParamError('"fields" param is wrong')
+                    raise TypeParamError('"fields" param is wrong')
             params['type'] = type
 
         if filters:
@@ -1046,25 +997,25 @@ class YMAPI(object):
                 params[k] = v
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -1072,12 +1023,12 @@ class YMAPI(object):
 
         if latitude:
             if latitude < -90 or latitude > 90:
-                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+                raise GeoParamError('"latitude" param must be between -90 and 90')
             params['latitude'] = latitude
 
         if longitude:
             if longitude < -180 or longitude > 180:
-                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+                raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
         return Outlets(self._request('offers/{id}/outlets', req_id, params))
@@ -1092,12 +1043,12 @@ class YMAPI(object):
                                                          'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1113,12 +1064,12 @@ class YMAPI(object):
                                                          'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1134,12 +1085,12 @@ class YMAPI(object):
                                                          'DECLENSIONS', 'PARENT', 'ALL'))
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1149,12 +1100,12 @@ class YMAPI(object):
         params = {}
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1162,7 +1113,7 @@ class YMAPI(object):
             for field in fields.split(','):
                 if field not in (
                         'DECLENSIONS', 'PARENT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         return Region(self._request('geo/regions/{id}', req_id, params))
@@ -1176,7 +1127,7 @@ class YMAPI(object):
             for field in fields.split(','):
                 if field not in (
                         'DECLENSIONS', 'PARENT', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         if types:
@@ -1185,16 +1136,16 @@ class YMAPI(object):
                         'AIRPORT', 'CITY', 'CITY_DISTRICT', 'CONTINENT', 'COUNTRY', 'COUNTRY_DISTRICT', 'METRO_STATION',
                         'MONORAIL_STATION', 'OVERSEAS_TERRITORY', 'REGION', 'RURAL_SETTLEMENT', 'SECONDARY_DISTRICT',
                         'SUBJECT_FEDERATION', 'SUBJECT_FEDERATION_DISTRICT', 'VILLAGE', 'ALL'):
-                    raise YMAPI.TypeParamError('"type" param is wrong')
+                    raise TypeParamError('"type" param is wrong')
             params['fields'] = fields
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1208,16 +1159,16 @@ class YMAPI(object):
                 if field not in (
                         'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
                         'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1231,7 +1182,7 @@ class YMAPI(object):
                 if field not in (
                         'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
                         'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         return Vendor(self._request('vendors/{id}', req_id, params))
@@ -1245,7 +1196,7 @@ class YMAPI(object):
                 if field not in (
                         'CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
                         'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         return Vendor(self._request('vendors/match', None, params))
@@ -1259,7 +1210,7 @@ class YMAPI(object):
         params = {'text': text}
 
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
 
         if geo_id:
@@ -1285,7 +1236,7 @@ class YMAPI(object):
                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
                         'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'ALL', 'MODEL_ALL',
                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -1297,7 +1248,7 @@ class YMAPI(object):
             for field in outlet_types.split(','):
                 if field not in (
                         'DELIVERY', 'PICKUP', 'STORE', 'ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['outlet_types'] = outlet_types
 
         if price_max:
@@ -1309,7 +1260,7 @@ class YMAPI(object):
         if result_type:
             if result_type not in (
                     'ALL', 'MODELS', 'OFFERS'):
-                raise YMAPI.ResultTypeParamError('"result_type" param is wrong')
+                raise ResultTypeParamError('"result_type" param is wrong')
             params['fields'] = fields
 
         if shop_id:
@@ -1331,7 +1282,7 @@ class YMAPI(object):
         if search_type:
             if search_type not in (
                     'BARCODE', 'ISBN', 'TEXT'):
-                raise YMAPI.SearchTypeParamError('"search_type" param is wrong')
+                raise SearchTypeParamError('"search_type" param is wrong')
             params['search_type'] = search_type
 
         if category_id:
@@ -1341,25 +1292,25 @@ class YMAPI(object):
             params['hid'] = hid
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -1367,12 +1318,12 @@ class YMAPI(object):
 
         if latitude:
             if latitude < -90 or latitude > 90:
-                raise YMAPI.GeoParamError('"latitude" param must be between -90 and 90')
+                raise GeoParamError('"latitude" param must be between -90 and 90')
             params['latitude'] = latitude
 
         if longitude:
             if longitude < -180 or longitude > 180:
-                raise YMAPI.GeoParamError('"longitude" param must be between -180 and 180')
+                raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
         return Search(self._request('search', None, params))
@@ -1384,7 +1335,7 @@ class YMAPI(object):
         params = {}
 
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
 
         if geo_id:
@@ -1404,13 +1355,13 @@ class YMAPI(object):
                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT', 'OFFER_PHOTO',
                         'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL', 'MODEL_ALL',
                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         if result_type:
             if result_type not in (
                     'ALL', 'MODELS', 'OFFERS'):
-                raise YMAPI.ResultTypeParamError('"result_type" param is wrong')
+                raise ResultTypeParamError('"result_type" param is wrong')
             params['result_type'] = result_type
 
         if rs:
@@ -1424,25 +1375,25 @@ class YMAPI(object):
                 params[k] = v
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         return Search(self._request('categories/{id}/search', req_id, params))
 
@@ -1454,7 +1405,7 @@ class YMAPI(object):
                 if field not in (
                         'ALLVENDORS', 'DESCRIPTION', 'FOUND',
                         'SORTS', 'ALL', 'STANDARD'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         return CategoriesFilters(self._request('search/filters', None, params))
@@ -1464,7 +1415,7 @@ class YMAPI(object):
         params = {'text': text}
 
         if geo_id is None and remote_ip is None:
-            raise YMAPI.NoGeoIdOrIP(
+            raise NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
 
         if geo_id:
@@ -1478,7 +1429,7 @@ class YMAPI(object):
                 if field not in (
                         'CATALOG', 'MODEL', 'SEARCH',
                         'VENDOR', 'ALL'):
-                    raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+                    raise RedirectTypesParamError('"redirect_types" param is wrong')
             params['redirect_types'] = redirect_types
 
         # todo Ограничение. Параметр действует только, если не указан search_type
@@ -1488,7 +1439,7 @@ class YMAPI(object):
         if search_type:
             if search_type not in (
                     'BARCODE', 'ISBN', 'TEXT'):
-                raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+                raise RedirectTypesParamError('"redirect_types" param is wrong')
             params['search_type'] = search_type
 
         if category_id:
@@ -1509,32 +1460,32 @@ class YMAPI(object):
                         'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'VENDOR_CATEGORIES',
                         'VENDOR_TOP_CATEGORIES', 'ALL', 'CATEGORY_ALL', 'MODEL_ALL', 'OFFER_ALL', 'SHOP_ALL',
                         'STANDARD', 'VENDOR_ALL'):
-                    raise YMAPI.FieldsParamError('"fields" param is wrong')
+                    raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
         if user_agent:
             params['user_agent'] = user_agent
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
         if how:
             if how not in ('ASC', 'DESC'):
-                raise YMAPI.HowParamError('"how" param is wrong')
+                raise HowParamError('"how" param is wrong')
 
         if sort:
             if sort not in (
                     'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
-                raise YMAPI.SortParamError('"sort" param is wrong')
+                raise SortParamError('"sort" param is wrong')
 
         return Redirect(self._request('redirect', None, params))
 
@@ -1543,12 +1494,12 @@ class YMAPI(object):
                   'count': count}
 
         if count < 1 or count > 30:
-            raise YMAPI.CountParamError('"count" param must be between 1 and 30')
+            raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
 
         if page < 1:
-            raise YMAPI.PageParamError('"page" param must be larger than 1')
+            raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
 
@@ -1560,7 +1511,7 @@ class YMAPI(object):
                 if field not in (
                         'CATALOG', 'MODEL', 'SEARCH',
                         'VENDOR', 'ALL', 'DEFAULT'):
-                    raise YMAPI.RedirectTypesParamError('"redirect_types" param is wrong')
+                    raise RedirectTypesParamError('"redirect_types" param is wrong')
             params['suggest_types'] = suggest_types
 
         return Suggestions(self._request('redirect', None, params))
