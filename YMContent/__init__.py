@@ -93,7 +93,7 @@ class YMAPI(object):
         :type remote_ip: int
 
         :param count: IP-адрес пользователя
-        :type count: str
+        :type count: int
 
         :param page: Номер страницы
         :type page: int
@@ -162,7 +162,7 @@ class YMAPI(object):
         :type remote_ip: int
 
         :param count: IP-адрес пользователя
-        :type count: str
+        :type count: int
 
         :param page: Номер страницы
         :type page: int
