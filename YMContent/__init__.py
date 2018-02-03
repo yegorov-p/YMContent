@@ -21,6 +21,9 @@ class YMAPI(object):
     class FieldsParamError(BaseException):
         pass
 
+    class NotAuthorized(BaseException):
+        pass
+
     class GroupByParamError(BaseException):
         pass
 
@@ -295,7 +298,7 @@ class YMAPI(object):
 
     def categories_filters(self, category_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR',
                            rs=None,
-                           sort='NONE', filters={}):
+                           sort='NONE', filters=None):
         """
         Список фильтров категории
 
@@ -412,7 +415,7 @@ class YMAPI(object):
 
         return Category(self._request('categories/match', None, params))
 
-    def models(self, req_id, fields='CATEGORY,PHOTO', filters={}, geo_id=None, remote_ip=None):
+    def models(self, req_id, fields='CATEGORY,PHOTO', filters=None, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
             raise YMAPI.NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
@@ -633,7 +636,7 @@ class YMAPI(object):
 
         return CategoriesPopular(self._request('categories/{id}/populars', req_id, params))
 
-    def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters={},
+    def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters=None,
                       count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
         params = {}
 
@@ -704,7 +707,7 @@ class YMAPI(object):
 
         return ModelOffers(self._request('models/{id}/offers', req_id, params))
 
-    def models_offers_default(self, req_id, fields='STANDARD', filters={}):
+    def models_offers_default(self, req_id, fields='STANDARD', filters=None):
         params = {}
 
         if fields:
@@ -855,7 +858,7 @@ class YMAPI(object):
 
         return ShopsSummary(self._request('geo/regions/{id}/shops/summary', req_id, params))
 
-    def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
+    def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                        page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         params = {}
 
@@ -922,7 +925,7 @@ class YMAPI(object):
 
         return Outlets(self._request('models/{id}/outlets', req_id, params))
 
-    def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
+    def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         params = {}
 
@@ -990,7 +993,7 @@ class YMAPI(object):
 
         return Outlets(self._request('shops/{id}/outlets', req_id, params))
 
-    def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters={}, count=10,
+    def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         params = {}
 
@@ -1227,7 +1230,7 @@ class YMAPI(object):
         return Vendor(self._request('vendors/match', None, params))
 
     def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
-               price_min=None, result_type='ALL', shop_id=None, warranty=0, filters={}, barcode=False, search_type=None,
+               price_min=None, result_type='ALL', shop_id=None, warranty=0, filters=None, barcode=False, search_type=None,
                category_id=None, hid=None, count=10, page=1, how=None, sort=None, latitude=None, longitude=None,
                geo_id=None, remote_ip=None):
 
@@ -1353,7 +1356,7 @@ class YMAPI(object):
         return Search(self._request('search', None, params))
 
     def categories_search(self, req_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
-                          shop_regions=None, filters={},
+                          shop_regions=None, filters=None,
                           count=10, page=1, how=None, sort=None):
 
         params = {}
