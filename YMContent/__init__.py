@@ -13,13 +13,8 @@ import socket
 import ssl
 from .response import *
 
-from pprint import pprint
-
 
 class YMAPI(object):
-    """Access Yandex REST API resources.
-    :param authorization_key: Yandex authorization key
-    """
 
     class BaseAPIError(BaseException):
         pass
@@ -70,6 +65,11 @@ class YMAPI(object):
         pass
 
     def __init__(self, authorization_key=None):
+        """
+
+        :param authorization_key: Авторизационный ключ
+        :type authorization_key: str
+        """
         if not authorization_key:
             raise YMAPI.NotAuthorized(
                 "You must provide authorization key to access Yandex.Market API!")

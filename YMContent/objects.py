@@ -329,6 +329,7 @@ class YMFilterValue(YMBase):
         """
 
         .. note:: Только для фильтра типа COLOR
+
         :return: Значение цвета
         :rtype: str
         """
@@ -339,6 +340,7 @@ class YMFilterValue(YMBase):
         """
 
         .. note:: Только для фильтра типа SIZE
+
         :return: Код единицы измерения размера значения фильтра
         :rtype: str
         """
