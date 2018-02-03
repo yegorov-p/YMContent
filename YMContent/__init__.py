@@ -324,7 +324,7 @@ class YMAPI(object):
         :type sort: str
 
         :param filters: Условия фильтрации моделей и предложений на модель
-        :type filters:
+        :type filters: dict
 
         :return: Cписок фильтров для фильтрации моделей и товарных предложений в указанной категории
         :rtype: response.CategoriesFilters
@@ -394,9 +394,6 @@ class YMAPI(object):
         :return: Подобранные категории
         :rtype: response.Category
 
-        :raises FieldsParamError: неверное значение параметра fields
-        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
-
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-match-docpage/
         """
         params = {'name': name, 'locale': locale}
@@ -415,41 +412,65 @@ class YMAPI(object):
 
         return Category(self._request('categories/match', None, params))
 
-    def models(self, req_id, fields='CATEGORY,PHOTO', filters=None, geo_id=None, remote_ip=None):
+    def model(self, model_id, fields='CATEGORY,PHOTO', filters=None, geo_id=None, remote_ip=None):
+        """
+        Информация о модели
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param fields: Свойства модели, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param filters: Условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :return: Информация о модели
+        :rtype: response.Model
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-model-docpage/
+        """
+        params = {}
         if geo_id is None and remote_ip is None:
             raise YMAPI.NoGeoIdOrIP(
                 "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                         'FILTER_ALLVENDORS',
-                                                         'FILTER_COLOR',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                         'MODIFICATIONS',
-                                                         'NAVIGATION_NODE',
-                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK',
-                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'PHOTO', 'PHOTOS', 'PRICE',
-                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                         'VENDOR', 'ALL', 'FILTER_ALL',
-                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                         'VENDOR_ALL'))
+                                                     ('CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
+                                                      'FILTER_ALLVENDORS',
+                                                      'FILTER_COLOR',
+                                                      'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
+                                                      'MODIFICATIONS',
+                                                      'NAVIGATION_NODE',
+                                                      'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
+                                                      'NAVIGATION_NODE_STATISTICS', 'OFFERS',
+                                                      'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
+                                                      'OFFER_DISCOUNT',
+                                                      'OFFER_OFFERS_LINK',
+                                                      'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
+                                                      'PHOTO', 'PHOTOS', 'PRICE',
+                                                      'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
+                                                      'VENDOR', 'ALL', 'FILTER_ALL',
+                                                      'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
+                                                      'VENDOR_ALL'))
 
-        params = {'fields': fields,
-                  'geo_id': geo_id,
-                  'remote_ip': remote_ip
-                  }
         if filters:
             for (k, v) in filters.items():
                 params[k] = v
 
-        return Model(self._request('models/{id}', req_id, params))
+        return Model(self._request('models/{}', model_id, params))
 
     def models_reviews(self, req_id, count=10, page=1):
         params = {'count': count,
@@ -1230,7 +1251,8 @@ class YMAPI(object):
         return Vendor(self._request('vendors/match', None, params))
 
     def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
-               price_min=None, result_type='ALL', shop_id=None, warranty=0, filters=None, barcode=False, search_type=None,
+               price_min=None, result_type='ALL', shop_id=None, warranty=0, filters=None, barcode=False,
+               search_type=None,
                category_id=None, hid=None, count=10, page=1, how=None, sort=None, latitude=None, longitude=None,
                geo_id=None, remote_ip=None):
 

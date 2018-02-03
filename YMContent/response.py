@@ -222,6 +222,11 @@ class Model(Base):
 
     @property
     def model(self):
+        """
+
+        :return: Модель
+        :rtype: objects.YMModel
+        """
         return YMModel(self.resp['model'])
 
 

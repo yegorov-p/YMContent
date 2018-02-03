@@ -354,10 +354,20 @@ class YMDatasourceOrder(YMBase):
 
     @property
     def sort(self):
+        """
+
+        :return: Вариант/параметр, по которому осуществляется сортировка
+        :rtype: str
+        """
         return self.data.get('sort')
 
     @property
     def how(self):
+        """
+
+        :return: Направление сортировки
+        :rtype: str
+        """
         return self.data.get('how')
 
 
@@ -368,14 +378,29 @@ class YMDatasourceCriteria(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор фильтра
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def value(self):
+        """
+
+        :return: Значение фильтра
+        :rtype: str
+        """
         return self.data.get('value')
 
     @property
     def text(self):
+        """
+
+        :return: Текст поисковой фразы
+        :rtype: str
+        """
         return self.data.get('text')
 
 
@@ -386,6 +411,11 @@ class YMIcon(YMBase):
 
     @property
     def url(self):
+        """
+
+        :return: Ссылка на изображение
+        :rtype: str
+        """
         return self.data.get('url')
 
 
@@ -395,23 +425,48 @@ class YMDatasource(YMBase):
         return '<{}: {}>'.format(self.__class__.__name__, self.data.get('id'))
 
     @property
-    def id(self):
+    def type(self):
+        """
+
+        :return: Тип источника данных
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def hid(self):
+        """
+
+        :return: Идентификатор категории
+        :rtype: int
+        """
         return self.data.get('hid')
 
     @property
     def nid(self):
+        """
+
+        :return: Идентификатор узла навигационного дерева
+        :rtype: int
+        """
         return self.data.get('nid')
 
     @property
     def order(self):
+        """
+
+        :return: Параметры сортировки моделей и товарных предложений источника
+        :rtype: objects.YMDatasourceOrder
+        """
         return YMDatasourceOrder(self.data.get('order'))
 
     @property
     def criteria(self):
+        """
+
+        :return: Список условий фильтрации моделей и товарных предложений источника
+        :rtype: list[YMDatasourceCriteria]
+        """
         return YMDatasourceCriteria(self.data.get('criteria'))
 
 
@@ -422,55 +477,120 @@ class YMNavigationNode(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор навигационного узла (nid)
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def hid(self):
+        """
+
+        :return: Идентификатор товарной категории (hid)
+        :rtype: int
+        """
         return self.data.get('hid')
 
     @property
     def shortName(self):
+        """
+
+        :return: Краткое наименование навигационного узла
+        :rtype: str
+        """
         return self.data.get('shortName')
 
     @property
     def type(self):
+        """
+
+        :return: Тип узла навигационного дерева
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def offerCount(self):
+        """
+
+        :return: Количество товарных предложений в категории узла
+        :rtype: int
+        """
         return self.data.get('offerCount')
 
     @property
     def modelCount(self):
+        """
+
+        :return: Количество моделей в категории узла
+        :rtype: int
+        """
         return self.data.get('modelCount')
 
     @property
     def visual(self):
+        """
+
+        :return: Признак визуальной категории
+        :rtype: bool
+        """
         return self.data.get('visual')
 
     @property
     def maxDiscount(self):
+        """
+
+        :return: Максимальная скидка в категории
+        :rtype: str
+        """
         return self.data.get('maxDiscount')
 
     @property
     def name(self):
+        """
+
+        :return: Полное наименование навигационного узла
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def datasource(self):
-        return self.data.get('datasource')
+        """
+
+        :return: Информация о источнике данных для узла навигационного дерева
+        :rtype: objects.YMDatasource
+        """
+        return YMDatasource(self.data.get('datasource'))
 
     @property
     def icons(self):
+        """
+
+        :return: Список изображений, относящихся к данному узлу навигационного дерева
+        :rtype: list[YMIcon]
+        """
         return [YMIcon(icon) for icon in self.data.get('icons', [])]
 
     @property
     def parents(self):
-        return self.data.get('parents')
+        """
+
+        :return: Иерархический список всех родителей узла, начиная с корня
+        :rtype: list[objects.YMNavigationNode]
+        """
+        return [YMNavigationNode(node) for node in self.data.get('parents', [])]
 
     @property
     def categories(self):
-        return self.data.get('categories')
+        """
+
+        :return: Список дочерних узлов
+        :rtype: list[objects.YMNavigationNode]
+        """
+        return [YMNavigationNode(node) for node in self.data.get('categories', [])]
 
 
 class YMFilter(YMBase):
@@ -585,18 +705,38 @@ class YMModelPhoto(YMBase):
 
     @property
     def width(self):
+        """
+
+        :return: Ширина изображения
+        :rtype: int
+        """
         return self.data.get('width')
 
     @property
     def height(self):
+        """
+
+        :return: Высота изображения
+        :rtype: int
+        """
         return self.data.get('height')
 
     @property
     def url(self):
+        """
+
+        :return: Ссылка на изображение
+        :rtype: str
+        """
         return self.data.get('url')
 
     @property
     def colorId(self):
+        """
+
+        :return: Код значения фильтра по цвету
+        :rtype: str
+        """
         return self.data.get('colorId')
 
 
@@ -919,130 +1059,304 @@ class YMModel(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор модели
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование модели
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def kind(self):
+        """
+
+        :return: Тип товара
+        :rtype: str
+        """
         return self.data.get('kind')
 
     @property
     def type(self):
+        """
+
+        :return: Тип модели
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def isNew(self):
+        """
+
+        :return: Признак "новизны" товара
+        :rtype: bool
+        """
         return self.data.get('isNew')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на карточку модели на большом маркете
+        :rtype: str
+        """
         return self.data.get('link')
 
+    # todo пустое описание
     @property
     def vendorLink(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return self.data.get('vendorLink')
 
+    # todo пустое описание
     @property
     def barcode(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return self.data.get('barcode')
 
+    # todo пустое описание
     @property
     def vendorCode(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return self.data.get('vendorCode')
 
     @property
     def offerCount(self):
+        """
+
+        :return: Количество товарных предложений модели в регионе запроса
+        :rtype: int
+        """
         return self.data.get('offerCount')
 
     @property
     def opinionCount(self):
+        """
+
+        :return: Количество отзывов на модель
+        :rtype: int
+        """
         return self.data.get('opinionCount')
 
     @property
     def reviewCount(self):
+        """
+
+        :return: Количество статей/обзоров на модель
+        :rtype: int
+        """
         return self.data.get('reviewCount')
 
     @property
     def modificationCount(self):
+        """
+
+        :return: Количество модификаций групповой модели. Поле отсутствует в выдаче, если модель не групповая
+        :rtype: int
+        """
         return self.data.get('modificationCount')
 
     @property
     def lastUpdate(self):
+        """
+
+        :return: Дата-время последнего обновления модели в спсике стравнения
+        :rtype: int
+        """
         return self.data.get('lastUpdate')
 
+    # todo пустое описание
     @property
     def aliases(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return self.data.get('aliases')
 
     @property
     def parent(self):
+        """
+
+        :return: Идентификатор модели
+        :rtype: int
+        """
         return self.data.get('parent')
 
     @property
     def description(self):
+        """
+
+        :return: Описание модели
+        :rtype: str
+        """
         return self.data.get('description')
 
     @property
     def photo(self):
+        """
+
+        :return: Основное изображение модели
+        :rtype: objects.YMModelPhoto
+        """
         return YMModelPhoto(self.data.get('photo'))
 
     @property
     def photos(self):
+        """
+
+        :return: Остальные изображения модели
+        :rtype: list[objects.YMModelPhoto]
+        """
         return [YMModelPhoto(photo) for photo in self.data.get('photos', [])]
 
     @property
     def category(self):
+        """
+
+        :return: Информация о категории, к которой относится модель
+        :rtype: objects.YMCategory
+        """
         return YMCategory(self.data.get('category'))
 
     @property
     def navigationNode(self):
+        """
+
+        :return: Информация об узле навигационного дерева, к которому относится модель
+        :rtype: objects.YMNavigationNode
+        """
         return YMNavigationNode(self.data.get('navigationNode'))
 
     @property
     def price(self):
+        """
+
+        :return: Информация о цене модели в основной валюте запроса
+        :rtype: objects.YMPrice
+        """
+        return YMPrice(self.data.get('price'))
+
+    @property
+    def alternatePrice(self):
+        """
+
+        :return: Информация о цене модели в альтернативной валюте запроса
+        :rtype: objects.YMPrice
+        """
         return YMPrice(self.data.get('price'))
 
     @property
     def vendor(self):
+        """
+
+        :return: Информация о производителе модели
+        :rtype: objects.YMVendor
+        """
         return YMVendor(self.data.get('vendor'))
 
     @property
     def rating(self):
+        """
+
+        :return: Информация о рейтинге модели
+        :rtype: objects.YMRating
+        """
         return YMRating(self.data.get('rating'))
 
     @property
     def facts(self):
+        """
+
+        :return: Факты о модели
+        :rtype: objects.YMFacts
+        """
         return YMFacts(self.data.get('facts'))
 
     @property
     def warning(self):
+        """
+
+        :return: Дисклеймер, связанный с моделью
+        :rtype: str
+        """
         return self.data.get('warning')
 
     @property
     def warnings(self):
+        """
+
+        :return: Строковый код дисклеймера
+        :rtype: list[objects.YMModelWarning]
+        """
         return [YMModelWarning(warning) for warning in self.data.get('warnings', [])]
 
     @property
     def filters(self):
+        """
+
+        :return: Список фильтров, предназначенных для фильтрации моделей/модификаций
+        :rtype: list[objects.YMFilter]
+        """
         return [YMFilter(filter) for filter in self.data.get('filters', [])]
 
     @property
     def modifications(self):
+        """
+
+        :return: Список модификаций групповой модели
+        :rtype: list[objects.YMModification]
+        """
         return [YMModification(modification) for modification in self.data.get('modifications', [])]
 
     @property
     def specification(self):
+        """
+
+        :return: Основные характеристики модели
+        :rtype: list[objects.YMSpecification]
+        """
         return [YMSpecification(specification) for specification in self.data.get('specification', [])]
 
+    # todo пустое описание
     @property
     def parameters(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return [YMParameter(parameter) for parameter in self.data.get('parameters', [])]
 
     @property
     def userRelated(self):
+        """
+
+        :return: Информация, касающаяся текущего пользователя
+        :rtype: list[objects.YMUserRelated]
+        """
         return YMUserRelated(self.data.get('userRelated'))
 
 
