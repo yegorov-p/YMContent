@@ -15,7 +15,6 @@ from .response import *
 
 
 class YMAPI(object):
-
     class BaseAPIError(BaseException):
         pass
 
@@ -366,9 +365,37 @@ class YMAPI(object):
 
         return CategoriesFilters(self._request('categories/{}/filters', category_id, params))
 
-    # Todo Не готов
     def categories_match(self, name, category_name=None, description=None, locale='RU_ru', price=None,
                          shop_name=None):
+        """
+        Подбор категорий по параметрам
+
+        :param name: Имя
+        :type name: str
+
+        :param category_name: Наименование категории
+        :type category_name: str
+
+        :param description: Описание модели
+        :type description: str
+
+        :param locale: Локаль поиска
+        :type locale: str
+
+        :param price: Цена модели
+        :type price: str
+
+        :param shop_name: Наименование магазина
+        :type shop_name: str
+
+        :return: Подобранные категории
+        :rtype: response.Category
+
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-match-docpage/
+        """
         params = {'name': name, 'locale': locale}
 
         if category_name:
