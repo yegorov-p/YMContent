@@ -7,6 +7,11 @@ class YMBase(object):
         self.data = data
 
     def json(self):
+        """
+
+        :return: Объект в виде JSON
+        :rtype: dict
+        """
         return self.data
 
 
