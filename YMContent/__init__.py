@@ -858,7 +858,22 @@ class YMAPI(object):
 
         return ModelOffers(self._request('models/{}/offers', model_id, params))
 
-    def models_offers_default(self, req_id, fields='STANDARD', filters=None):
+    def model_offers_default(self, model_id, fields='STANDARD', filters=None):
+        """
+        Товарное предложение по умолчанию
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param fields: Параметры предложений, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :return: Товарное предложение по умолчанию
+        :rtype: response.ModelOffersDefault
+        """
         params = {}
 
         if fields:
@@ -874,7 +889,7 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return ModelOffersDefault(self._request('models/{id}/offers/default', req_id, params))
+        return ModelOffersDefault(self._request('models/{}/offers/default', model_id, params))
 
     def models_offers_stat(self, req_id):
         params = {}

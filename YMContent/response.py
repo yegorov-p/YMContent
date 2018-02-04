@@ -323,6 +323,11 @@ class ModelOffersDefault(Base):
 
     @property
     def offer(self):
+        """
+
+        :return: Товарное предложение
+        :rtype: objects.YMOffer
+        """
         return YMOffer(self.resp['offers'])
 
 
