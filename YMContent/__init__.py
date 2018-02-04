@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 __title__ = 'YandexMarketContent'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __author__ = 'Pavel Yegorov'
 __license__ = 'Apache 2.0'
 
 from .constants import *
 import requests
 from requests.exceptions import ConnectionError, ReadTimeout, SSLError
-from requests.packages.urllib3.exceptions import ReadTimeoutError, ProtocolError
 import socket
 import ssl
 from .response import *
@@ -59,7 +58,7 @@ class YMAPI(object):
                     data['errors'][0]['message'])
             return response
 
-        except (ConnectionError, ProtocolError, ReadTimeout, ReadTimeoutError, SSLError, ssl.SSLError,
+        except (ConnectionError, ReadTimeout, SSLError, ssl.SSLError,
                 socket.error) as exception:
             pass
 
