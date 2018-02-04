@@ -441,7 +441,7 @@ class YMAPI(object):
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра count
 
-        .. https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-reviews-docpage/
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-reviews-docpage/
         """
         params = {'count': count,
                   'page': page
@@ -461,6 +461,50 @@ class YMAPI(object):
     def models_match(self, name, category_count=1, fields='CATEGORY,PHOTO', match_types='MULTI,REPORT',
                      category_name=None, description=None, locale='RU_ru', price=None, shop_name=None, category_id=None,
                      hid=None):
+        """
+        Поиск модели по названию и параметрам
+
+        :param name: Имя
+        :type name: str
+
+        :param category_count: Количество категорий
+        :type category_count: int
+
+        :param fields: Параметры моделей, которые необходимо показать в выходных данных
+        :type fields: str or list
+
+        :param match_types: Типы поиска
+        :type match_types: str or list
+
+        :param category_name: Наименование категории
+        :type category_name: str
+
+        :param description: Описание модели
+        :type description: str
+
+        :param locale: Локаль поиска
+        :type locale: str
+
+        :param price: Цена модели
+        :type price: str
+
+        :param shop_name: Наименование магазина
+        :type shop_name: str
+
+        :param category_id: Идентификаторы категорий
+        :type category_id: list[int]
+
+        :param hid: Идентификаторы категорий
+        :type hid: list[int]
+
+        :return: Модель из гуризованной категории по названию и параметрам, удовлетворяющим заданным во входных данных условиям поиска
+        :rtype: response.Models
+
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises MatchTypeParamError: недопустимое значение параметра match_types
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-matched-models-docpage/
+        """
         params = {'category_count': category_count,
                   'fields': fields,
                   'match_types': match_types,

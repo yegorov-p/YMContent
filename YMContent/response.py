@@ -245,6 +245,11 @@ class Models(Base):
 
     @property
     def models(self):
+        """
+
+        :return: Список моделей
+        :rtype: list[objects.YMModel]
+        """
         return [YMModel(model) for model in self.resp['models']]
 
 
