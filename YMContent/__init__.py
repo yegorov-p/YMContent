@@ -891,10 +891,18 @@ class YMAPI(object):
 
         return ModelOffersDefault(self._request('models/{}/offers/default', model_id, params))
 
-    def models_offers_stat(self, req_id):
+    def model_offers_stat(self, model_id):
+        """
+        Количество товарных предложений на модель по регионам
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :return: Информация о количестве товарных предложений на указанную модель по регионам, а также минимальную, максимальную и среднюю стоимость этой модели
+        :rtype: response.ModelOffersStat
+        """
         params = {}
 
-        return ModelOffersStat(self._request('models/{id}/offers/default', req_id, params))
+        return ModelOffersStat(self._request('models/{}/offers/default', model_id, params))
 
     def models_offers_filters(self, req_id, fields=None, filter_set=None, sort='NONE'):
         params = {}

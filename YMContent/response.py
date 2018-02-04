@@ -335,6 +335,11 @@ class ModelOffersStat(Base):
 
     @property
     def statistics(self):
+        """
+
+        :return: Информация о количестве и ценах товарных предложений модели по регионам
+        :rtype: objects.YMStatistics
+        """
         return YMStatistics(self.resp['statistics'])
 
 

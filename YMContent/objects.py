@@ -2183,23 +2183,48 @@ class YMStatisticsRegion(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор региона
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def offerCount(self):
+        """
+
+        :return: Количество товарных предложений модели в регионе
+        :rtype: int
+        """
         return self.data.get('offerCount')
 
     @property
     def price_max(self):
-        return self.data.get('price_max')
+        """
+
+        :return: Максимальная цена
+        :rtype: str
+        """
+        return self.data.get('price')['price_max']
 
     @property
     def price_min(self):
-        return self.data.get('price_min')
+        """
+
+        :return: Минимальная цена
+        :rtype: str
+        """
+        return self.data.get('price')['price_min']
 
     @property
     def price_median(self):
-        return self.data.get('price_median')
+        """
+
+        :return: Медиана по ценам
+        :rtype: str
+        """
+        return self.data.get('price')['price_median']
 
 
 class YMStatistics(YMBase):
@@ -2208,6 +2233,11 @@ class YMStatistics(YMBase):
 
     @property
     def regions(self):
+        """
+
+        :return: Список статистик по регионам
+        :rtype: list[objects.YMStatisticsRegion]
+        """
         return [YMStatisticsRegion(region) for region in self.data.get('regions', [])]
 
 
