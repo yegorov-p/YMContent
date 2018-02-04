@@ -637,7 +637,6 @@ class YMAPI(object):
         :raises PageParamError: недопустимое значение параметра count
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-best-deals-docpage/
-
         """
         params = {'fields': fields}
 
@@ -674,14 +673,39 @@ class YMAPI(object):
 
         return CategoriesLookas(self._request('categories/{}/bestdeals', category_id, params))
 
-    def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
-        if geo_id is None and remote_ip is None:
-            raise NoGeoIdOrIP(
-                "You must provide either geo_id or remote_ip")
+    def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
+        """
+        Список популярных моделей
 
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param count: Количество элементов на странице
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param fields: Параметры моделей, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :return: популярные на Яндекс.Маркете модели
+        :rtype: response.CategoriesPopular
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-popular-models-docpage/
+        """
         params = {'count': count,
                   'fields': fields}
 
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
         if geo_id:
             params['geo_id'] = geo_id
 
@@ -719,7 +743,7 @@ class YMAPI(object):
                                                          'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
                                                          'VENDOR_ALL'))
 
-        return CategoriesPopular(self._request('categories/{id}/populars', req_id, params))
+        return CategoriesPopular(self._request('categories/{}/populars', category_id, params))
 
     def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters=None,
                       count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
