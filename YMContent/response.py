@@ -231,7 +231,11 @@ class Model(Base):
 
 
 class ModelReview(Page):
+    """
 
+    :return: Список отзывов на модель
+    :rtype: list[YMModelReview]
+    """
     @property
     def reviews(self):
         return [YMModelReview(review) for review in self.resp['reviews']]

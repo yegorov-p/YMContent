@@ -1367,14 +1367,29 @@ class YMModelReview(YMBase):
 
     @property
     def url(self):
+        """
+
+        :return: URL обзорной статьи на модель
+        :rtype: str
+        """
         return self.data.get('url')
 
     @property
     def title(self):
+        """
+
+        :return: Заголовок обзора на модель
+        :rtype: str
+        """
         return self.data.get('title')
 
     @property
     def favIcon(self):
+        """
+
+        :return: URL значка веб-сайта с обзором на модель
+        :rtype: str
+        """
         return self.data.get('favIcon')
 
 

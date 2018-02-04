@@ -423,7 +423,27 @@ class YMAPI(object):
 
         return Model(self._request('models/{}', model_id, params))
 
-    def models_reviews(self, req_id, count=10, page=1):
+    def models_reviews(self, model_id, count=10, page=1):
+        """
+        Список обзоров на модель
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param count: Количество элементов на странице
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :return: Обзоры на модель
+        :rtype: response.ModelReview
+
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
+
+        .. https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-reviews-docpage/
+        """
         params = {'count': count,
                   'page': page
                   }
@@ -437,7 +457,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return ModelReview(self._request('models/{id}/reviews', req_id, params))
+        return ModelReview(self._request('models/{}/reviews', model_id, params))
 
     def models_match(self, name, category_count=1, fields='CATEGORY,PHOTO', match_types='MULTI,REPORT',
                      category_name=None, description=None, locale='RU_ru', price=None, shop_name=None, category_id=None,
