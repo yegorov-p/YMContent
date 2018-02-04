@@ -293,14 +293,29 @@ class ModelOffers(Page):
 
     @property
     def sorts(self):
+        """
+
+        :return: Список доступных сортировок товарных предложений модели
+        :rtype: list[objects.YMSort]
+        """
         return [YMSort(sort) for sort in self.resp['sorts']]
 
     @property
     def filters(self):
+        """
+
+        :return: Список фильтров, доступных для фильтрации товарных предложений модели
+        :rtype: list[objects.YMFilter]
+        """
         return [YMFilter(filter) for filter in self.resp['filters']]
 
     @property
     def offers(self):
+        """
+
+        :return: Список товарных предложений модели
+        :rtype: list[objects.YMOffer]
+        """
         return [YMOffer(offer) for offer in self.resp['offers']]
 
 

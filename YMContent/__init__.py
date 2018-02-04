@@ -745,8 +745,50 @@ class YMAPI(object):
 
         return CategoriesPopular(self._request('categories/{}/populars', category_id, params))
 
-    def models_offers(self, req_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters=None,
-                      count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
+    def model_offers(self, model_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters=None,
+                     count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
+        """
+        Список предложений на модель
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param delivery_included: Признак включения цены доставки в цену товарного предложения
+        :type delivery_included: bool or int or str
+
+        :param fields: Параметры товарных предложений, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param groupBy: Вариант группировки товарных предложений
+        :type groupBy: str
+
+        :param shop_regions: Идентификаторы регионов магазинов
+        :type shop_regions: str or list[int]
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param count: Количество элементов на странице
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :param latitude: Широта
+        :type latitude: int or str or float
+
+        :param longitude: Долгота
+        :type longitude: int or str or float
+
+        :return: Список товарных предложений, соотнесенных с указанной моделью
+        :rtype: response.ModelOffers
+        """
         params = {}
 
         if count < 1 or count > 30:
@@ -814,7 +856,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOffers(self._request('models/{id}/offers', req_id, params))
+        return ModelOffers(self._request('models/{}/offers', model_id, params))
 
     def models_offers_default(self, req_id, fields='STANDARD', filters=None):
         params = {}
