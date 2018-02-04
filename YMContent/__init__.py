@@ -443,9 +443,7 @@ class YMAPI(object):
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-reviews-docpage/
         """
-        params = {'count': count,
-                  'page': page
-                  }
+        params = {}
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
         else:
@@ -557,12 +555,41 @@ class YMAPI(object):
 
         return Models(self._request('models/match', None, params))
 
-    def models_lookas(self, req_id, count=10, fields='CATEGORY,PHOTO'):
-        params = {'count': count,
-                  'fields': fields}
+    def models_lookas(self, model_id, count=10, page=1, fields='CATEGORY,PHOTO'):
+        """
+        Список похожих моделей
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param count: Количество элементов на странице
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param fields: Параметры моделей, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return: Cписок моделей, которые похожи на указанную в запросе
+        :rtype: response.ModelsLookas
+
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-matched-models-docpage/
+        """
+        params = {}
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
+
+        if page < 1:
+            raise PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
 
         if fields:
             params['fields'] = self._validate_fields(fields,
@@ -585,7 +612,7 @@ class YMAPI(object):
                                                          'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
                                                          'VENDOR_ALL'))
 
-        return ModelsLookas(self._request('models/{id}/looksas', req_id, params))
+        return ModelsLookas(self._request('models/{}/looksas', model_id, params))
 
     def categories_bestdeals(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1):
         params = {'count': count,
