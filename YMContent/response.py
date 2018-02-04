@@ -269,6 +269,11 @@ class CategoriesLookas(Page):
 
     @property
     def models(self):
+        """
+
+        :return: Список моделей товаров c самыми большими скидками на сегодняшний день для указанной категории
+        :rtype: list[objects.YMModel]
+        """
         return [YMModel(model) for model in self.resp['models']]
 
 

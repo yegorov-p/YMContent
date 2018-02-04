@@ -614,9 +614,32 @@ class YMAPI(object):
 
         return ModelsLookas(self._request('models/{}/looksas', model_id, params))
 
-    def categories_bestdeals(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1):
-        params = {'count': count,
-                  'fields': fields}
+    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1):
+        """
+        Лучшие предложения (скидки дня)
+
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param count: Количество элементов на странице
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param fields: Параметры моделей, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return:
+        :rtype: response.CategoriesLookas
+
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра count
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-best-deals-docpage/
+
+        """
+        params = {'fields': fields}
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -649,7 +672,7 @@ class YMAPI(object):
                                                          'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
                                                          'VENDOR_ALL'))
 
-        return CategoriesLookas(self._request('categories/{id}/bestdeals', req_id, params))
+        return CategoriesLookas(self._request('categories/{}/bestdeals', category_id, params))
 
     def categories_popular(self, req_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
         if geo_id is None and remote_ip is None:
