@@ -3095,7 +3095,6 @@ class YMOutlet(YMBase):
         """
         return self.data.get('geoPoint')['coordinates']['longitude']
 
-
     @property
     def offer(self):
         """
@@ -3112,22 +3111,47 @@ class YMRedirectModel(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип редиректа
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def queryText(self):
+        """
+
+        :return: Текст оригинального запроса на редирект
+        :rtype: str
+        """
         return self.data.get('queryText')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
+        :rtype: str
+        """
         return self.data.get('link')
 
     @property
     def model(self):
+        """
+
+        :return: Информация о модели
+        :rtype: objects.YMModel
+        """
         return YMModel(self.data.get('content').get('model'))
 
     @property
     def model_id(self):
+        """
+
+        :return: Идентификатор модели
+        :rtype: int
+        """
         return self.data.get('model')['id']
 
 
@@ -3137,34 +3161,84 @@ class YMRedirectCatalog(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип редиректа
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def queryText(self):
+        """
+
+        :return: Текст оригинального запроса на редирект
+        :rtype: str
+        """
         return self.data.get('queryText')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
+        :rtype: str
+        """
         return self.data.get('link')
 
     @property
     def items(self):
-        return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in self.get('items', [])]
+        """
+
+        :return: Список моделей и/или товарных предложений
+        :rtype: list[objects.YMModel or objects.YMOffer]
+        """
+        return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in
+                self.data['content'].get('items', [])]
 
     @property
     def categories(self):
-        return [YMSearchCategory(category) for category in self.get('categories', [])]
+        """
+
+        :return: Список категорий
+        :rtype: list[objects.YMSearchCategory]
+        """
+        return [YMSearchCategory(category) for category in self.data.get('categories', [])]
+
+    @property
+    def filters(self):
+        """
+
+        :return: Фильтры
+        :rtype: list[objects.YMFilter]
+        """
+        return [YMFilter(f) for f in self.data.get('filters', [])]
 
     @property
     def sorts(self):
-        return [YMSort(sort) for sort in self.get('sorts', [])]
+        """
+
+        :return: Сортировки
+        :rtype: list[objects.YMSort]
+        """
+        return [YMSort(sort) for sort in self.data.get('sorts', [])]
 
     @property
     def navigationNode(self):
+        """
+
+        :return: Краткая информация об узле навигационного дерева
+        :rtype: objects.YMNavigationNode
+        """
         return YMNavigationNode(self.data.get('navigationNode'))
 
     @property
     def criteria(self):
+        """
+
+        :return: Список условий фильтрации, уточняющих поиск
+        :rtype: list[objects.YMDatasourceCriteria]
+        """
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 
 
@@ -3174,22 +3248,47 @@ class YMRedirectVendor(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип редиректа
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def queryText(self):
+        """
+
+        :return: Текст оригинального запроса на редирект
+        :rtype: str
+        """
         return self.data.get('queryText')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
+        :rtype: str
+        """
         return self.data.get('link')
 
     @property
     def vendor(self):
+        """
+
+        :return: Производитель
+        :rtype: objects.YMVendor
+        """
         return YMVendor(self.data.get('content').get('vendor'))
 
     @property
     def vendor_id(self):
+        """
+
+        :return: Идентификатор производителя
+        :rtype: int
+        """
         return self.data.get('vendor')['id']
 
 
@@ -3199,26 +3298,68 @@ class YMRedirectSearch(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип редиректа
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def queryText(self):
+        """
+
+        :return: Текст оригинального запроса на редирект
+        :rtype: str
+        """
         return self.data.get('queryText')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
+        :rtype: str
+        """
         return self.data.get('link')
+
+    # @property
+    # def items(self):
+    #     """
+    #
+    #     :return: Список моделей и/или товарных предложений
+    #     :rtype: list[objects.YMModel or objects.YMOffer]
+    #     """
+    #     return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in
+    #             self.data['content'].get('items', [])]
+
 
     @property
     def filters(self):
-        return [YMFilter(f) for f in self.resp.get('filters', [])]
+        """
+
+        :return: Фильтры
+        :rtype: list[objects.YMFilter]
+        """
+        return [YMFilter(f) for f in self.data.get('filters', [])]
+
 
     @property
     def sorts(self):
-        return [YMSort(sort) for sort in self.resp.get('sorts', [])]
+        """
+
+        :return: Сортировки
+        :rtype: list[objects.YMSort]
+        """
+        return [YMSort(sort) for sort in self.data.get('sorts', [])]
 
     @property
     def criteria(self):
+        """
+
+        :return: Список условий фильтрации, уточняющих поиск
+        :rtype: list[objects.YMDatasourceCriteria]
+        """
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 
 

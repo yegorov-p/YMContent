@@ -2086,6 +2086,54 @@ class YMAPI(object):
 
     def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
                  fields=None, user_agent=None, count=10, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
+        """
+        Редирект (перенаправление)
+
+        :param text: Текст запроса
+        :type text: str
+
+        :param redirect_types: Типы редиректов
+        :type redirect_types: str or list[str]
+
+        :param barcode: Признак поиска по штрихкоду
+        :type barcode: bool
+
+        :param search_type: Тип поискового запроса
+        :type search_type: str
+
+        :param category_id: Идентификаторы категорий
+        :type category_id: int
+
+        :param hid: Идентификаторы категорий
+        :type hid: int
+
+        :param fields: Праметры модели/товарного предложения, которые необходимо показать в выходных данных.
+        :type fields: str or list[str]
+
+        :param user_agent: Признак включения цены доставки в цену товарного предложения
+        :type user_agent: str
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :return: Список параметров редиректа (перенаправления), подходящих под заданные в запросе условия.
+        :rtype: response.Redirect
+        """
         params = {'text': text}
 
         if geo_id is None and remote_ip is None:
@@ -2157,6 +2205,7 @@ class YMAPI(object):
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
+            params['how'] = how
 
         if sort:
             if sort not in (
@@ -2164,6 +2213,7 @@ class YMAPI(object):
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
         return Redirect(self._request('redirect', None, params))
 

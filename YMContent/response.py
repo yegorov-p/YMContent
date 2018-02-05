@@ -560,6 +560,11 @@ class Redirect(Page):
 
     @property
     def redirect(self):
+        """
+
+        :return: Информация по редиректу
+        :rtype: objects.YMRedirectModel or objects.YMRedirectCatalog or objects.YMRedirectVendor or objects.YMRedirectSearch
+        """
         if self.resp.get('redirect')['type'] == 'MODEL':
             return YMRedirectModel(self.resp.get('redirect'))
         elif self.resp.get('redirect')['type'] == 'CATALOG':
