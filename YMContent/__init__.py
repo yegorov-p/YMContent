@@ -1659,6 +1659,20 @@ class YMAPI(object):
         return Suggests(self._request('geo/suggest', None, params))
 
     def vendors(self, fields=None, count=10, page=1):
+        """
+        Список производителей
+
+        :param fields: Параметры региона, которые необходимо включить в выдачу
+        :type fields: str or list[str]
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+        :return:
+        :rtype:
+        """
         params = {}
 
         if fields:

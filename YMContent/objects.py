@@ -878,10 +878,20 @@ class YMVendorCategory(YMCategory):
 
     @property
     def popularity(self):
+        """
+
+        :return: Оценка популярности
+        :rtype: float
+        """
         return self.data.get('popularity')
 
     @property
     def children(self):
+        """
+
+        :return: Список дочерних категорий
+        :rtype: list[objects.YMVendorCategory]
+        """
         return [YMVendorCategory(category) for category in self.data.get('children', [])]
 
 
@@ -892,34 +902,74 @@ class YMVendor(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор производителя
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование производителя
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def site(self):
+        """
+
+        :return: Ссылка на веб-сайт производителя
+        :rtype: str
+        """
         return self.data.get('site')
 
     @property
     def picture(self):
+        """
+
+        :return: Ссылка на изображение логотипа производителя
+        :rtype: str
+        """
         return self.data.get('picture')
 
     @property
     def recommendedShops(self):
+        """
+
+        :return: Ссылка на страницу производителя с рекомендованными магазинами
+        :rtype: str
+        """
         return self.data.get('recommendedShops')
 
     @property
     def link(self):
+        """
+
+        :return: Ссылка на карточку производителя на большом маркете
+        :rtype: str
+        """
         return self.data.get('link')
 
     @property
     def categories(self):
+        """
+
+        :return: Список категорий, в которых представлен данный производитель
+        :rtype: list[objects.YMVendorCategory]
+        """
         return [YMVendorCategory(category) for category in self.data.get('categories', [])]
 
     @property
     def topCategories(self):
+        """
+
+        :return: Список наиболее популярных категорий товаров производителя
+        :rtype: list[objects.YMVendorCategory]
+        """
         return [YMVendorCategory(category) for category in self.data.get('topCategories', [])]
 
 

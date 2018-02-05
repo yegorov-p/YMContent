@@ -506,6 +506,11 @@ class Vendors(Page):
 
     @property
     def vendors(self):
+        """
+
+        :return: Список производителей
+        :rtype: list[objects.YMVendor]
+        """
         return [YMVendor(vendor) for vendor in self.resp.get('vendors', [])]
 
 
