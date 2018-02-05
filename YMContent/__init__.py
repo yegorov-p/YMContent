@@ -1027,12 +1027,39 @@ class YMAPI(object):
             params['sort'] = sort
         return ModelOpinions(self._request('models/{}/opinions', model_id, params))
 
-    def shops_opinions(self, req_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
+    def shop_opinions(self, shop_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
+        """
+        Отзывы о магазине
+
+        :param model_id: Идентификатор магазина
+        :type model_id: int
+
+        :param grade: Оценка, выставленная автором отзыва
+        :type grade: int
+
+        :param max_comments: Максимальное количество комментариев, возвращаемых для каждого отзыва
+        :type max_comments: int
+
+        :param count: IP-адрес пользователя
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки отзывов
+        :type sort: str
+
+        :return: Отзывы пользователей о магазине
+        :rtype: response.ShopOpinions
+        """
         params = {}
 
         if grade:
             if grade < 1 or grade > 5:
-                raise CountParamError('"grade" param must be between 1 and 5')
+                raise GradeParamError('"grade" param must be between 1 and 5')
             params['grade'] = grade
 
         if count < 1 or count > 30:
@@ -1053,8 +1080,9 @@ class YMAPI(object):
         if sort:
             if sort not in ('DATE', 'GRADE', 'RANK'):
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
-        return ShopOpinions(self._request('shops/{id}/opinions', req_id, params))
+        return ShopOpinions(self._request('shops/{}/opinions', shop_id, params))
 
     def shop(self, req_id, fields=None):
         params = {}

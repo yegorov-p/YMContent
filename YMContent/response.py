@@ -392,6 +392,11 @@ class ShopOpinions(Page):
 
     @property
     def opinions(self):
+        """
+
+        :return: Отзывы
+        :rtype: list[objects.YMShopOpinion]
+        """
         return [YMShopOpinion(opinion) for opinion in self.resp['opinions']]
 
 
