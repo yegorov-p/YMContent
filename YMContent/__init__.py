@@ -1563,26 +1563,27 @@ class YMAPI(object):
 
         return Regions(self._request('geo/regions/{}/children', region_id, params))
 
-    def geo_regions_children(self, req_id, fields=None, count=10, page=1):
-        params = {'count': count,
-                  'page': page}
+    def geo_region(self, region_id, fields=None):
+        """
+        Информация о регионе
+
+        :param region_id: Идентификатор региона
+        :type region_id: int
+
+        :param fields: Параметры региона, которые необходимо включить в выдачу
+        :type fields: str or list[str]
+
+        :return: Информация о регионе
+        :rtype: response.Region
+        """
+        params = {}
 
         if fields:
             params['fields'] = self._validate_fields(fields,
                                                      (
                                                          'DECLENSIONS', 'PARENT', 'ALL'))
 
-        if count < 1 or count > 30:
-            raise CountParamError('"count" param must be between 1 and 30')
-        else:
-            params['count'] = count
-
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Regions(self._request('geo/regions/{id}/children', req_id, params))
+        return Region(self._request('geo/regions/{}', region_id, params))
 
     def geo_regions(self, req_id, fields=None, count=10, page=1):
         params = {}

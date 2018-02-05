@@ -482,6 +482,11 @@ class Region(Base):
 
     @property
     def region(self):
+        """
+
+        :return: Регион
+        :rtype: objects.YMRegion
+        """
         return YMRegion(self.resp.get('region'))
 
 
