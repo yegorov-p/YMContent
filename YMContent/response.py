@@ -530,14 +530,29 @@ class Search(Page):
 
     @property
     def items(self):
+        """
+
+        :return: Список моделей и/или товарных предложений
+        :rtype: list[objects.YMModel or objects.YMOffer]
+        """
         return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in self.resp['items']]
 
     @property
     def categories(self):
+        """
+
+        :return: Список категорий
+        :rtype: list[objects.YMSearchCategory]
+        """
         return [YMSearchCategory(category) for category in self.resp['categories']]
 
     @property
     def sorts(self):
+        """
+
+        :return: Список доступных сортировок
+        :rtype: list[objects.YMSort]
+        """
         return [YMSort(sort) for sort in self.resp['sorts']]
 
 

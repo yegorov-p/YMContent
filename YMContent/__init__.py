@@ -1739,7 +1739,81 @@ class YMAPI(object):
                search_type=None,
                category_id=None, hid=None, count=10, page=1, how=None, sort=None, latitude=None, longitude=None,
                geo_id=None, remote_ip=None):
+        """
+        Текстовый поиск
 
+        :param text: Текст запроса
+        :type text: str
+
+        :param delivery_included: Признак включения цены доставки в цену товарного предложения
+        :type delivery_included: str or int or bool
+
+        :param fields: Праметры модели/товарного предложения, которые необходимо показать в выходных данных.
+        :type fields: str or list[str]
+
+        :param onstock: Признак в наличии
+        :type onstock: str or int or bool
+
+        :param outlet_types: Типы точек продажи
+        :type outlet_types: str or list[str]
+
+        :param price_max: Максимальная цена
+        :type price_max: int
+
+        :param price_min: Минимальная цена
+        :type price_min: int
+
+        :param result_type: Возможные значения
+        :type result_type: str
+
+        :param shop_id: Идентификаторы магазинов
+        :type shop_id: str or list[str]
+
+        :param warranty: Признак "Гарантия производителя"
+        :type warranty: str or int or bool
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param barcode: Признак поиска по штрихкоду
+        :type barcode: bool
+
+        :param search_type: Тип поискового запроса
+        :type search_type: str
+
+        :param category_id: Идентификаторы категорий
+        :type category_id: int
+
+        :param hid: Идентификаторы категорий
+        :type hid: int
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :param latitude: Широта
+        :type latitude: float
+
+        :param longitude: Долгота
+        :type longitude: float
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :return: Список моделей и товарных предложений, удовлетворяющих заданным в запросе условиям поиска
+        :rtype: response.Search
+        """
         params = {'text': text}
 
         if geo_id is None and remote_ip is None:
@@ -1850,6 +1924,7 @@ class YMAPI(object):
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
+            params['how'] = how
 
         if sort:
             if sort not in (
@@ -1857,7 +1932,7 @@ class YMAPI(object):
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
                 raise SortParamError('"sort" param is wrong')
-
+            params['sort'] = sort
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
         # todo Ограничение. Оба парметра должны быть определены совместно. Не допускается указывать один без другого.

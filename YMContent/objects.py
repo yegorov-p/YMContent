@@ -247,6 +247,11 @@ class YMCategory(YMBase):
 class YMSearchCategory(YMCategory):
     @property
     def findCount(self):
+        """
+
+        :return: Количество категорий в результатах поиска
+        :rtype: int
+        """
         return self.data.get('findCount')
 
 
