@@ -1668,14 +1668,29 @@ class YMPhone(YMBase):
 
     @property
     def number(self):
+        """
+
+        :return: Значение номера телефона в произвольном формате
+        :rtype: str
+        """
         return self.data.get('number')
 
     @property
     def sanitized(self):
+        """
+
+        :return: Значение номера телефона в числовом формате
+        :rtype: str
+        """
         return self.data.get('sanitized')
 
     @property
     def call(self):
+        """
+
+        :return: Ссылка для получения номера телефона
+        :rtype: str
+        """
         return self.data.get('call')
 
 
@@ -2702,86 +2717,191 @@ class YMAddress(YMBase):
 
     @property
     def regionId(self):
+        """
+
+        :return: Идентификатор региона, к которому относится данный адрес
+        :rtype: int
+        """
         return self.data.get('regionId')
 
     @property
     def type(self):
+        """
+
+        :return: Тип региона, к которому относится данный адрес
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def country(self):
+        """
+
+        :return: Наименование страны
+        :rtype: str
+        """
         return self.data.get('country')
 
     @property
     def region(self):
+        """
+
+        :return: Наименование региона
+        :rtype: str
+        """
         return self.data.get('region')
 
     @property
     def subRegion(self):
+        """
+
+        :return: Район внутри области
+        :rtype:
+        """
         return self.data.get('subRegion')
 
     @property
     def locality(self):
+        """
+
+        :return: Наименование города, поселка, деревни и тд
+        :rtype: str
+        """
         return self.data.get('locality')
 
     @property
     def subLocality(self):
+        """
+
+        :return: Наименование района
+        :rtype: str
+        """
         return self.data.get('subLocality')
 
     @property
     def thoroughfare(self):
+        """
+
+        :return: Улица, проспект, км шоссе и тд
+        :rtype: str
+        """
         return self.data.get('thoroughfare')
 
     @property
     def premiseNumber(self):
+        """
+
+        :return: Номер дома, строение, участка и тд
+        :rtype: str
+        """
         return self.data.get('premiseNumber')
 
     @property
     def fullAddress(self):
+        """
+
+        :return: Полный адрес
+        :rtype: str
+        """
         return self.data.get('fullAddress')
 
     @property
     def block(self):
+        """
+
+        :return: Корпус
+        :rtype: str
+        """
         return self.data.get('block')
 
     @property
     def wing(self):
+        """
+
+        :return: Строение
+        :rtype: str
+        """
         return self.data.get('wing')
 
     @property
     def estate(self):
+        """
+
+        :return: Владение
+        :rtype: str
+        """
         return self.data.get('estate')
 
     @property
     def entrance(self):
+        """
+
+        :return: Подъезд
+        :rtype: str
+        """
         return self.data.get('entrance')
 
     @property
     def floor(self):
+        """
+
+        :return: Этаж
+        :rtype: str
+        """
         return self.data.get('floor')
 
     @property
     def room(self):
+        """
+
+        :return: Комната, офис
+        :rtype: str
+        """
         return self.data.get('room')
 
     @property
     def note(self):
+        """
+
+        :return: Примечание
+        :rtype: str
+        """
         return self.data.get('note')
 
     @property
     def distance(self):
-        return self.data.get('distance')
+        """
+
+        :return: Расстояние
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['distance']
 
     @property
     def latitude(self):
-        return self.data.get('latitude')
+        """
+
+        :return: Широта
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['coordinates']['latitude']
 
     @property
     def longitude(self):
-        return self.data.get('longitude')
+        """
+
+        :return: Долгота
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['coordinates']['longitude']
 
     @property
     def postcode(self):
+        """
+
+        :return: Почтовый индекс
+        :rtype: str
+        """
         return self.data.get('postcode')
 
 
@@ -2791,18 +2911,38 @@ class YMSchedule(YMBase):
 
     @property
     def daysFrom(self):
+        """
+
+        :return: День недели, определяет начало периода работы в рамках недели
+        :rtype: str
+        """
         return self.data.get('daysFrom')
 
     @property
     def daysTill(self):
+        """
+
+        :return: День недели, определяет окончание периода работы в рамках недели
+        :rtype: str
+        """
         return self.data.get('daysTill')
 
     @property
     def timeFrom(self):
+        """
+
+        :return: Время суток, определяет начало периода работы в рамках дня
+        :rtype: str
+        """
         return self.data.get('from')
 
     @property
     def timeTill(self):
+        """
+
+        :return: Время суток, определяет окончание периода работы в рамках дня
+        :rtype: str
+        """
         return self.data.get('till')
 
 
@@ -2812,46 +2952,102 @@ class YMOutlet(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор торговой точки / пункта выдачи товара
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование торговой точки / пункта выдачи товара
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def type(self):
+        """
+
+        :return: Тип торговой точки / пункта выдачи товара
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def shop(self):
+        """
+
+        :return: Информация о магазине, осуществляющем выдачу товара в данной торговой точке
+        :rtype: objects.YMShop
+        """
         return YMShop(self.data.get('shop'))
 
     @property
     def phones(self):
+        """
+
+        :return: Список телефонов торговой точки / пункта выдачи товара
+        :rtype: list[objects.YMPhone]
+        """
         return [YMPhone(phone) for phone in self.data.get('phones', [])]
 
     @property
     def address(self):
+        """
+
+        :return: Адрес торговой точки / пункта выдачи товара
+        :rtype: objects.YMAddress
+        """
         return YMAddress(self.data.get('address'))
 
     @property
     def schedule(self):
+        """
+
+        :return: Расписание работы торговой точки / пункта выдачи товара
+        :rtype: list[objects.YMSchedule]
+        """
         return [YMSchedule(s) for s in self.data.get('schedule', [])]
 
     @property
     def distance(self):
-        return self.data.get('distance')
+        """
+
+        :return: Расстояние
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['distance']
 
     @property
     def latitude(self):
-        return self.data.get('latitude')
+        """
+
+        :return: Широта
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['coordinates']['latitude']
 
     @property
     def longitude(self):
-        return self.data.get('longitude')
+        """
+
+        :return: Долгота
+        :rtype: float
+        """
+        return self.data.get('geoPoint')['coordinates']['longitude']
+
 
     @property
     def offer(self):
+        """
+
+        :return: Товарное предложение в контексте запроса
+        :rtype: objects.YMOffer
+        """
         return YMOffer(self.data.get('offer'))
 
 

@@ -745,7 +745,8 @@ class YMAPI(object):
 
         return CategoriesPopular(self._request('categories/{}/populars', category_id, params))
 
-    def model_offers(self, model_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None, filters=None,
+    def model_offers(self, model_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None,
+                     filters=None,
                      count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
         """
         Список предложений на модель
@@ -1159,8 +1160,47 @@ class YMAPI(object):
 
         return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
-    def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
-                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+    def model_outlets(self, model_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
+                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+        """
+        Список пунктов выдачи модели
+
+        :param model_id: Идентификатор модели
+        :type model_id: int
+
+        :param boundary: Координаты квадрата на местности для выдачи точек продаж на карте.
+        :type boundary: str
+
+        :param fields: Поля точек продажи, которые попадут в выдачу
+        :type fields: str or list[str]
+
+        :param type: Типы пунктов выдачи товара
+        :type type: str or list[str]
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :param latitude: Широта
+        :type latitude: float
+
+        :param longitude: Долгота
+        :type longitude: float
+
+        :return: Список пунктов выдачи/точек продаж, в которых представлена указанная модель
+        :rtype: response.Outlets
+        """
         params = {}
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -1209,6 +1249,7 @@ class YMAPI(object):
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -1224,7 +1265,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self._request('models/{id}/outlets', req_id, params))
+        return Outlets(self._request('models/{}/outlets', model_id, params))
 
     def shop_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):

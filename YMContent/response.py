@@ -458,6 +458,11 @@ class Outlets(Page):
 
     @property
     def outlets(self):
+        """
+
+        :return: Список торговых точек / пунктов выдачи товара
+        :rtype: list[objects.YMOutlet]
+        """
         return [YMOutlet(outlet) for outlet in self.resp.get('outlets', [])]
 
 
