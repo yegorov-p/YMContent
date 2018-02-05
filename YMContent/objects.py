@@ -794,22 +794,47 @@ class YMPrice(YMBase):
 
     @property
     def max(self):
+        """
+
+        :return: Максимальная цена
+        :rtype: str
+        """
         return self.data.get('max')
 
     @property
     def min(self):
+        """
+
+        :return: Минимальная цена
+        :rtype: str
+        """
         return self.data.get('min')
 
     @property
     def avg(self):
+        """
+
+        :return: Среднее значение цены
+        :rtype: str
+        """
         return self.data.get('avg')
 
     @property
     def discount(self):
+        """
+
+        :return: Скидка
+        :rtype: str
+        """
         return self.data.get('discount')
 
     @property
     def base(self):
+        """
+
+        :return: Базовое значение цены
+        :rtype: str
+        """
         return self.data.get('base')
 
 
@@ -1112,34 +1137,74 @@ class YMModification(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор модели-модификации
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование модели-модификации
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def description(self):
+        """
+
+        :return: Описание модели-модификации
+        :rtype: str
+        """
         return self.data.get('description')
 
     @property
     def popularity(self):
+        """
+
+        :return: Оценка популярности модели-модификации
+        :rtype: str
+        """
         return self.data.get('popularity')
 
     @property
     def offerCount(self):
+        """
+
+        :return: Кол-во товарных предложений для данной модификации
+        :rtype: int
+        """
         return self.data.get('offerCount')
 
     @property
     def shopCount(self):
+        """
+
+        :return: Кол-во магазинов, имеющих товарные предложения данной модификации
+        :rtype: int
+        """
         return self.data.get('shopCount')
 
     @property
     def price(self):
+        """
+
+        :return: Информация о цене модификации
+        :rtype: objects.YMPrice
+        """
         return YMPrice(self.data.get('price'))
 
     @property
     def alternatePrices(self):
+        """
+
+        :return: Информация о ценах на модификацию в альтернативной валюте запроса
+        :rtype: objects.YMPrice
+        """
         return YMPrice(self.data.get('alternatePrices'))
 
 
@@ -1150,10 +1215,20 @@ class YMSpecificationFeature(YMBase):
 
     @property
     def name(self):
+        """
+
+        :return: Наименование характеристики
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def value(self):
+        """
+
+        :return: Значение характеристики
+        :rtype: str
+        """
         return self.data.get('value')
 
 
@@ -1164,6 +1239,11 @@ class YMSpecification(YMBase):
 
     @property
     def name(self):
+        """
+
+        :return: Название группы характеристик
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
@@ -1178,10 +1258,20 @@ class YMParameterOption(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор значения параметра
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Название значения параметра
+        :rtype: str
+        """
         return self.data.get('name')
 
 
@@ -1192,34 +1282,74 @@ class YMParameter(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип параметра категории
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def parameterId(self):
+        """
+
+        :return: Идентификатор параметра
+        :rtype: int
+        """
         return self.data.get('parameterId')
 
     @property
     def multivalue(self):
+        """
+
+        :return: Признак, что параметр имеет несколько значений
+        :rtype: bool
+        """
         return self.data.get('multivalue')
 
     @property
     def name(self):
+        """
+
+        :return: Название параметра
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def unit(self):
+        """
+
+        :return: Единица измерения параметра
+        :rtype: str
+        """
         return self.data.get('unit')
 
     @property
     def mandatory(self):
+        """
+
+        :return: Является ли атрибут обязательным
+        :rtype: bool
+        """
         return self.data.get('mandatory')
 
     @property
     def values(self):
+        """
+
+        :return: Список значений параметра
+        :rtype: list[bool]
+        """
         return self.data.get('values')
 
     @property
     def options(self):
+        """
+
+        :return: Список возможных значений параметра
+        :rtype: list[objects.YMParameterOption]
+        """
         return [YMParameterOption(parameter) for parameter in self.data.get('options', [])]
 
 
@@ -1230,10 +1360,20 @@ class YMUserRelated(YMBase):
 
     @property
     def inComparisonList(self):
+        """
+
+        :return: Модель находится в списках сравнений
+        :rtype: bool
+        """
         return self.data.get('inComparisonList')
 
     @property
     def inWishlist(self):
+        """
+
+        :return: Модель находится в отложеннных
+        :rtype: bool
+        """
         return self.data.get('inWishlist')
 
 
@@ -1525,13 +1665,12 @@ class YMModel(YMBase):
         """
         return [YMSpecification(specification) for specification in self.data.get('specification', [])]
 
-    # todo пустое описание
     @property
     def parameters(self):
         """
 
-        :return:
-        :rtype:
+        :return: Параметры модели
+        :rtype: list[objects.YMParameter]
         """
         return [YMParameter(parameter) for parameter in self.data.get('parameters', [])]
 
@@ -1756,10 +1895,20 @@ class YMDeliveryOptionService(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор службы доставки
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование службы доставки
+        :rtype: str
+        """
         return self.data.get('name')
 
 
@@ -1770,26 +1919,56 @@ class YMDeliveryOptionConditions(YMBase):
 
     @property
     def price(self):
+        """
+
+        :return: Стоимость доставки в основной валюте
+        :rtype: objects.YMShopPrice
+        """
         return YMShopPrice(self.data.get('price'))
 
     @property
     def alternatePrice(self):
+        """
+
+        :return: Стоимость доставки в альтернативной валюте
+        :rtype: objects.YMShopPrice
+        """
         return YMShopPrice(self.data.get('alternatePrice'))
 
     @property
     def daysFrom(self):
+        """
+
+        :return: Определяет начало периода (день недели), в котором возможна доставка
+        :rtype: int
+        """
         return self.data.get('daysFrom')
 
     @property
     def daysTo(self):
+        """
+
+        :return: Определяет окончание периода (день недели), в котором возможна доставка
+        :rtype: int
+        """
         return self.data.get('daysTo')
 
     @property
     def orderBefore(self):
+        """
+
+        :return: Время, до которого нужно сделать заказ в часовом поясе пользователя. Возможные значения - от 0 до 23. Отсутствие параметра - заказ можно делать в любое время
+        :rtype: int
+        """
         return self.data.get('orderBefore')
 
     @property
     def deliveryIncluded(self):
+        """
+
+        :return: Признак, что стоимость доставки включена в стоимость товарного предложения. Отсутствие свойства в ввыдаче равнозначно значению false.
+        :rtype: bool
+        """
         return self.data.get('deliveryIncluded')
 
 
@@ -1800,14 +1979,29 @@ class YMDeliveryOption(YMBase):
 
     @property
     def brief(self):
+        """
+
+        :return: Краткое описание условий доставки
+        :rtype: str
+        """
         return self.data.get('brief')
 
     @property
     def service(self):
+        """
+
+        :return: Информация о службе доставки
+        :rtype: objects.YMDeliveryOptionService
+        """
         return YMDeliveryOptionService(self.data.get('service'))
 
     @property
     def conditions(self):
+        """
+
+        :return: Информация об условиях доставки
+        :rtype: objects.YMDeliveryOptionConditions
+        """
         return YMDeliveryOptionConditions(self.data.get('conditions'))
 
 
@@ -1818,18 +2012,38 @@ class YMDeliveryPickupOption(YMBase):
 
     @property
     def brief(self):
+        """
+
+        :return: Краткое описание условий доставки
+        :rtype: str
+        """
         return self.data.get('brief')
 
     @property
     def outletCount(self):
+        """
+
+        :return: Количество пунктов выдачи и торговых залов, в которых можно забрать заказ
+        :rtype: int
+        """
         return self.data.get('outletCount')
 
     @property
     def service(self):
+        """
+
+        :return: Информация о службе доставки
+        :rtype: objects.YMDeliveryOptionService
+        """
         return YMDeliveryOptionService(self.data.get('service'))
 
     @property
     def conditions(self):
+        """
+
+        :return: Информация об условиях доставки
+        :rtype: objects.YMDeliveryOptionConditions
+        """
         return YMDeliveryOptionConditions(self.data.get('conditions'))
 
 
@@ -1840,70 +2054,155 @@ class YMDelivery(YMBase):
 
     @property
     def free(self):
+        """
+
+        :return: Признак бесплатной доставки
+        :rtype: bool
+        """
         return self.data.get('free')
 
     @property
     def deliveryIncluded(self):
+        """
+
+        :return: Признак, что цена доставки включена в стоимость товара
+        :rtype: bool
+        """
         return self.data.get('deliveryIncluded')
 
     @property
     def carried(self):
+        """
+
+        :return: Признак наличия доставки
+        :rtype: bool
+        """
         return self.data.get('carried')
 
     @property
     def pickup(self):
+        """
+
+        :return: Признак возможности самовывоза заказа
+        :rtype: bool
+        """
         return self.data.get('pickup')
 
     @property
     def downloadable(self):
+        """
+
+        :return: Признак, что товар можно скачать
+        :rtype: bool
+        """
         return self.data.get('downloadable')
 
     @property
     def localStore(self):
+        """
+
+        :return: Признак наличия торгового зала в регионе пользователя
+        :rtype: bool
+        """
         return self.data.get('localStore')
 
     @property
     def localDelivery(self):
+        """
+
+        :return: Признак локальной доставки
+        :rtype: bool
+        """
         return self.data.get('localDelivery')
 
     @property
     def brief(self):
+        """
+
+        :return: Краткое описание условий доставки
+        :rtype: str
+        """
         return self.data.get('brief')
 
     @property
     def inStock(self):
+        """
+
+        :return: Признак наличия товара
+        :rtype: bool
+        """
         return self.data.get('inStock')
 
     @property
     def is_global(self):
+        """
+
+        :return: Признак трансграничной доставки
+        :rtype: bool
+        """
         return self.data.get('global')
 
     @property
     def price(self):
+        """
+
+        :return: Стоимость доставки в валюте заказа
+        :rtype: objects.YMShopPrice
+        """
         return YMShopPrice(self.data.get('price'))
 
     @property
     def alternatePrice(self):
+        """
+
+        :return: Стоимость доставки в альтернативной или неденоминированной валюте
+        :rtype: objects.YMShopPrice
+        """
         return YMShopPrice(self.data.get('alternatePrice'))
 
     @property
     def shopRegion(self):
+        """
+
+        :return: Свой регион магазина
+        :rtype: objects.YMRegion
+        """
         return YMRegion(self.data.get('shopRegion'))
 
     @property
     def userRegion(self):
+        """
+
+        :return: Регион пользователя
+        :rtype: objects.YMRegion
+        """
         return YMRegion(self.data.get('userRegion'))
 
     @property
     def description(self):
+        """
+
+        :return: Описание условий доставки
+        :rtype: str
+        """
         return self.data.get('description')
 
     @property
     def options(self):
+        """
+
+        :return: Информация о службах доставки, с которыми сотрудничает магазин
+        :rtype: list[objects.YMDeliveryOption]
+        """
         return [YMDeliveryOption(option) for option in self.data.get('options', [])]
 
     @property
     def pickupOptions(self):
+        """
+
+        :return: Информация об условиях самовывоза
+        :rtype: list[objects.YMDeliveryPickupOption]
+        """
         return [YMDeliveryPickupOption(option) for option in self.data.get('pickupOptions', [])]
 
 
