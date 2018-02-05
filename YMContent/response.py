@@ -8,9 +8,19 @@ class Base(object):
         self.resp = r.json()
 
     def json(self):
+        """
+
+        :return: ответ в формате JSON
+        :rtype: dict
+        """
         return self.resp
 
     def curl(self):
+        """
+
+        :return: Эквивалент команды curl
+        :rtype: str
+        """
         headers = ["'{0}: {1}'".format(k, v) for k, v in self.req.request.headers.items()]
         headers = " -H ".join(sorted(headers))
 
@@ -23,6 +33,11 @@ class Base(object):
         return command
 
     def is_ok(self):
+        """
+
+        :return: Статус корректности запроса
+        :rtype: bool
+        """
         return self.resp.get('status') == 'OK'
 
     @property

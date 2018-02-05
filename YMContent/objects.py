@@ -889,21 +889,6 @@ class YMShopPrice(YMBase):
         return self.data.get('shopMax')
 
 
-class YMVendor(object):
-    def __init__(self, data):
-        self.data = data
-
-    def json(self):
-        return self.data
-
-    def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.data.get('id'))
-
-    @property
-    def id(self):
-        return self.data.get('id')
-
-
 class YMVendorCategory(YMCategory):
 
     @property
@@ -1109,10 +1094,20 @@ class YMFacts(YMBase):
 
     @property
     def pro(self):
+        """
+
+        :return: Достоинства
+        :rtype: list[str]
+        """
         return self.data.get('pro')
 
     @property
     def contra(self):
+        """
+
+        :return: Недостатки
+        :rtype: list[str]
+        """
         return self.data.get('contra')
 
 
@@ -1123,10 +1118,20 @@ class YMModelWarning(YMBase):
 
     @property
     def code(self):
+        """
+
+        :return: Строковый код дисклеймера
+        :rtype: str
+        """
         return self.data.get('code')
 
     @property
     def message(self):
+        """
+
+        :return: Текст дисклеймера
+        :rtype: str
+        """
         return self.data.get('message')
 
 
@@ -3632,7 +3637,6 @@ class YMRedirectSearch(YMBase):
     #     return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in
     #             self.data['content'].get('items', [])]
 
-
     @property
     def filters(self):
         """
@@ -3641,7 +3645,6 @@ class YMRedirectSearch(YMBase):
         :rtype: list[objects.YMFilter]
         """
         return [YMFilter(f) for f in self.data.get('filters', [])]
-
 
     @property
     def sorts(self):
