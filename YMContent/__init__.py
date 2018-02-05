@@ -1107,6 +1107,21 @@ class YMAPI(object):
         return Shop(self._request('shops/{}', shop_id, params))
 
     def shops(self, host, fields=None, geo_id=None):
+        """
+        Поиск магазина по хосту или URL
+
+        :param host: Хост или URL магазина, который требуется найти
+        :type host: str
+
+        :param fields: Свойства магазинов, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :return: Информация о найденном магазине по указанному в запросе хосту или URL
+        :rtype: response.Shops
+        """
         params = {'host': host}
 
         if geo_id is None:

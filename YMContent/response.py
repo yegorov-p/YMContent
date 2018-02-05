@@ -416,6 +416,11 @@ class Shops(Page):
 
     @property
     def shops(self):
+        """
+
+        :return: Информация о магазинах
+        :rtype: list[objects.YMShop]
+        """
         return [YMShop(shop) for shop in self.resp['shops']]
 
 
