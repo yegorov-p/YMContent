@@ -803,9 +803,9 @@ class YMAPI(object):
             params['page'] = page
 
         if delivery_included:
-            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
-                delivery_included='FALSE'
-            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+            if str(delivery_included).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
+                delivery_included = 'FALSE'
+            elif str(delivery_included).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 delivery_included = 'TRUE'
             else:
                 raise DeliveryIncludedParamError('"delivery_included" param is wrong')
@@ -964,9 +964,9 @@ class YMAPI(object):
         params = {}
 
         if delivery_included:
-            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
-                delivery_included='FALSE'
-            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+            if str(delivery_included).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
+                delivery_included = 'FALSE'
+            elif str(delivery_included).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 delivery_included = 'TRUE'
             else:
                 raise DeliveryIncludedParamError('"delivery_included" param is wrong')
@@ -1490,9 +1490,26 @@ class YMAPI(object):
 
         return Outlets(self._request('offers/{}/outlets', offer_id, params))
 
-    def geo_regions(self, req_id, fields='STANDART', count=10, page=1):
-        params = {'count': count,
-                  'page': page}
+    def geo_regions(self, fields=None, count=10, page=1):
+        """
+        Список регионов
+
+        :param region_id: Идентификатор региона
+        :type region_id: int
+
+        :param fields: Параметры региона, которые необходимо включить в выдачу
+        :type fields: str or list[str]
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :return: Список регионов
+        :rtype: response.Regions
+        """
+        params = {}
 
         if fields:
             params['fields'] = self._validate_fields(fields,
@@ -1509,7 +1526,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Regions(self._request('geo/regions', req_id, params))
+        return Regions(self._request('geo/regions', None, params))
 
     def geo_regions_children(self, req_id, fields=None, count=10, page=1):
         params = {'count': count,
@@ -1677,9 +1694,9 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if delivery_included:
-            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
-                delivery_included='FALSE'
-            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+            if str(delivery_included).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
+                delivery_included = 'FALSE'
+            elif str(delivery_included).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 delivery_included = 'TRUE'
             else:
                 raise DeliveryIncludedParamError('"delivery_included" param is wrong')
@@ -1701,9 +1718,9 @@ class YMAPI(object):
             params['fields'] = fields
 
         if onstock:
-            if str(onstock).upper() in [0,'0','F','FALSE','N','NO']:
-                onstock='FALSE'
-            elif str(onstock).upper() in [1,'1','T','TRUE','Y','YES']:
+            if str(onstock).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
+                onstock = 'FALSE'
+            elif str(onstock).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 onstock = 'TRUE'
             else:
                 raise OnstockParamError('"delivery_included" param is wrong')
@@ -1732,9 +1749,9 @@ class YMAPI(object):
             params['shop_id'] = shop_id
 
         if warranty:
-            if str(warranty).upper() in [0,'0','F','FALSE','N','NO']:
-                warranty='FALSE'
-            elif str(warranty).upper() in [1,'1','T','TRUE','Y','YES']:
+            if str(warranty).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
+                warranty = 'FALSE'
+            elif str(warranty).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 warranty = 'TRUE'
             else:
                 raise WarrantyParamError('"warranty" param is wrong')

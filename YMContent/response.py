@@ -470,6 +470,11 @@ class Regions(Page):
 
     @property
     def regions(self):
+        """
+
+        :return: Список регионов
+        :rtype: list[objects.YMRegion]
+        """
         return [YMRegion(region) for region in self.resp.get('regions', [])]
 
 
