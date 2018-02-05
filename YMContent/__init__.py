@@ -1607,9 +1607,27 @@ class YMAPI(object):
 
         return Region(self._request('geo/regions/{id}', req_id, params))
 
-    def geo_regions_children(self, fields=None,
+    def geo_suggest(self, fields=None,
                              types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
                              count=10, page=1):
+        """
+        Текстовый поиск региона
+
+        :param fields: Параметры региона, которые необходимо включить в выдачу
+        :type fields: str or list[str]
+
+        :param types: Тип региона
+        :type types: str or list[str]
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :return: Список регионов, подходящих под заданные условия поиска
+        :rtype: response.Suggests
+        """
         params = {}
 
         if fields:
@@ -1626,7 +1644,7 @@ class YMAPI(object):
                         'MONORAIL_STATION', 'OVERSEAS_TERRITORY', 'REGION', 'RURAL_SETTLEMENT', 'SECONDARY_DISTRICT',
                         'SUBJECT_FEDERATION', 'SUBJECT_FEDERATION_DISTRICT', 'VILLAGE', 'ALL'):
                     raise TypeParamError('"type" param is wrong')
-            params['fields'] = fields
+            params['types'] = types
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')

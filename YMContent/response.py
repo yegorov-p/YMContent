@@ -494,6 +494,11 @@ class Suggests(Page):
 
     @property
     def suggests(self):
+        """
+
+        :return: Список регионов в результате поиска по частичному или полному наименованию
+        :rtype: list[objects.YMRegion]
+        """
         return [YMRegion(region) for region in self.resp.get('suggests', [])]
 
 
