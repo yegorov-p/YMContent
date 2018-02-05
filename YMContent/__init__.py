@@ -802,9 +802,13 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        # ToDO нужно добавить преобразование типа в эталонный
         if delivery_included:
-            #     if delivery_included in [0,'0','F','FALSE','N','NO'
+            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
+                delivery_included='FALSE'
+            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+                delivery_included = 'TRUE'
+            else:
+                raise DeliveryIncludedParamError('"delivery_included" param is wrong')
             params['delivery_included'] = delivery_included
 
         if fields:
@@ -959,9 +963,13 @@ class YMAPI(object):
         """
         params = {}
 
-        # ToDO нужно добавить преобразование типа в эталонный
         if delivery_included:
-            #     if delivery_included in [0,'0','F','FALSE','N','NO'
+            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
+                delivery_included='FALSE'
+            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+                delivery_included = 'TRUE'
+            else:
+                raise DeliveryIncludedParamError('"delivery_included" param is wrong')
             params['delivery_included'] = delivery_included
 
         if fields:
@@ -1589,9 +1597,13 @@ class YMAPI(object):
         if remote_ip:
             params['remote_ip'] = remote_ip
 
-        # ToDO нужно добавить преобразование типа в эталонный
         if delivery_included:
-            #     if delivery_included in [0,'0','F','FALSE','N','NO'
+            if str(delivery_included).upper() in [0,'0','F','FALSE','N','NO']:
+                delivery_included='FALSE'
+            elif str(delivery_included).upper() in [1,'1','T','TRUE','Y','YES']:
+                delivery_included = 'TRUE'
+            else:
+                raise DeliveryIncludedParamError('"delivery_included" param is wrong')
             params['delivery_included'] = delivery_included
 
         if fields:
@@ -1609,9 +1621,13 @@ class YMAPI(object):
                     raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        # ToDO нужно добавить преобразование типа в эталонный
         if onstock:
-            #     if onstock in [0,'0','F','FALSE','N','NO'
+            if str(onstock).upper() in [0,'0','F','FALSE','N','NO']:
+                onstock='FALSE'
+            elif str(onstock).upper() in [1,'1','T','TRUE','Y','YES']:
+                onstock = 'TRUE'
+            else:
+                raise OnstockParamError('"delivery_included" param is wrong')
             params['onstock'] = onstock
 
         if outlet_types:
@@ -1636,9 +1652,13 @@ class YMAPI(object):
         if shop_id:
             params['shop_id'] = shop_id
 
-        # ToDO нужно добавить преобразование типа в эталонный
         if warranty:
-            #     if onstock in [0,'0','F','FALSE','N','NO'
+            if str(warranty).upper() in [0,'0','F','FALSE','N','NO']:
+                warranty='FALSE'
+            elif str(warranty).upper() in [1,'1','T','TRUE','Y','YES']:
+                warranty = 'TRUE'
+            else:
+                raise WarrantyParamError('"warranty" param is wrong')
             params['warranty'] = warranty
 
         if filters:

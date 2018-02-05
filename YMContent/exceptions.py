@@ -63,5 +63,17 @@ class GeoParamError(BaseException):
     pass
 
 
+class DeliveryIncludedParamError(BaseException):
+    pass
+
+
+class OnstockParamError(BaseException):
+    pass
+
+
+class WarrantyParamError(BaseException):
+    pass
+
+
 class NoGeoIdOrIP(BaseException):
     pass
