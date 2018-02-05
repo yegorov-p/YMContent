@@ -2218,8 +2218,28 @@ class YMAPI(object):
         return Redirect(self._request('redirect', None, params))
 
     def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT'):
-        params = {'text': text,
-                  'count': count}
+        """
+        Поисковые подсказки
+
+        :param text: Текст запроса
+        :type text: str
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param pos: Позиция курсора в поисковой подсказке
+        :type pos: int
+
+        :param suggest_types: Типы поисковых подсказок
+        :type suggest_types: str or list[str]
+
+        :return: Список поисковых подсказок, подходящих под заданные условия поиска
+        :rtype: objects.Suggestions
+        """
+        params = {'text': text}
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -2232,14 +2252,17 @@ class YMAPI(object):
             params['page'] = page
 
         if pos:
-            params['pos'] = pos
+            if pos < 0 or pos > 1024:
+                raise PosParamError('"count" param must be between 1 and 30')
+            else:
+                params['pos'] = pos
 
         if suggest_types:
             for field in suggest_types.split(','):
                 if field not in (
                         'CATALOG', 'MODEL', 'SEARCH',
                         'VENDOR', 'ALL', 'DEFAULT'):
-                    raise RedirectTypesParamError('"redirect_types" param is wrong')
+                    raise RedirectTypesParamError('"suggest_types" param is wrong')
             params['suggest_types'] = suggest_types
 
         return Suggestions(self._request('redirect', None, params))

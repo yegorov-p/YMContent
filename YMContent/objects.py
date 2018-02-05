@@ -3369,10 +3369,20 @@ class YMSuggestion(YMBase):
 
     @property
     def value(self):
+        """
+
+        :return: Значение поисковой подсказки
+        :rtype: str
+        """
         return self.data.get('value')
 
     @property
     def url(self):
+        """
+
+        :return: Ссылка на страницу соответствующую поисковой посдказке
+        :rtype: str
+        """
         return self.data.get('url')
 
 
@@ -3382,8 +3392,18 @@ class YMSuggestionCompletion(YMBase):
 
     @property
     def completion(self):
+        """
+
+        :return: Завершение фразы
+        :rtype: str
+        """
         return self.data.get('completion')
 
     @property
     def value(self):
+        """
+
+        :return: Фраза целиком после завершения
+        :rtype: str
+        """
         return self.data.get('value')

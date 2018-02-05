@@ -579,12 +579,27 @@ class Suggestions(Page):
 
     @property
     def input(self):
-        return YMSuggestion(self.resp['input'])
+        """
+
+        :return: Поисковая подсказка соответствующая введенному тексту
+        :rtype: objects.YMSuggestion
+        """
+        return YMSuggestion(self.resp['suggestions']['input'])
 
     @property
     def completions(self):
-        return [YMSuggestionCompletion(c) for c in self.resp['completions']]
+        """
+
+        :return: Поисковые подсказки для завершения фразы
+        :rtype: list[objects.YMSuggestionCompletion]
+        """
+        return [YMSuggestionCompletion(c) for c in self.resp['suggestions']['completions']]
 
     @property
     def pages(self):
-        return [YMSuggestion(c) for c in self.resp['pages']]
+        """
+
+        :return: Поисковые подсказки ведущие на конкретные страницы
+        :rtype: list[objects.YMSuggestion]
+        """
+        return [YMSuggestion(c) for c in self.resp['suggestions']['pages']]
