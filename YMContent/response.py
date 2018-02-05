@@ -380,6 +380,11 @@ class ModelOpinions(Page):
 
     @property
     def opinions(self):
+        """
+
+        :return: Отзывы
+        :rtype: list[objects.YMModelOpinion]
+        """
         return [YMModelOpinion(opinion) for opinion in self.resp['opinions']]
 
 

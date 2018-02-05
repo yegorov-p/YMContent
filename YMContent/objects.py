@@ -2247,10 +2247,20 @@ class YMOpinionAuthorSocial(YMBase):
 
     @property
     def type(self):
+        """
+
+        :return: Тип профиля
+        :rtype: str
+        """
         return self.data.get('type')
 
     @property
     def url(self):
+        """
+
+        :return: Ссылка на профиль
+        :rtype: str
+        """
         return self.data.get('url')
 
 
@@ -2260,22 +2270,47 @@ class YMOpinionAuthor(YMBase):
 
     @property
     def name(self):
+        """
+
+        :return: Имя автора
+        :rtype: str
+        """
         return self.data.get('name')
 
     @property
     def avatarUrl(self):
+        """
+
+        :return: Ссылка на аватар
+        :rtype: str
+        """
         return self.data.get('avatarUrl')
 
     @property
     def grades(self):
+        """
+
+        :return: Количество оценок
+        :rtype: int
+        """
         return self.data.get('grades')
 
     @property
     def visibility(self):
+        """
+
+        :return: Вариант отображения отзыва
+        :rtype: str
+        """
         return self.data.get('visibility')
 
     @property
     def social(self):
+        """
+
+        :return: Оиформация о профилях автора в социальных сетях
+        :rtype: list[objects.YMOpinionAuthorSocial]
+        """
         return [YMOpinionAuthorSocial(social) for social in self.data.get('social', [])]
 
 
@@ -2285,10 +2320,20 @@ class YMModelOpinionUser(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор автора комментария
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Имя автора комментария
+        :rtype: str
+        """
         return self.data.get('name')
 
 
@@ -2298,50 +2343,110 @@ class YMOpinionComment(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор комментария
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def rootId(self):
+        """
+
+        :return: Идентификатор корневого объекта, к которому относится комментарий
+        :rtype: str
+        """
         return self.data.get('rootId')
 
     @property
     def parentId(self):
+        """
+
+        :return: Идентификатор родительского комментария или корневого объекта в дереве комментариев
+        :rtype: str
+        """
         return self.data.get('parentId')
 
     @property
     def title(self):
+        """
+
+        :return: Заголовок комментария
+        :rtype: str
+        """
         return self.data.get('title')
 
     @property
     def updateTimestamp(self):
+        """
+
+        :return: Timestamp времени последнего обновления комментария
+        :rtype: int
+        """
         return self.data.get('updateTimestamp')
 
     @property
     def valid(self):
+        """
+
+        :return: Комментарий действителен
+        :rtype: bool
+        """
         return self.data.get('valid')
 
     @property
     def deleted(self):
+        """
+
+        :return: Признак удаленного комментария
+        :rtype: bool
+        """
         return self.data.get('deleted')
 
     @property
     def blocked(self):
+        """
+
+        :return: Комментарий заблокирован
+        :rtype: bool
+        """
         return self.data.get('blocked')
 
     @property
     def sticky(self):
+        """
+
+        :return: Признак прикрепленного комментария
+        :rtype: bool
+        """
         return self.data.get('sticky')
 
     @property
     def body(self):
+        """
+
+        :return: Текст комментария
+        :rtype: str
+        """
         return self.data.get('body')
 
     @property
     def user(self):
+        """
+
+        :return: Информация об авторе комментария
+        :rtype: objects.YMModelOpinionUser
+        """
         return YMModelOpinionUser(self.data.get('user'))
 
     @property
     def children(self):
+        """
+
+        :return: Список дочерних комментариев к данному в дереве комментариев
+        :rtype: list[objects.YMOpinionComment]
+        """
         return [YMOpinionComment(comment) for comment in self.data.get('children', [])]
 
 
@@ -2351,10 +2456,20 @@ class YMModelOpinionModel(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор модели
+        :rtype: str
+        """
         return self.data.get('id')
 
     @property
     def name(self):
+        """
+
+        :return: Наименование модели
+        :rtype: str
+        """
         return self.data.get('name')
 
 
@@ -2377,70 +2492,155 @@ class YMModelOpinion(YMBase):
 
     @property
     def id(self):
+        """
+
+        :return: Идентификатор отзыва
+        :rtype: int
+        """
         return self.data.get('id')
 
     @property
     def date(self):
+        """
+
+        :return: Дата написания
+        :rtype: str
+        """
         return self.data.get('date')
 
     @property
     def vote(self):
+        """
+
+        :return: Мнение текущего пользователя об отзыве
+        :rtype: bool
+        """
         return self.data.get('vote')
 
     @property
     def grade(self):
+        """
+
+        :return: Оценка
+        :rtype: int
+        """
         return self.data.get('grade')
 
     @property
     def rejectReason(self):
+        """
+
+        :return: Причина отклонения отзыва
+        :rtype: str
+        """
         return self.data.get('rejectReason')
 
     @property
     def state(self):
+        """
+
+        :return: Статус отзыва
+        :rtype: str
+        """
         return self.data.get('state')
 
     @property
     def agreeCount(self):
+        """
+
+        :return: Количество согласных с оценкой
+        :rtype: int
+        """
         return self.data.get('agreeCount')
 
     @property
     def disagreeCount(self):
+        """
+
+        :return: Количество несоглазных с оценкой
+        :rtype: int
+        """
         return self.data.get('disagreeCount')
 
     @property
     def usageTime(self):
+        """
+
+        :return: Время использования модели
+        :rtype: str
+        """
         return self.data.get('usageTime')
 
     @property
     def verifiedBuyer(self):
+        """
+
+        :return: Признак проверенного покупателя
+        :rtype: bool
+        """
         return self.data.get('verifiedBuyer')
 
     @property
     def text(self):
+        """
+
+        :return: Текст отзыва
+        :rtype: str
+        """
         return self.data.get('text')
 
     @property
     def pros(self):
+        """
+
+        :return: Описание достоинств
+        :rtype: str
+        """
         return self.data.get('pros')
 
     @property
     def cons(self):
+        """
+
+        :return: Описание недостатков
+        :rtype: str
+        """
         return self.data.get('cons')
 
     @property
     def author(self):
+        """
+
+        :return: Информация об авторе
+        :rtype: objects.YMOpinionAuthor
+        """
         return YMOpinionAuthor(self.data.get('author'))
 
     @property
     def comments(self):
+        """
+
+        :return: Комментарии
+        :rtype: list[objects.YMOpinionComment]
+        """
         return [YMOpinionComment(comment) for comment in self.data.get('comments', [])]
 
     @property
     def region(self):
+        """
+
+        :return: Регион
+        :rtype: objects.YMRegion
+        """
         return YMRegion(self.data.get('region'))
 
     @property
     def model(self):
+        """
+
+        :return: Модель
+        :rtype: objects.YMModelOpinionModel
+        """
         return YMModelOpinionModel(self.data.get('model'))
 
 
