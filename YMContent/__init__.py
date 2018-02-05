@@ -1384,8 +1384,44 @@ class YMAPI(object):
 
         return Outlets(self._request('shops/{}/outlets', shop_id, params))
 
-    def offer_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
+    def offer_outlets(self, offer_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+        """
+        Список пунктов выдачи товарного предложения
+
+        :param boundary: Координаты квадрата на местности для выдачи точек продаж на карте.
+        :type boundary: str
+
+        :param fields: Поля точек продажи, которые попадут в выдачу
+        :type fields: str or list[str]
+
+        :param type: Типы пунктов выдачи товара
+        :type type: str or list[str]
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :param latitude: Широта
+        :type latitude: float
+
+        :param longitude: Долгота
+        :type longitude: float
+
+        :return: Список пунктов выдачи/точек продаж указанного товарного предложения
+        :rtype: response.Outlets
+        """
         params = {}
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -1428,6 +1464,7 @@ class YMAPI(object):
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
+            params['how'] = how
 
         if sort:
             if sort not in (
@@ -1435,6 +1472,7 @@ class YMAPI(object):
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -1450,7 +1488,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self._request('offers/{id}/outlets', req_id, params))
+        return Outlets(self._request('offers/{}/outlets', offer_id, params))
 
     def geo_regions(self, req_id, fields='STANDART', count=10, page=1):
         params = {'count': count,
