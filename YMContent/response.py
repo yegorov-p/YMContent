@@ -6,6 +6,7 @@ class Base(object):
     def __init__(self, r):
         self.req = r
         self.resp = r.json()
+        self.headers = r.headers
 
     def json(self):
         """
@@ -48,6 +49,87 @@ class Base(object):
         :rtype: int
         """
         return self.req.status_code
+
+    @property
+    def daily_limit(self):
+        """
+
+        :return: возможное количество запросов в сутки
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Daily-Limit')
+
+    @property
+    def daily_remaining(self):
+        """
+
+        :return: оставшееся количество запросов до превышения суточного ограничения
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Daily-Remaining')
+
+    @property
+    def daily_until(self):
+        """
+
+        :return: время обновления суточного ограничения
+        :rtype: str
+        """
+        return self.headers.get('X-RateLimit-Daily-Until')
+
+    @property
+    def global_limit(self):
+        """
+
+        :return: возможное количество запросов в определенный промежуток времени
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Global-Limit')
+
+    @property
+    def global_remaining(self):
+        """
+
+        :return: оставшееся количество запросов в определенный промежуток времени до превышения глобального ограничения
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Global-Remaining')
+
+    @property
+    def global_until(self):
+        """
+
+        :return: время обновления глобального посекундного ограничения
+        :rtype: str
+        """
+        return self.headers.get('X-RateLimit-Global-Until')
+
+    @property
+    def method_limit(self):
+        """
+
+        :return: возможное количество запросов к вызываемому ресурсу
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Method-Limit')
+
+    @property
+    def method_remaining(self):
+        """
+
+        :return: оставшееся количество запросов к вызываемому ресурсу
+        :rtype: int
+        """
+        return self.headers.get('X-RateLimit-Method-Remaining')
+
+    @property
+    def method_until(self):
+        """
+
+        :return: время обновления ресурсного посекундного ограничения
+        :rtype: date
+        """
+        return self.headers.get('X-RateLimit-Method-Until')
 
     @property
     def status(self):
