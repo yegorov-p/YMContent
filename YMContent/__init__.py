@@ -1949,10 +1949,51 @@ class YMAPI(object):
 
         return Search(self._request('search', None, params))
 
-    def categories_search(self, req_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
+    def categories_search(self, category_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
                           shop_regions=None, filters=None,
                           count=10, page=1, how=None, sort=None):
+        """
+        Подбор по параметрам в категории
 
+        :param category_id: Идентификатор категории
+        :type category_id: int
+
+        :param geo_id: Идентификатор региона
+        :type geo_id: int
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: int
+
+        :param fields: Поля, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :param result_type: Тип возвращаемых данных
+        :type result_type: str
+
+        :param rs: Поле содержащее закодированную информацию о текстовом запросе после редиректа, на которую будет ориентироватся поиск
+        :type rs: str
+
+        :param shop_regions: Идентификаторы регионов магазинов
+        :type shop_regions: str or list[str]
+
+        :param filters: Параметры задают условия фильтрации моделей и предложений на модель
+        :type filters: dict
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :param how: Направление сортировки
+        :type how: str
+
+        :param sort: Тип сортировки товарных предложений
+        :type sort: str
+
+        :return: Список моделей категории и предложений на модели, удовлетворяющих заданным в запросе параметрам
+        :rtype: response.Search
+        """
         params = {}
 
         if geo_id is None and remote_ip is None:
@@ -2009,6 +2050,7 @@ class YMAPI(object):
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
+            params['how'] = how
 
         if sort:
             if sort not in (
@@ -2016,8 +2058,9 @@ class YMAPI(object):
                     'QUALITY',
                     'RATING', 'RELEVANCY'):
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
-        return Search(self._request('categories/{id}/search', req_id, params))
+        return Search(self._request('categories/{}/search', category_id, params))
 
     def search_filters(self, text, fields=None):
         params = {'text': text}
