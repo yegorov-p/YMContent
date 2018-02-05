@@ -404,6 +404,11 @@ class Shop(Page):
 
     @property
     def shop(self):
+        """
+
+        :return: Информация о магазине
+        :rtype: objects.YMShop
+        """
         return YMShop(self.resp['shop'])
 
 

@@ -1084,7 +1084,19 @@ class YMAPI(object):
 
         return ShopOpinions(self._request('shops/{}/opinions', shop_id, params))
 
-    def shop(self, req_id, fields=None):
+    def shop(self, shop_id, fields=None):
+        """
+        Информация о магазине
+
+        :param shop_id: Идентификатор магазина
+        :type shop_id: int
+
+        :param fields: Свойства магазинов, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return: Информация об указанном магазине
+        :rtype: response.Shop
+        """
         params = {}
 
         if fields:
@@ -1092,7 +1104,7 @@ class YMAPI(object):
                                                      ('ORGANIZATION', 'RATING',
                                                       'ALL'))
 
-        return Shop(self._request('shops/{id}', req_id, params))
+        return Shop(self._request('shops/{}', shop_id, params))
 
     def shops(self, host, fields=None, geo_id=None):
         params = {'host': host}
