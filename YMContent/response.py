@@ -364,10 +364,15 @@ class ModelOffersFilters(Base):
         return [YMFilter(filter) for filter in self.resp['filters']]
 
 
-class Offers(Base):
+class Offer(Base):
 
     @property
     def offer(self):
+        """
+
+        :return: Товарное предложение
+        :rtype: objects.YMOffer
+        """
         return YMOffer(self.resp['offer'])
 
 

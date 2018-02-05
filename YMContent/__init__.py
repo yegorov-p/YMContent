@@ -940,7 +940,22 @@ class YMAPI(object):
 
         return ModelOffersFilters(self._request('models/{}/offers/filters', model_id, params))
 
-    def offers(self, req_id, delivery_included=0, fields='STANDARD'):
+    def offer(self, offer_id, delivery_included=0, fields='STANDARD'):
+        """
+        Информация о товарном предложении
+
+        :param offer_id: Идентификатор товарного предложения
+        :type offer_id: str
+
+        :param delivery_included: Признак включения цены доставки в цену товарного предложения
+        :type delivery_included: bool
+
+        :param fields: Параметры предложений, которые необходимо показать в выходных данных
+        :type fields: list or str[list]
+
+        :return: Информацияя об указанном товарном предложении
+        :rtype: response.Offer
+        """
         params = {}
 
         # ToDO нужно добавить преобразование типа в эталонный
@@ -956,7 +971,7 @@ class YMAPI(object):
                                                       'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
                                                       'ALL', 'SHOP_ALL', 'STANDARD'))
 
-        return Offers(self._request('offers/{id}', req_id, params))
+        return Offer(self._request('offers/{}', offer_id, params))
 
     def models_opinions(self, req_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
         params = {}
