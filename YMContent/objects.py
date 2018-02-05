@@ -2496,7 +2496,7 @@ class YMModelOpinionShop(YMBase):
         return self.data.get('name')
 
 
-class YMModelOpinion(YMBase):
+class YMOpinion(YMBase):
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
 
@@ -2571,24 +2571,6 @@ class YMModelOpinion(YMBase):
         :rtype: int
         """
         return self.data.get('disagreeCount')
-
-    @property
-    def usageTime(self):
-        """
-
-        :return: Время использования модели
-        :rtype: str
-        """
-        return self.data.get('usageTime')
-
-    @property
-    def verifiedBuyer(self):
-        """
-
-        :return: Признак проверенного покупателя
-        :rtype: bool
-        """
-        return self.data.get('verifiedBuyer')
 
     @property
     def text(self):
@@ -2644,6 +2626,27 @@ class YMModelOpinion(YMBase):
         """
         return YMRegion(self.data.get('region'))
 
+
+class YMModelOpinion(YMOpinion):
+
+    @property
+    def usageTime(self):
+        """
+
+        :return: Время использования модели
+        :rtype: str
+        """
+        return self.data.get('usageTime')
+
+    @property
+    def verifiedBuyer(self):
+        """
+
+        :return: Признак проверенного покупателя
+        :rtype: bool
+        """
+        return self.data.get('verifiedBuyer')
+
     @property
     def model(self):
         """
@@ -2654,81 +2657,7 @@ class YMModelOpinion(YMBase):
         return YMModelOpinionModel(self.data.get('model'))
 
 
-class YMShopOpinion(YMBase):
-    def __repr__(self):
-        return '<{}>'.format(self.__class__.__name__)
-
-    @property
-    def id(self):
-        """
-
-        :return: Идентификатор отзыва
-        :rtype: int
-        """
-        return self.data.get('id')
-
-    @property
-    def date(self):
-        """
-
-        :return: Дата написания
-        :rtype: str
-        """
-        return self.data.get('date')
-
-    @property
-    def vote(self):
-        """
-
-        :return: Мнение текущего пользователя об отзыве
-        :rtype: str
-        """
-        return self.data.get('vote')
-
-    @property
-    def grade(self):
-        """
-
-        :return: Оценка
-        :rtype: int
-        """
-        return self.data.get('grade')
-
-    @property
-    def rejectReason(self):
-        """
-
-        :return: Причина отклонения отзыва
-        :rtype: str
-        """
-        return self.data.get('rejectReason')
-
-    @property
-    def state(self):
-        """
-
-        :return: Статус отзыва
-        :rtype: str
-        """
-        return self.data.get('state')
-
-    @property
-    def agreeCount(self):
-        """
-
-        :return: Количество согласных с оценкой
-        :rtype: int
-        """
-        return self.data.get('agreeCount')
-
-    @property
-    def disagreeCount(self):
-        """
-
-        :return: Количество несоглазных с оценкой
-        :rtype: int
-        """
-        return self.data.get('disagreeCount')
+class YMShopOpinion(YMOpinion):
 
     @property
     def shopOrderId(self):
@@ -2756,60 +2685,6 @@ class YMShopOpinion(YMBase):
         :rtype: str
         """
         return self.data.get('problem')
-
-    @property
-    def text(self):
-        """
-
-        :return: Текст отзыва
-        :rtype: str
-        """
-        return self.data.get('text')
-
-    @property
-    def pros(self):
-        """
-
-        :return: Описание достоинств
-        :rtype: str
-        """
-        return self.data.get('pros')
-
-    @property
-    def cons(self):
-        """
-
-        :return: Описание недостатков
-        :rtype: str
-        """
-        return self.data.get('cons')
-
-    @property
-    def author(self):
-        """
-
-        :return: Информация об авторе
-        :rtype: objects.YMOpinionAuthor
-        """
-        return YMOpinionAuthor(self.data.get('author'))
-
-    @property
-    def comments(self):
-        """
-
-        :return: Комментарии
-        :rtype: list[objects.YMOpinionComment]
-        """
-        return [YMOpinionComment(comment) for comment in self.data.get('comments', [])]
-
-    @property
-    def region(self):
-        """
-
-        :return: Регион
-        :rtype: objects.YMRegion
-        """
-        return YMRegion(self.data.get('region'))
 
     @property
     def shop(self):
