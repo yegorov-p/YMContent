@@ -904,7 +904,25 @@ class YMAPI(object):
 
         return ModelOffersStat(self._request('models/{}/offers/default', model_id, params))
 
-    def models_offers_filters(self, req_id, fields=None, filter_set=None, sort='NONE'):
+    def model_offers_filters(self, model_id, fields=None, filter_set=None, sort='NONE'):
+        """
+        Список фильтров для предложений на модель
+
+        :param model_id:
+        :type model_id:
+
+        :param fields: Группы параметров, которые необходимо отобразить в выходных данных
+        :type fields: str or list[str]
+
+        :param filter_set: Определяет набор фильтров в выходных данных
+        :type filter_set: str
+
+        :param sort: Задает тип сортировки значений в фильтрах
+        :type sort: str
+
+        :return: Cписок фильтров и сортировок, доступных для фильтрации и сортировки товарных предложений указанной модели
+        :rtype: response.ModelOffersFilters
+        """
         params = {}
 
         if fields:
@@ -920,7 +938,7 @@ class YMAPI(object):
             if sort not in ('NAME', 'NONE'):
                 raise SortParamError('"sort" param is wrong')
 
-        return ModelOffersFilters(self._request('models/{id}/offers/filters', req_id, params))
+        return ModelOffersFilters(self._request('models/{}/offers/filters', model_id, params))
 
     def offers(self, req_id, delivery_included=0, fields='STANDARD'):
         params = {}
