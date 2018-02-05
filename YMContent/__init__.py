@@ -1711,6 +1711,18 @@ class YMAPI(object):
         return Vendor(self._request('vendors/{}', vendor_id, params))
 
     def vendors_match(self, name, fields=None):
+        """
+        Подбор производителя по названию
+
+        :param name: Название производителя
+        :type name: str
+
+        :param fields: Свойства производителя, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return: Производитель, наиболее подходящего под заданное во входных данных название
+        :rtype: response.Vendor
+        """
         params = {'name': name}
 
         if fields:
