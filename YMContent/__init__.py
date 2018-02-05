@@ -1494,6 +1494,41 @@ class YMAPI(object):
         """
         Список регионов
 
+        :param fields: Параметры региона, которые необходимо включить в выдачу
+        :type fields: str or list[str]
+
+        :param count: Размер страницы (количество элементов на странице)
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :return: Список регионов
+        :rtype: response.Regions
+        """
+        params = {}
+
+        if fields:
+            params['fields'] = self._validate_fields(fields,
+                                                     (
+                                                         'DECLENSIONS', 'PARENT', 'ALL'))
+
+        if count < 1 or count > 30:
+            raise CountParamError('"count" param must be between 1 and 30')
+        else:
+            params['count'] = count
+
+        if page < 1:
+            raise PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
+
+        return Regions(self._request('geo/regions', None, params))
+
+    def geo_regions_children(self, region_id, fields=None, count=10, page=1):
+        """
+        Список дочерних регионов
+
         :param region_id: Идентификатор региона
         :type region_id: int
 
@@ -1526,28 +1561,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return Regions(self._request('geo/regions', None, params))
-
-    def geo_regions_children(self, req_id, fields=None, count=10, page=1):
-        params = {'count': count,
-                  'page': page}
-
-        if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'DECLENSIONS', 'PARENT', 'ALL'))
-
-        if count < 1 or count > 30:
-            raise CountParamError('"count" param must be between 1 and 30')
-        else:
-            params['count'] = count
-
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Regions(self._request('geo/regions/{id}/children', req_id, params))
+        return Regions(self._request('geo/regions/{}/children', region_id, params))
 
     def geo_regions_children(self, req_id, fields=None, count=10, page=1):
         params = {'count': count,
