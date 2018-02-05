@@ -2063,6 +2063,18 @@ class YMAPI(object):
         return Search(self._request('categories/{}/search', category_id, params))
 
     def search_filters(self, text, fields=None):
+        """
+        Фильтры для поискового запроса
+
+        :param text: Текст запроса
+        :type text: str
+
+        :param fields: Поля, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return: Список доступных фильтров и сортировок для укзанного поискового запроса
+        :rtype: response.CategoriesFilters
+        """
         params = {'text': text}
 
         if fields:
