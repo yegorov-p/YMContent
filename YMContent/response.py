@@ -518,6 +518,11 @@ class Vendor(Base):
 
     @property
     def vendor(self):
+        """
+
+        :return: Производитель
+        :rtype: objects.YMVendor
+        """
         return YMVendor(self.resp.get('vendor'))
 
 

@@ -1695,7 +1695,19 @@ class YMAPI(object):
 
         return Vendors(self._request('vendors', None, params))
 
-    def vendor(self, req_id, fields=None):
+    def vendor(self, vendor_id, fields=None):
+        """
+        Информация о производителе
+
+        :param vendor_id: Идентификатор производителя
+        :type vendor_id: int
+
+        :param fields: Свойства производителя, которые необходимо показать в выходных данных
+        :type fields: str or list[str]
+
+        :return: Информация об указанном производителе
+        :rtype: response.Vendor
+        """
         params = {}
 
         if fields:
@@ -1706,7 +1718,7 @@ class YMAPI(object):
                     raise FieldsParamError('"fields" param is wrong')
             params['fields'] = fields
 
-        return Vendor(self._request('vendors/{id}', req_id, params))
+        return Vendor(self._request('vendors/{}', vendor_id, params))
 
     def vendors_match(self, name, fields=None):
         params = {'name': name}
