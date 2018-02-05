@@ -1137,7 +1137,19 @@ class YMAPI(object):
 
         return Shops(self._request('shops', None, params))
 
-    def geo_regions_shops_summary(self, req_id, fields='DELIVERY_COUNT,HOME_COUNT'):
+    def geo_regions_shops_summary(self, region_id, fields='DELIVERY_COUNT,HOME_COUNT'):
+        """
+        Количество магазинов, работающих в регионе
+
+        :param region_id: Идентификатор региона
+        :type region_id: int
+
+        :param fields: Параметры, которые необходимо показать в выдаче
+        :type fields: str or list[str]
+
+        :return: Информация о количестве магазинов и типах их работы в указанном регионе
+        :rtype: response.ShopsSummary
+        """
         params = {}
 
         if fields:
@@ -1145,7 +1157,7 @@ class YMAPI(object):
                                                      ('DELIVERY_COUNT', 'HOME_COUNT',
                                                       'TOTAL_COUNT', 'ALL'))
 
-        return ShopsSummary(self._request('geo/regions/{id}/shops/summary', req_id, params))
+        return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
     def models_outlets(self, req_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
                        page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):

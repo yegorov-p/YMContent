@@ -428,14 +428,29 @@ class ShopsSummary(Page):
 
     @property
     def homeCount(self):
+        """
+
+        :return: Количество магазинов, которые находятся в указанном регионе
+        :rtype: int
+        """
         return self.resp.get('homeCount')
 
     @property
     def deliveryCount(self):
+        """
+
+        :return: Количество магазинов, которые осуществляют доставку в указанный регион
+        :rtype: int
+        """
         return self.resp.get('deliveryCount')
 
     @property
     def totalCount(self):
+        """
+
+        :return: Общее количество магазинов, которые работают в указанном регионе: находятся в указанном регионе и осуществляют в него доставку
+        :rtype: int
+        """
         return self.resp.get('totalCount')
 
 
