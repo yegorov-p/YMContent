@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 
-__title__ = 'YandexMarketContent'
-__version__ = '0.0.2'
-__author__ = 'Pavel Yegorov'
-__license__ = 'Apache 2.0'
 
-from .constants import *
-import requests
-from requests.exceptions import ConnectionError, ReadTimeout, SSLError
 import socket
 import ssl
-from .response import *
-from .exceptions import *
 
+import requests
+from requests.exceptions import ConnectionError, ReadTimeout, SSLError
+
+from .constants import *
+from .exceptions import *
+from .response import *
+
+__title__ = 'YMContent'
+__version__ = constants.VERSION
+__author__ = 'Pavel Yegorov'
+__license__ = 'Apache 2.0'
 
 class YMAPI(object):
 

@@ -2,7 +2,9 @@
 
 API_VERSION = 'v2'
 
-USER_AGENT = 'pyYandexMarketContentAPI'
+USER_AGENT = 'YMContent'
+
+VERSION = '0.1.0'
 
 PROTOCOL = 'https'
 
