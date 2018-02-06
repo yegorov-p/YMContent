@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
-
 class YMBase(object):
     def __init__(self, data):
         self.data = data
@@ -16,8 +13,6 @@ class YMBase(object):
 
 
 class YMRegion(YMBase):
-    def __init__(self, data):
-        self.data = data
 
     def __repr__(self):
         return '<{}: {} ({})>'.format(self.__class__.__name__, self.data.get('name'), self.data.get('id'))
@@ -1650,7 +1645,7 @@ class YMModel(YMBase):
         :return: Список фильтров, предназначенных для фильтрации моделей/модификаций
         :rtype: list[objects.YMFilter]
         """
-        return [YMFilter(filter) for filter in self.data.get('filters', [])]
+        return [YMFilter(f) for f in self.data.get('filters', [])]
 
     @property
     def modifications(self):
@@ -3409,7 +3404,7 @@ class YMOutlet(YMBase):
         return YMOffer(self.data.get('offer'))
 
 
-class YMRedirectModel(YMBase):
+class YMRedirect(YMBase):
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
 
@@ -3439,6 +3434,9 @@ class YMRedirectModel(YMBase):
         :rtype: str
         """
         return self.data.get('link')
+
+
+class YMRedirectModel(YMRedirect):
 
     @property
     def model(self):
@@ -3459,36 +3457,7 @@ class YMRedirectModel(YMBase):
         return self.data.get('model')['id']
 
 
-class YMRedirectCatalog(YMBase):
-    def __repr__(self):
-        return '<{}>'.format(self.__class__.__name__)
-
-    @property
-    def type(self):
-        """
-
-        :return: Тип редиректа
-        :rtype: str
-        """
-        return self.data.get('type')
-
-    @property
-    def queryText(self):
-        """
-
-        :return: Текст оригинального запроса на редирект
-        :rtype: str
-        """
-        return self.data.get('queryText')
-
-    @property
-    def link(self):
-        """
-
-        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
-        :rtype: str
-        """
-        return self.data.get('link')
+class YMRedirectCatalog(YMRedirect):
 
     @property
     def items(self):
@@ -3546,36 +3515,7 @@ class YMRedirectCatalog(YMBase):
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 
 
-class YMRedirectVendor(YMBase):
-    def __repr__(self):
-        return '<{}>'.format(self.__class__.__name__)
-
-    @property
-    def type(self):
-        """
-
-        :return: Тип редиректа
-        :rtype: str
-        """
-        return self.data.get('type')
-
-    @property
-    def queryText(self):
-        """
-
-        :return: Текст оригинального запроса на редирект
-        :rtype: str
-        """
-        return self.data.get('queryText')
-
-    @property
-    def link(self):
-        """
-
-        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
-        :rtype: str
-        """
-        return self.data.get('link')
+class YMRedirectVendor(YMRedirect):
 
     @property
     def vendor(self):
@@ -3596,36 +3536,7 @@ class YMRedirectVendor(YMBase):
         return self.data.get('vendor')['id']
 
 
-class YMRedirectSearch(YMBase):
-    def __repr__(self):
-        return '<{}>'.format(self.__class__.__name__)
-
-    @property
-    def type(self):
-        """
-
-        :return: Тип редиректа
-        :rtype: str
-        """
-        return self.data.get('type')
-
-    @property
-    def queryText(self):
-        """
-
-        :return: Текст оригинального запроса на редирект
-        :rtype: str
-        """
-        return self.data.get('queryText')
-
-    @property
-    def link(self):
-        """
-
-        :return: Ссылка на данный редирект, направляющая на Яндекс.Маркет
-        :rtype: str
-        """
-        return self.data.get('link')
+class YMRedirectSearch(YMRedirect):
 
     # @property
     # def items(self):

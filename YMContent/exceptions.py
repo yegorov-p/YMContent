@@ -54,6 +54,7 @@ class GradeParamError(BaseException):
 class CountParamError(BaseException):
     pass
 
+
 class PosParamError(BaseException):
     pass
 

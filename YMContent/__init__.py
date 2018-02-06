@@ -32,10 +32,12 @@ class YMAPI(object):
             'User-agent': USER_AGENT,
         }
 
-    def _prepare_url(self, resource):
+    @staticmethod
+    def _prepare_url(resource):
         return '%s://%s/%s/%s' % (PROTOCOL, DOMAIN, API_VERSION, resource)
 
-    def _prepare_resource_path(self, resource_path, params=None):
+    @staticmethod
+    def _prepare_resource_path(resource_path, params=None):
         return resource_path.format(**params)
 
     def _request(self, resource, req_id, params):
@@ -46,23 +48,24 @@ class YMAPI(object):
         url = self._prepare_url(resource_path)
 
         try:
-            response = self.session.get(
+            r = self.session.get(
                 url=url,
                 params=params
             )
 
-            data = response.json()
+            data = r.json()
 
-            if response.status_code in (401, 404, 422):
+            if r.status_code in (401, 404, 422):
                 raise BaseAPIError(
                     data['errors'][0]['message'])
-            return response
+            return r
 
         except (ConnectionError, ReadTimeout, SSLError, ssl.SSLError,
                 socket.error) as exception:
             pass
 
-    def _validate_fields(self, fields, values):
+    @staticmethod
+    def _validate_fields(fields, values):
         if type(fields) == list:
             for field in fields:
                 if field.upper() not in values:
@@ -98,7 +101,7 @@ class YMAPI(object):
         :type page: int
 
         :return: Список категорий первого уровня (корневых) товарного дерева :class:`response.Categories`
-        :rtype: list[response.Categories]
+        :rtype: response.Categories
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises SortParamError: неверное значение параметра sort
@@ -277,7 +280,7 @@ class YMAPI(object):
         :type filters: dict
 
         :return: Cписок фильтров для фильтрации моделей и товарных предложений в указанной категории
-        :rtype: response.CategoriesFilters
+        :rtype: response.Filters
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
@@ -316,7 +319,7 @@ class YMAPI(object):
             for (k, v) in filters.items():
                 params[k] = v
 
-        return CategoriesFilters(self._request('categories/{}/filters', category_id, params))
+        return Filters(self._request('categories/{}/filters', category_id, params))
 
     def categories_match(self, name, category_name=None, description=None, locale='RU_ru', price=None,
                          shop_name=None):
@@ -572,7 +575,7 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :return: Cписок моделей, которые похожи на указанную в запросе
-        :rtype: response.ModelsLookas
+        :rtype: response.Models
 
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра count
@@ -612,7 +615,7 @@ class YMAPI(object):
                                                          'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
                                                          'VENDOR_ALL'))
 
-        return ModelsLookas(self._request('models/{}/looksas', model_id, params))
+        return Models(self._request('models/{}/looksas', model_id, params))
 
     def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1):
         """
@@ -696,7 +699,7 @@ class YMAPI(object):
         :type remote_ip: int
 
         :return: популярные на Яндекс.Маркете модели
-        :rtype: response.CategoriesPopular
+        :rtype: response.Models
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-popular-models-docpage/
         """
@@ -743,9 +746,9 @@ class YMAPI(object):
                                                          'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
                                                          'VENDOR_ALL'))
 
-        return CategoriesPopular(self._request('categories/{}/populars', category_id, params))
+        return Models(self._request('categories/{}/populars', category_id, params))
 
-    def model_offers(self, model_id, delivery_included=False, fields=None, groupBy=None, shop_regions=None,
+    def model_offers(self, model_id, delivery_included=False, fields=None, group_by=None, shop_regions=None,
                      filters=None,
                      count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
         """
@@ -760,8 +763,8 @@ class YMAPI(object):
         :param fields: Параметры товарных предложений, которые необходимо показать в выходных данных
         :type fields: str or list[str]
 
-        :param groupBy: Вариант группировки товарных предложений
-        :type groupBy: str
+        :param group_by: Вариант группировки товарных предложений
+        :type group_by: str
 
         :param shop_regions: Идентификаторы регионов магазинов
         :type shop_regions: str or list[int]
@@ -824,10 +827,10 @@ class YMAPI(object):
                                                          'FILTER_ALL',
                                                          'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'))
 
-        if groupBy:
-            if groupBy not in ('NONE', 'OFFER', 'SHOP'):
-                raise GroupByParamError('"groupBy" param is wrong')
-            params['groupBy'] = groupBy
+        if group_by:
+            if group_by not in ('NONE', 'OFFER', 'SHOP'):
+                raise GroupByParamError('"group_by" param is wrong')
+            params['group_by'] = group_by
 
         if shop_regions:
             params['shop_regions'] = shop_regions
@@ -926,7 +929,7 @@ class YMAPI(object):
         :type sort: str
 
         :return: Cписок фильтров и сортировок, доступных для фильтрации и сортировки товарных предложений указанной модели
-        :rtype: response.ModelOffersFilters
+        :rtype: response.Filters
         """
         params = {}
 
@@ -943,7 +946,7 @@ class YMAPI(object):
             if sort not in ('NAME', 'NONE'):
                 raise SortParamError('"sort" param is wrong')
 
-        return ModelOffersFilters(self._request('models/{}/offers/filters', model_id, params))
+        return Filters(self._request('models/{}/offers/filters', model_id, params))
 
     def offer(self, offer_id, delivery_included=0, fields='STANDARD'):
         """
@@ -1025,6 +1028,9 @@ class YMAPI(object):
         else:
             params['page'] = page
 
+        if max_comments:
+            params['max_comments'] = max_comments
+
         if how:
             if how not in ['ASC', 'DESC']:
                 raise HowParamError('"how" param is wrong')
@@ -1040,8 +1046,8 @@ class YMAPI(object):
         """
         Отзывы о магазине
 
-        :param model_id: Идентификатор магазина
-        :type model_id: int
+        :param shop_id: Идентификатор магазина
+        :type shop_id: int
 
         :param grade: Оценка, выставленная автором отзыва
         :type grade: int
@@ -1080,6 +1086,9 @@ class YMAPI(object):
             raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
+
+        if max_comments:
+            params['max_comments'] = max_comments
 
         if how:
             if how not in ['ASC', 'DESC']:
@@ -1389,6 +1398,9 @@ class YMAPI(object):
         """
         Список пунктов выдачи товарного предложения
 
+        :param offer_id: Идентификатор товарного предложения
+        :type offer_id: int
+
         :param boundary: Координаты квадрата на местности для выдачи точек продаж на карте.
         :type boundary: str
 
@@ -1584,25 +1596,6 @@ class YMAPI(object):
                                                          'DECLENSIONS', 'PARENT', 'ALL'))
 
         return Region(self._request('geo/regions/{}', region_id, params))
-
-    def geo_regions(self, req_id, fields=None, count=10, page=1):
-        params = {}
-
-        if count < 1 or count > 30:
-            raise CountParamError('"count" param must be between 1 and 30')
-        else:
-            params['count'] = count
-
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('DECLENSIONS', 'PARENT', 'ALL'))
-
-        return Region(self._request('geo/regions/{id}', req_id, params))
 
     def geo_suggest(self, fields=None,
                     types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
@@ -2073,7 +2066,7 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :return: Список доступных фильтров и сортировок для укзанного поискового запроса
-        :rtype: response.CategoriesFilters
+        :rtype: response.Filters
         """
         params = {'text': text}
 
@@ -2082,7 +2075,7 @@ class YMAPI(object):
                                                      ('ALLVENDORS', 'DESCRIPTION', 'FOUND',
                                                       'SORTS', 'ALL', 'STANDARD'))
 
-        return CategoriesFilters(self._request('search/filters', None, params))
+        return Filters(self._request('search/filters', None, params))
 
     def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
                  fields=None, user_agent=None, count=10, page=1, how=None, sort=None, geo_id=None, remote_ip=None):

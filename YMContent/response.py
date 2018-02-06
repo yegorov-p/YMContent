@@ -294,7 +294,7 @@ class Category(Base):
         return YMCategory(self.resp['category'])
 
 
-class CategoriesFilters(Base):
+class Filters(Base):
 
     @property
     def sorts(self):
@@ -312,7 +312,7 @@ class CategoriesFilters(Base):
         :return: Список фильтров
         :rtype: list[objects.YMFilter]
         """
-        return [YMFilter(filter) for filter in self.resp['filters']]
+        return [YMFilter(f) for f in self.resp['filters']]
 
 
 class Model(Base):
@@ -333,24 +333,13 @@ class ModelReview(Page):
     :return: Список отзывов на модель
     :rtype: list[YMModelReview]
     """
+
     @property
     def reviews(self):
         return [YMModelReview(review) for review in self.resp['reviews']]
 
 
 class Models(Base):
-
-    @property
-    def models(self):
-        """
-
-        :return: Список моделей
-        :rtype: list[objects.YMModel]
-        """
-        return [YMModel(model) for model in self.resp['models']]
-
-
-class ModelsLookas(Base):
 
     @property
     def models(self):
@@ -374,18 +363,6 @@ class CategoriesLookas(Page):
         return [YMModel(model) for model in self.resp['models']]
 
 
-class CategoriesPopular(Page):
-
-    @property
-    def models(self):
-        """
-
-        :return: Список моделей
-        :rtype: list[objects.YMModel]
-        """
-        return [YMModel(model) for model in self.resp['models']]
-
-
 class ModelOffers(Page):
 
     @property
@@ -404,7 +381,7 @@ class ModelOffers(Page):
         :return: Список фильтров, доступных для фильтрации товарных предложений модели
         :rtype: list[objects.YMFilter]
         """
-        return [YMFilter(filter) for filter in self.resp['filters']]
+        return [YMFilter(f) for f in self.resp['filters']]
 
     @property
     def offers(self):
@@ -438,27 +415,6 @@ class ModelOffersStat(Base):
         :rtype: objects.YMStatistics
         """
         return YMStatistics(self.resp['statistics'])
-
-
-class ModelOffersFilters(Base):
-
-    @property
-    def sorts(self):
-        """
-
-        :return: Список сортировок
-        :rtype: list[objects.YMSort]
-        """
-        return [YMSort(sort) for sort in self.resp['sorts']]
-
-    @property
-    def filters(self):
-        """
-
-        :return: Список фильтров
-        :rtype: list[objects.YMFilter]
-        """
-        return [YMFilter(filter) for filter in self.resp['filters']]
 
 
 class Offer(Base):
