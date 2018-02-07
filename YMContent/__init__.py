@@ -239,27 +239,35 @@ class YMAPI(object):
 
         return Categories(self._request('categories/{}/children', category_id, params))
 
-    def category(self, category_id=None, fields=None, geo_id=None, remote_ip=None):
+    def category(self, category_id, fields=None, geo_id=None, remote_ip=None):
         """
         Информация о категории
 
         :param category_id: Идентификатор категории
         :type category_id: int
 
-        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :param fields: Параметры категории, которые необходимо показать в выходных данных:
+
+            * **PARENT** — информация о родительской категории
+            * **STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории
+            * **WARNINGS** — предупреждения, связанные с показом категории
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
-        :param remote_ip: Идентификатор региона пользователя
+        :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
         :return: Информация о категории
         :rtype: response.Category
 
-        :raises FieldsParamError: неверное значение параметра fields
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises FieldsParamError: неверное значение параметра fields
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-category-docpage/
         """
