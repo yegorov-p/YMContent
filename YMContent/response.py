@@ -272,17 +272,6 @@ class Categories(Page):
         return [YMCategory(category) for category in self.resp['categories']]
 
 
-class CategoriesChildren(Page):
-    @property
-    def categories(self):
-        """
-
-        :return: Список подкатегорий
-        :rtype: list[objects.YMCategory]
-        """
-        return [YMCategory(category) for category in self.resp['categories']]
-
-
 class Category(Base):
     @property
     def category(self):

@@ -159,7 +159,7 @@ class YMAPI(object):
 
         return Categories(self._request('categories', None, params))
 
-    def categories_children(self, category_id=None, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10,
+    def categories_children(self, category_id, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10,
                             page=1):
         """
         Список подкатегорий
@@ -167,32 +167,45 @@ class YMAPI(object):
         :param category_id: Идентификатор категории
         :type category_id: int
 
-        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :param fields: Параметры категории, которые необходимо показать в выходных данных:
+
+            * **PARENT** — информация о родительской категории
+            * **STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории
+            * **WARNINGS** — предупреждения, связанные с показом категории
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
-        :param sort: Тип сортировки категорий
+        :param sort: Тип сортировки категорий:
+
+            * **BY_NAME** — сортировка категорий в алфавитном порядке
+            * **BY_OFFERS_NUM** — сортировка по количеству товарных предложений в каждой категории
+            * **NONE** — сортировка по умолчанию
+
         :type sort: str
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
-        :param remote_ip: Идентификатор региона пользователя
+        :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
-        :param count: IP-адрес пользователя
+        :param count: Количество выводимых результатов на странице ответа
         :type count: int
 
         :param page: Номер страницы
         :type page: int
 
         :return: Список категорий товарного дерева, вложенных в категорию с указанным в запросе идентификатором
-        :rtype: list[response.CategoriesChildren]
+        :rtype: response.CategoriesChildren
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises SortParamError: неверное значение параметра sort
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
-        :raises PageParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-children-categories-docpage/
         """
@@ -224,7 +237,7 @@ class YMAPI(object):
         else:
             params['page'] = page
 
-        return CategoriesChildren(self._request('categories/{}/children', category_id, params))
+        return Categories(self._request('categories/{}/children', category_id, params))
 
     def category(self, category_id=None, fields=None, geo_id=None, remote_ip=None):
         """
