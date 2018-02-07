@@ -16,14 +16,15 @@ __version__ = constants.VERSION
 __author__ = 'Pavel Yegorov'
 __license__ = 'Apache 2.0'
 
+
 class YMAPI(object):
+    """
+
+    :param authorization_key: Авторизационный ключ
+    :type authorization_key: str
+    """
 
     def __init__(self, authorization_key=None):
-        """
-
-        :param authorization_key: Авторизационный ключ
-        :type authorization_key: str
-        """
         if not authorization_key:
             raise NotAuthorized(
                 "You must provide authorization key to access Yandex.Market API!")
@@ -84,32 +85,45 @@ class YMAPI(object):
         """
         Список категорий
 
-        :param fields: Параметры категории, которые необходимо показать в выходных данных
-        :type fields: str
+        :param fields: Параметры категории, которые необходимо показать в выходных данных:
 
-        :param sort: Тип сортировки категорий
+            * **PARENT** — информация о родительской категории
+            * **STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории
+            * **WARNINGS** — предупреждения, связанные с показом категории
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
+        :type fields: str or list[str]
+
+        :param sort: Тип сортировки категорий:
+
+            * **BY_NAME** — сортировка категорий в алфавитном порядке
+            * **BY_OFFERS_NUM** — сортировка по количеству товарных предложений в каждой категории
+            * **NONE** — сортировка по умолчанию
+
         :type sort: str
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
-        :param remote_ip: Идентификатор региона пользователя
+        :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
-        :param count: IP-адрес пользователя
+        :param count: Количество выводимых результатов на странице ответа
         :type count: int
 
         :param page: Номер страницы
         :type page: int
 
-        :return: Список категорий первого уровня (корневых) товарного дерева :class:`response.Categories`
+        :return: Список категорий первого уровня (корневых) товарного дерева
         :rtype: response.Categories
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises SortParamError: неверное значение параметра sort
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
-        :raises PageParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-root-categories-docpage/
         """

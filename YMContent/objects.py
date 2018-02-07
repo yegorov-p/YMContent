@@ -136,6 +136,8 @@ class YMCategory(YMBase):
 
         :return: Идентификатор категории
         :rtype: int
+
+        90402
         """
         return self.data.get('id')
 
@@ -145,6 +147,8 @@ class YMCategory(YMBase):
 
         :return: Наименование категории
         :rtype: str
+
+        Авто
         """
         return self.data.get('name')
 
@@ -154,6 +158,8 @@ class YMCategory(YMBase):
 
         :return: Полное наименование категории
         :rtype: str
+
+        Товары для авто- и мототехники
         """
         return self.data.get('fullName')
 
@@ -163,6 +169,8 @@ class YMCategory(YMBase):
 
         :return: Идентификатор родительской категории
         :rtype: int
+
+        90401
         """
         return self.data.get('parent')
 
@@ -172,6 +180,8 @@ class YMCategory(YMBase):
 
         :return: Признак категории, имеющей возрастное ограничение (18+)
         :rtype: bool
+
+        False
         """
         return self.data.get('adult')
 
@@ -181,6 +191,8 @@ class YMCategory(YMBase):
 
         :return: Ссылка на карточку категории на Яндекс.Маркете
         :rtype: str
+
+        https://market.yandex.ru/catalog/90402/list?hid=90402&onstock=1&pp=1001
         """
         return self.data.get('link')
 
@@ -190,6 +202,8 @@ class YMCategory(YMBase):
 
         :return: Количество дочерних категорий
         :rtype: int
+
+        12
         """
         return self.data.get('childCount')
 
@@ -199,6 +213,8 @@ class YMCategory(YMBase):
 
         :return: Количество моделей в категории
         :rtype: int
+
+        181170
         """
         return self.data.get('modelCount')
 
@@ -208,6 +224,8 @@ class YMCategory(YMBase):
 
         :return: Количество товарных предложений в категории
         :rtype: int
+
+        3531718
         """
         return self.data.get('offerCount')
 
@@ -217,6 +235,10 @@ class YMCategory(YMBase):
 
         :return: Тип размещения товарных предложений в категории
         :rtype: str
+
+        * **CPA** — плата за заказы, оформленные прямо на Яндекс.Маркете
+        * **CPC** — плата только за клики по предложению магазина
+        * **HYBRID** — возможны оба варианта размещения товарных предложений в категории
         """
         return self.data.get('advertisingModel')
 
@@ -226,6 +248,9 @@ class YMCategory(YMBase):
 
         :return: Тип отображения товаров в категории
         :rtype: str
+
+        * **LIST** — список
+        * **GRID** — сетка
         """
         return self.data.get('viewType')
 
