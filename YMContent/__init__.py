@@ -289,9 +289,11 @@ class YMAPI(object):
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных:
 
-            * **PARENT** — информация о родительской категории
-            * **STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории
-            * **WARNINGS** — предупреждения, связанные с показом категории
+            * **ALLVENDORS** — группа параметров для фильтра «Производитель
+            * **DESCRIPTION** — описания фильтров
+            * **FOUND** — количество моделей или товарных предложений
+            * **SORTS** — включение в выдачу доступных фильтров
+            * **STANDARD** = ALLVENDORS, DESCRIPTION, FOUND, SORTS
             * **ALL** - Все значения
 
             .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
@@ -304,13 +306,24 @@ class YMAPI(object):
         :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
-        :param filter_set: Набор фильтров в выходных данных
-        :type filter_set: str or list[str]
+        :param filter_set: Набор фильтров в выходных данных:
+
+            * **ALL** — все фильтры
+            * **BASIC** — базовый набор фильтров
+            * **POPULAR** — только популярные фильтры
+
+            .. note:: Значение BASIC равнозначно POPULAR
+
+        :type filter_set: str
 
         :param rs: Поле содержащее закодированную информацию о текстовом запросе после редиректа, на которую будет ориентироваться поиск
         :type rs: str
 
-        :param sort: Тип сортировки категорий
+        :param sort: Тип сортировки категорий:
+
+            * **NAME** — сортировка по имени
+            * **NONE** — сортировка отсутствует
+
         :type sort: str
 
         :param filters: Условия фильтрации моделей и предложений на модель
@@ -319,8 +332,10 @@ class YMAPI(object):
         :return: Cписок фильтров для фильтрации моделей и товарных предложений в указанной категории
         :rtype: response.Filters
 
-        :raises FieldsParamError: неверное значение параметра fields
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises FieldsParamError: неверное значение параметра fields
+        :raises FilterSetParamError: неверное значение параметра filter_set
+        :raises SortParamError: неверное значение параметра sort
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-get-category-filters-docpage/
         """

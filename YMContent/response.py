@@ -284,7 +284,7 @@ class Category(Base):
 
 
 class Filters(Base):
-
+    """Фильтры"""
     @property
     def sorts(self):
         """

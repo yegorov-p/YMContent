@@ -276,7 +276,7 @@ class YMSearchCategory(YMCategory):
 
 
 class YMSortOption(YMBase):
-
+    """Опции сортировки"""
     def __repr__(self):
         return '<{}: {} ({})>'.format(self.__class__.__name__, self.data.get('id'), self.data.get('how'))
 
@@ -286,6 +286,8 @@ class YMSortOption(YMBase):
 
         :return: Идентификатор варианта сортировки
         :rtype: str
+
+        aprice
         """
         return self.data.get('id')
 
@@ -295,6 +297,8 @@ class YMSortOption(YMBase):
 
         :return: Направление сортировки
         :rtype: str
+
+        ASC
         """
         return self.data.get('how')
 
@@ -304,6 +308,8 @@ class YMSortOption(YMBase):
 
         :return: Наименование данного варианта сортировки
         :rtype: str
+
+        Сначала дешёвые
         """
         return self.data.get('text')
 
@@ -319,6 +325,8 @@ class YMSort(YMBase):
 
         :return: Наименование типа сортировки
         :rtype: str
+
+        по цене
         """
         return self.data.get('text')
 
@@ -328,6 +336,8 @@ class YMSort(YMBase):
 
         :return: Тип сортировки
         :rtype: str
+
+        PRICE
         """
         return self.data.get('field')
 
@@ -661,7 +671,7 @@ class YMNavigationNode(YMBase):
 
 
 class YMFilter(YMBase):
-
+    """Фильтр"""
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__, self.data.get('id'))
 
@@ -671,6 +681,8 @@ class YMFilter(YMBase):
 
         :return: Идентификатор фильтра
         :rtype: str
+
+        -2
         """
         return self.data.get('id')
 
@@ -680,6 +692,8 @@ class YMFilter(YMBase):
 
         :return: Наименование фильтра
         :rtype: str
+
+        Гарантия производителя
         """
         return self.data.get('name')
 
@@ -689,6 +703,14 @@ class YMFilter(YMBase):
 
         :return: Тип фильтра
         :rtype: str
+
+        * **BOOLEAN** — логический тип
+        * **NUMBER** — числовой тип, задает диапазон допустимых значений
+        * **ENUM** — тип перечисление, задает список допустимых значений, множественный выбор
+        * **COLOR** — фильтр по цвету, аналогичен ENUM, значения фильтра дополнительно содержат HEX-код соответствующего цвета
+        * **SIZE** — фильтр по размеру, аналогичен ENUM, значения фильтра дополнительно содержат код единиц измерения
+        * **RADIO** — аналогичен ENUM, но допускает выбор только одного значения
+        * **TEXT** — тип фильтра для фильтрации по поисковой фразе
         """
         return self.data.get('type')
 
@@ -699,6 +721,7 @@ class YMFilter(YMBase):
         :return: Описание фильтра
         :rtype: str
         """
+        #todo никогда не возвращается
         return self.data.get('description')
 
     @property
@@ -708,6 +731,7 @@ class YMFilter(YMBase):
         :return: Единицы измерения значений фильтра
         :rtype: str
         """
+        # todo никогда не возвращается
         return self.data.get('unit')
 
     @property
@@ -717,6 +741,7 @@ class YMFilter(YMBase):
         :return: Код единиц измерения значений фильтра, используемых по умолчанию
         :rtype: str
         """
+        # todo никогда не возвращается
         return self.data.get('defaultUnit')
 
     @property
@@ -726,6 +751,7 @@ class YMFilter(YMBase):
         :return: Список значений фильтра
         :rtype: list[objects.YMFilterValue]
         """
+        # todo никогда не возвращается
         return [YMFilterValue(value) for value in self.data.get('values', [])]
 
     @property
@@ -735,6 +761,7 @@ class YMFilter(YMBase):
         :return: Максимальное значение числового фильтра
         :rtype: str
         """
+        # todo никогда не возвращается
         return self.data.get('max')
 
     @property
@@ -744,6 +771,7 @@ class YMFilter(YMBase):
         :return: Минимальное значение числового фильтра
         :rtype: str
         """
+        # todo никогда не возвращается
         return self.data.get('min')
 
     @property
@@ -753,6 +781,7 @@ class YMFilter(YMBase):
         :return: Выбранное значение числового фильтра
         :rtype: str
         """
+        # todo никогда не возвращается
         return self.data.get('value')
 
     @property
@@ -762,6 +791,7 @@ class YMFilter(YMBase):
         :return: Количество знаков поле запятой у значений фильтра
         :rtype: int
         """
+        # todo никогда не возвращается
         return self.data.get('precision')
 
 
