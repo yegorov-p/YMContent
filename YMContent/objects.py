@@ -508,6 +508,7 @@ class YMDatasource(YMBase):
         :return: Тип источника данных
         :rtype: str
         """
+        # todo Нет примера
         return self.data.get('id')
 
     @property
@@ -516,6 +517,8 @@ class YMDatasource(YMBase):
 
         :return: Идентификатор категории
         :rtype: int
+
+        91491
         """
         return self.data.get('hid')
 
@@ -525,6 +528,8 @@ class YMDatasource(YMBase):
 
         :return: Идентификатор узла навигационного дерева
         :rtype: int
+
+        54726
         """
         return self.data.get('nid')
 
@@ -558,6 +563,8 @@ class YMNavigationNode(YMBase):
 
         :return: Идентификатор навигационного узла (nid)
         :rtype: int
+
+        54726
         """
         return self.data.get('id')
 
@@ -567,6 +574,8 @@ class YMNavigationNode(YMBase):
 
         :return: Идентификатор товарной категории (hid)
         :rtype: int
+
+        91491
         """
         return self.data.get('hid')
 
@@ -576,6 +585,8 @@ class YMNavigationNode(YMBase):
 
         :return: Краткое наименование навигационного узла
         :rtype: str
+
+        Мобильные телефоны
         """
         return self.data.get('shortName')
 
@@ -586,6 +597,7 @@ class YMNavigationNode(YMBase):
         :return: Тип узла навигационного дерева
         :rtype: str
         """
+        # todo бывает нескольких видов, предположительно category, virtual, link
         return self.data.get('type')
 
     @property
@@ -594,6 +606,8 @@ class YMNavigationNode(YMBase):
 
         :return: Количество товарных предложений в категории узла
         :rtype: int
+
+        55595
         """
         return self.data.get('offerCount')
 
@@ -603,6 +617,8 @@ class YMNavigationNode(YMBase):
 
         :return: Количество моделей в категории узла
         :rtype: int
+
+        3002
         """
         return self.data.get('modelCount')
 
@@ -613,6 +629,7 @@ class YMNavigationNode(YMBase):
         :return: Признак визуальной категории
         :rtype: bool
         """
+        # todo нет примера
         return self.data.get('visual')
 
     @property
@@ -622,6 +639,7 @@ class YMNavigationNode(YMBase):
         :return: Максимальная скидка в категории
         :rtype: str
         """
+        # todo нет примера
         return self.data.get('maxDiscount')
 
     @property
@@ -630,6 +648,8 @@ class YMNavigationNode(YMBase):
 
         :return: Полное наименование навигационного узла
         :rtype: str
+
+        Мобильные телефоны
         """
         return self.data.get('name')
 
@@ -649,6 +669,7 @@ class YMNavigationNode(YMBase):
         :return: Список изображений, относящихся к данному узлу навигационного дерева
         :rtype: list[YMIcon]
         """
+        # todo нет примера
         return [YMIcon(icon) for icon in self.data.get('icons', [])]
 
     @property
@@ -658,6 +679,7 @@ class YMNavigationNode(YMBase):
         :return: Иерархический список всех родителей узла, начиная с корня
         :rtype: list[objects.YMNavigationNode]
         """
+        # todo нет примера
         return [YMNavigationNode(node) for node in self.data.get('parents', [])]
 
     @property
@@ -667,6 +689,7 @@ class YMNavigationNode(YMBase):
         :return: Список дочерних узлов
         :rtype: list[objects.YMNavigationNode]
         """
+        # todo нет примера
         return [YMNavigationNode(node) for node in self.data.get('categories', [])]
 
 
@@ -806,6 +829,8 @@ class YMModelPhoto(YMBase):
 
         :return: Ширина изображения
         :rtype: int
+
+        321
         """
         return self.data.get('width')
 
@@ -815,6 +840,8 @@ class YMModelPhoto(YMBase):
 
         :return: Высота изображения
         :rtype: int
+
+        620
         """
         return self.data.get('height')
 
@@ -824,6 +851,8 @@ class YMModelPhoto(YMBase):
 
         :return: Ссылка на изображение
         :rtype: str
+
+        https://avatars.mds.yandex.net/get-mpic/397397/img_id7051974271832358544.png/orig
         """
         return self.data.get('url')
 
@@ -834,6 +863,7 @@ class YMModelPhoto(YMBase):
         :return: Код значения фильтра по цвету
         :rtype: str
         """
+        # todo нет примера
         return self.data.get('colorId')
 
 
@@ -1443,6 +1473,8 @@ class YMModel(YMBase):
 
         :return: Идентификатор модели
         :rtype: int
+
+        1732210983
         """
         return self.data.get('id')
 
@@ -1452,6 +1484,8 @@ class YMModel(YMBase):
 
         :return: Наименование модели
         :rtype: str
+
+        Смартфон Apple iPhone X 256GB
         """
         return self.data.get('name')
 
@@ -1462,6 +1496,7 @@ class YMModel(YMBase):
         :return: Тип товара
         :rtype: str
         """
+        # todo нет примера
         return self.data.get('kind')
 
     @property
@@ -1470,6 +1505,12 @@ class YMModel(YMBase):
 
         :return: Тип модели
         :rtype: str
+
+        * **MODEL** — Обычная модель
+        * **GROUP** — Групповая модель
+        * **MODIFICATION** — Модификация
+        * **BOOK** — Книга
+        * **CLUSTER** — Визуальная модель
         """
         return self.data.get('type')
 
@@ -1479,6 +1520,8 @@ class YMModel(YMBase):
 
         :return: Признак "новизны" товара
         :rtype: bool
+
+        False
         """
         return self.data.get('isNew')
 
@@ -1486,19 +1529,24 @@ class YMModel(YMBase):
     def link(self):
         """
 
-        :return: Ссылка на карточку модели на большом маркете
+        :return: Ссылка на карточку модели
         :rtype: str
+
+        https://market.yandex.ru/product/1732210983?hid=91491&pp=1001
         """
+        # todo нет примера
         return self.data.get('link')
 
-    # todo пустое описание
     @property
     def vendorLink(self):
         """
 
-        :return:
-        :rtype:
+        :return: Ссылка на страницу производителя
+        :rtype: str
+
+        https://market.yandex.ru/brands/267101?pp=1001',
         """
+        # todo нет примера
         return self.data.get('vendorLink')
 
     # todo пустое описание
@@ -1506,9 +1554,10 @@ class YMModel(YMBase):
     def barcode(self):
         """
 
-        :return:
-        :rtype:
+        :return: Штрих-код модели
+        :rtype: str
         """
+        # todo нет примера
         return self.data.get('barcode')
 
     # todo пустое описание
@@ -1516,9 +1565,10 @@ class YMModel(YMBase):
     def vendorCode(self):
         """
 
-        :return:
-        :rtype:
+        :return: Общий идентификатор модели
+        :rtype: str
         """
+        # todo нет примера
         return self.data.get('vendorCode')
 
     @property
@@ -1527,6 +1577,8 @@ class YMModel(YMBase):
 
         :return: Количество товарных предложений модели в регионе запроса
         :rtype: int
+
+        248
         """
         return self.data.get('offerCount')
 
@@ -1536,6 +1588,8 @@ class YMModel(YMBase):
 
         :return: Количество отзывов на модель
         :rtype: int
+
+        33
         """
         return self.data.get('opinionCount')
 
@@ -1545,6 +1599,8 @@ class YMModel(YMBase):
 
         :return: Количество статей/обзоров на модель
         :rtype: int
+
+        6
         """
         return self.data.get('reviewCount')
 
@@ -1555,6 +1611,7 @@ class YMModel(YMBase):
         :return: Количество модификаций групповой модели. Поле отсутствует в выдаче, если модель не групповая
         :rtype: int
         """
+        # todo нет примера
         return self.data.get('modificationCount')
 
     @property
@@ -1564,9 +1621,11 @@ class YMModel(YMBase):
         :return: Дата-время последнего обновления модели в спсике стравнения
         :rtype: int
         """
+        # todo нет примера
         return self.data.get('lastUpdate')
 
     # todo пустое описание
+    # todo нет примера
     @property
     def aliases(self):
         """
@@ -1583,6 +1642,7 @@ class YMModel(YMBase):
         :return: Идентификатор модели
         :rtype: int
         """
+        # todo нет примера
         return self.data.get('parent')
 
     @property
@@ -1591,6 +1651,8 @@ class YMModel(YMBase):
 
         :return: Описание модели
         :rtype: str
+
+        GSM, LTE-A, смартфон, iOS 11, вес 174 г, ШхВхТ 70.9x143.6x7.7 мм, экран 5.8", 2436x1125, Bluetooth, NFC, Wi-Fi, GPS, ГЛОНАСС, фотокамера 12 МП, память 256 Гб
         """
         return self.data.get('description')
 

@@ -391,7 +391,7 @@ class YMAPI(object):
         :type locale: str
 
         :param price: Цена модели
-        :type price: str
+        :type price: str or int
 
         :param shop_name: Наименование магазина
         :type shop_name: str
@@ -422,22 +422,70 @@ class YMAPI(object):
         Информация о модели
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
-        :param fields: Свойства модели, которые необходимо показать в выходных данных
+        :param fields: Свойства модели, которые необходимо показать в выходных данных:
+
+            * **CATEGORY** — Информация о категории, к которой относится модель
+            * **DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **DISCOUNTS** — информация о скидках на модель.
+            * **FACTS** — Список достоинств и недостатков модели
+            * **FILTERS** — список фильтров, доступных для отбора модификаций модели.
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODIFICATIONS** — краткая информация о модификациях (для групповой модели).
+            * **NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **NAVIGATION_NODE_DATASOURCE** — источник данных узла навигационного дерева.
+            * **NAVIGATION_NODE_ICONS** — иконки навигационного дерева.
+            * **NAVIGATION_NODE_STATISTICS** — статистика узла навигационного дерева.
+            * **OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **PHOTOS** — все доступные изображения модели.
+            * **PRICE** — информация о ценах на модель.
+            * **RATING** — иформация о рейтинге и оценках модели.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SPECIFICATION** — характеристики модели.
+            * **VENDOR** — информация о производителе.
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_SORTS
+            * **NAVIGATION_NODE_ALL** = NAVIGATION_NODE_DATASOURCE, NAVIGATION_NODE_ICONS, NAVIGATION_NODE_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, OFFERS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, PHOTO, PRICE, RATING, SHOP_RATING, VENDOR
+            * **VENDOR_ALL** = VENDOR_LINK
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :param filters: Условия фильтрации моделей и предложений на модель
         :type filters: dict
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
-        :param remote_ip: Идентификатор региона пользователя
+        :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
         :return: Информация о модели
         :rtype: response.Model
+
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises FieldsParamError: неверное значение параметра fields
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-model-docpage/
         """

@@ -306,7 +306,7 @@ class Filters(Base):
 
 
 class Model(Base):
-
+    """Модель"""
     @property
     def model(self):
         """
