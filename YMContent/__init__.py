@@ -35,20 +35,12 @@ class YMAPI(object):
             'User-agent': USER_AGENT,
         }
 
-    @staticmethod
-    def _prepare_url(resource):
-        return '%s://%s/%s/%s' % (PROTOCOL, DOMAIN, API_VERSION, resource)
-
-    @staticmethod
-    def _prepare_resource_path(resource_path, params=None):
-        return resource_path.format(**params)
-
     def _request(self, resource, req_id, params):
         if resource not in RESOURCES:
             raise Exception('Resource "%s" unsupported' % resource)
 
-        resource_path = self._prepare_resource_path(resource, {'id': req_id})
-        url = self._prepare_url(resource_path)
+        resource_path = resource.format(req_id)
+        url = '{}://{}/{}/{}'.format(PROTOCOL, DOMAIN, API_VERSION, resource_path)
 
         try:
             r = self.session.get(
@@ -286,7 +278,7 @@ class YMAPI(object):
 
         return Category(self._request('categories/{}', category_id, params))
 
-    def categories_filters(self, category_id=None, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR',
+    def categories_filters(self, category_id, geo_id=None, remote_ip=None, fields=None, filter_set='POPULAR',
                            rs=None,
                            sort='NONE', filters=None):
         """
@@ -295,13 +287,21 @@ class YMAPI(object):
         :param category_id: Идентификатор категории
         :type category_id: int
 
-        :param fields: Параметры категории, которые необходимо показать в выходных данных
+        :param fields: Параметры категории, которые необходимо показать в выходных данных:
+
+            * **PARENT** — информация о родительской категории
+            * **STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории
+            * **WARNINGS** — предупреждения, связанные с показом категории
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
-        :param remote_ip: Идентификатор региона пользователя
+        :param remote_ip: IP-адрес пользователя
         :type remote_ip: int
 
         :param filter_set: Набор фильтров в выходных данных

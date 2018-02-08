@@ -13,46 +13,46 @@ DOMAIN = 'api.content.market.yandex.ru'
 RESOURCES = [
     # Категории
     'categories',
-    'categories/{id}/children',
-    'categories/{id}',
-    'categories/{id}/filters',
+    'categories/{}/children',
+    'categories/{}',
+    'categories/{}/filters',
     'categories/match',
-    'categories/{id}/bestdeals',
-    'categories/{id}/populars',
-    'categories/{id}/search',
+    'categories/{}/bestdeals',
+    'categories/{}/populars',
+    'categories/{}/search',
 
     # Модели товаров
-    'models/{id}',
-    'models/{id}/reviews',
+    'models/{}',
+    'models/{}/reviews',
     'models/match',
-    'models/{id}/looksas',
-    'models/{id}/offers',
-    'models/{id}/offers/default',
-    'models/{id}/offers/stat',
-    'models/{id}/offers/filters',
-    'models/{id}/opinions',
-    'models/{id}/outlets'
+    'models/{}/looksas',
+    'models/{}/offers',
+    'models/{}/offers/default',
+    'models/{}/offers/stat',
+    'models/{}/offers/filters',
+    'models/{}/opinions',
+    'models/{}/outlets'
 
     # Товарные предложения
-    'offers/{id}',
-    'offers/{id}/outlets',
+    'offers/{}',
+    'offers/{}/outlets',
 
     # Магазины
-    'shops/{id}/opinions',
-    'shops/{id}',
+    'shops/{}/opinions',
+    'shops/{}',
     'shops',
-    'shops/{id}/outlets',
+    'shops/{}/outlets',
 
     # Регионы
-    'geo/regions/{id}/shops/summary',
+    'geo/regions/{}/shops/summary',
     'geo/regions',
-    'geo/regions/{id}/children',
-    'geo/regions/{id}',
+    'geo/regions/{}/children',
+    'geo/regions/{}',
     'geo/suggest',
 
     # Производители
     'vendor',
-    'vendors/{id}',
+    'vendors/{}',
     'vendors/match',
 
     # Сервисы
