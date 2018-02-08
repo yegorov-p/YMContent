@@ -273,6 +273,7 @@ class Categories(Page):
 
 
 class Category(Base):
+    """Категория"""
     @property
     def category(self):
         """
