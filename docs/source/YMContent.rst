@@ -4,13 +4,6 @@ YMContent package
 Submodules
 ----------
 
-YMContent\.constants module
----------------------------
-
-.. automodule:: YMContent.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 YMContent\.objects module
 -------------------------
