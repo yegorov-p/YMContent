@@ -122,10 +122,10 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
+            params['fields'] = self._validate_fields(fields, constants.CATEGORY_FIELDS)
 
         if sort:
-            if sort.upper() not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
+            if sort.upper() not in constants.CATEGORY_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -212,10 +212,10 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
+            params['fields'] = self._validate_fields(fields, constants.CATEGORY_FIELDS)
 
         if sort:
-            if sort not in ('BY_NAME', 'BY_OFFERS_NUM', 'NONE'):
+            if sort not in constants.CATEGORY_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -274,7 +274,7 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            params['fields'] = self._validate_fields(fields, ('ALL', 'PARENT', 'STATISTICS', 'WARNINGS'))
+            params['fields'] = self._validate_fields(fields, constants.CATEGORY_FIELDS)
 
         return Category(self._request('categories/{}', category_id, params))
 
@@ -350,12 +350,11 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.SEARCH_FILTERS)
 
         if filter_set:
             for field in filter_set.split(','):
-                if field not in ('ALL', 'BASIC', 'POPULAR'):
+                if field not in constants.FILTER_SET:
                     raise FilterSetParamError('"filter_set" param is wrong')
             params['filter_set'] = filter_set
 
@@ -500,24 +499,7 @@ class YMAPI(object):
             params['remote_ip'] = remote_ip
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                      'FILTER_ALLVENDORS',
-                                                      'FILTER_COLOR',
-                                                      'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                      'MODIFICATIONS',
-                                                      'NAVIGATION_NODE',
-                                                      'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                      'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                      'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                      'OFFER_DISCOUNT',
-                                                      'OFFER_OFFERS_LINK',
-                                                      'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                      'PHOTO', 'PHOTOS', 'PRICE',
-                                                      'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                      'VENDOR', 'ALL', 'FILTER_ALL',
-                                                      'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                      'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
         if filters:
             for (k, v) in filters.items():
@@ -612,25 +594,7 @@ class YMAPI(object):
                   'name': name, 'locale': locale}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                         'FILTER_ALLVENDORS',
-                                                         'FILTER_COLOR',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                         'MODIFICATIONS',
-                                                         'NAVIGATION_NODE',
-                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK',
-                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'PHOTO', 'PHOTOS', 'PRICE',
-                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                         'VENDOR', 'ALL', 'FILTER_ALL',
-                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                         'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
         if match_types:
             for match_type in match_types.split(','):
@@ -696,25 +660,7 @@ class YMAPI(object):
             params['page'] = page
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                         'FILTER_ALLVENDORS',
-                                                         'FILTER_COLOR',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                         'MODIFICATIONS',
-                                                         'NAVIGATION_NODE',
-                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK',
-                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'PHOTO', 'PHOTOS', 'PRICE',
-                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                         'VENDOR', 'ALL', 'FILTER_ALL',
-                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                         'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
         return Models(self._request('models/{}/looksas', model_id, params))
 
@@ -756,25 +702,7 @@ class YMAPI(object):
             params['page'] = page
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                         'FILTER_ALLVENDORS',
-                                                         'FILTER_COLOR',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                         'MODIFICATIONS',
-                                                         'NAVIGATION_NODE',
-                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK',
-                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'PHOTO', 'PHOTOS', 'PRICE',
-                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                         'VENDOR', 'ALL', 'FILTER_ALL',
-                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                         'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
         return CategoriesLookas(self._request('categories/{}/bestdeals', category_id, params))
 
@@ -832,25 +760,7 @@ class YMAPI(object):
             params['page'] = page
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'CATEGORY', 'DEFAULT_OFFER', 'DISCOUNTS', 'FACTS', 'FILTERS',
-                                                         'FILTER_ALLVENDORS',
-                                                         'FILTER_COLOR',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS', 'MEDIA',
-                                                         'MODIFICATIONS',
-                                                         'NAVIGATION_NODE',
-                                                         'NAVIGATION_NODE_DATASOURCE', 'NAVIGATION_NODE_ICONS',
-                                                         'NAVIGATION_NODE_STATISTICS', 'OFFERS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK',
-                                                         'OFFER_OUTLET', 'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'PHOTO', 'PHOTOS', 'PRICE',
-                                                         'RATING', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SPECIFICATION',
-                                                         'VENDOR', 'ALL', 'FILTER_ALL',
-                                                         'NAVIGATION_NODE_ALL', 'OFFER_ALL', 'SHOP_ALL', 'STANDARD',
-                                                         'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
         return Models(self._request('categories/{}/populars', category_id, params))
 
@@ -887,7 +797,20 @@ class YMAPI(object):
         :param how: Направление сортировки
         :type how: str
 
-        :param sort: Тип сортировки товарных предложений
+        :param sort: Тип сортировки товарных предложений:
+
+            * **DATE** — сортировка по дате
+            * **DELIVERY_TIME** — сортировка по времени доставки
+            * **DISCOUNT** — сортировка по размеру скидки
+            * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя)
+            * **NOFFERS** — сортировка по количеству предложений
+            * **OPINIONS** — сортировка по количеству отзывов
+            * **POPULARITY** — сортировка по популярности
+            * **PRICE** — сортировка по цене
+            * **QUALITY** — сортировка по рейтингу
+            * **RATING** — сортировка по рейтингу
+            * **RELEVANCY** — сортировка по релевантности
+
         :type sort: str
 
         :param latitude: Широта
@@ -962,11 +885,9 @@ class YMAPI(object):
                 raise HowParamError('"how" param is wrong')
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
+            params['sort'] = sort
 
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
 
@@ -992,6 +913,23 @@ class YMAPI(object):
         :type model_id: int or str
 
         :param fields: Параметры предложений, которые необходимо показать в выходных данных
+
+            * **ACTIVE_FILTERS** — активные фильтры
+            * **CATEGORY** — информация о категории предложения
+            * **DELIVERY** — информация о доставке
+            * **DISCOUNT** — скидка
+            * **OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине
+            * **OUTLET** — информация о точке выдачи производетеля
+            * **OUTLET_COUNT** — Количество точек выдачи предложени
+            * **PHOTO** — фото предложения
+            * **SHOP** — магазин от которого поступило предложенение
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты
+            * **SHOP_RATING** — рейтинг магазина
+            * **VENDOR** — информация о поставщике
+            * **ALL** = Все значения
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, DELIVERY, OUTLET, OUTLET_COUNT, PHOTO, SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
@@ -1007,13 +945,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'ACTIVE_FILTERS', 'CATEGORY',
-                                                         'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
-                                                         'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
-                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
-                                                         'ALL', 'SHOP_ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.OFFER_FIELDS)
 
         if filters:
             for (k, v) in filters.items():
@@ -1046,7 +978,14 @@ class YMAPI(object):
         :param fields: Группы параметров, которые необходимо отобразить в выходных данных
         :type fields: str or list[str]
 
-        :param filter_set: Определяет набор фильтров в выходных данных
+        :param filter_set: Набор фильтров в выходных данных:
+
+            * **ALL** — все фильтры
+            * **BASIC** — базовый набор фильтров
+            * **POPULAR** — только популярные фильтры
+
+            .. note:: Значение BASIC равнозначно POPULAR
+
         :type filter_set: str
 
         :param sort: Задает тип сортировки значений в фильтрах
@@ -1065,10 +1004,10 @@ class YMAPI(object):
 
         if fields:
             params['fields'] = self._validate_fields(fields,
-                                                     ('ALLVENDORS', 'DESCRIPTION', 'FOUND', 'SORTS', 'ALL', 'STANDARD'))
+                                                     constants.SEARCH_FILTERS)
 
         if filter_set:
-            if filter_set not in ('ALL', 'BASIC', 'POPULAR'):
+            if filter_set not in constants.FILTER_SET:
                 raise FilterSetParamError('"filter_set" param is wrong')
             params['filter_set'] = filter_set
 
@@ -1089,6 +1028,23 @@ class YMAPI(object):
         :type delivery_included: bool
 
         :param fields: Параметры предложений, которые необходимо показать в выходных данных
+
+            * **ACTIVE_FILTERS** — активные фильтры
+            * **CATEGORY** — информация о категории предложения
+            * **DELIVERY** — информация о доставке
+            * **DISCOUNT** — скидка
+            * **OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине
+            * **OUTLET** — информация о точке выдачи производетеля
+            * **OUTLET_COUNT** — Количество точек выдачи предложени
+            * **PHOTO** — фото предложения
+            * **SHOP** — магазин от которого поступило предложенение
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты
+            * **SHOP_RATING** — рейтинг магазина
+            * **VENDOR** — информация о поставщике
+            * **ALL** = Все значения
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, DELIVERY, OUTLET, OUTLET_COUNT, PHOTO, SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
@@ -1111,12 +1067,7 @@ class YMAPI(object):
             params['delivery_included'] = delivery_included
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('ACTIVE_FILTERS', 'CATEGORY',
-                                                      'DELIVERY', 'DISCOUNT', 'OFFERS_LINK',
-                                                      'OUTLET', 'OUTLET_COUNT', 'PHOTO', 'SHOP',
-                                                      'SHOP_ORGANIZATION', 'SHOP_RATING', 'VENDOR',
-                                                      'ALL', 'SHOP_ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.OFFER_FIELDS)
 
         return Offer(self._request('offers/{}', offer_id, params))
 
@@ -1261,6 +1212,11 @@ class YMAPI(object):
         :type shop_id: int
 
         :param fields: Свойства магазинов, которые необходимо показать в выходных данных
+
+        * **DATE** — сортировка по дате написания отзыва
+        * **GRADE** — сортировка по оценке пользователем модели
+        * **RANK** — сортировка по полезности отзыва
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1273,9 +1229,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('ORGANIZATION', 'RATING',
-                                                      'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.SHOP_FIELDS)
 
         return Shop(self._request('shops/{}', shop_id, params))
 
@@ -1287,6 +1241,11 @@ class YMAPI(object):
         :type host: str
 
         :param fields: Свойства магазинов, которые необходимо показать в выходных данных
+
+            * **DATE** — сортировка по дате написания отзыва
+            * **GRADE** — сортировка по оценке пользователем модели
+            * **RANK** — сортировка по полезности отзыва
+
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
@@ -1309,9 +1268,7 @@ class YMAPI(object):
             params['geo_id'] = geo_id
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('ORGANIZATION', 'RATING',
-                                                      'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.SHOP_FIELDS)
 
         return Shops(self._request('shops', None, params))
 
@@ -1353,6 +1310,26 @@ class YMAPI(object):
         :type boundary: str
 
         :param fields: Поля точек продажи, которые попадут в выдачу
+
+            * **OFFER** — Информация о товарнном предложении, соответствующем точке продажи
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP** — Информация о магазине, сортировка по полезности отзыва
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **ALL** = Все значения
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param type: Типы пунктов выдачи товара
@@ -1371,6 +1348,19 @@ class YMAPI(object):
         :type how: str
 
         :param sort: Тип сортировки товарных предложений
+
+            * **DATE** — сортировка по дате
+            * **DELIVERY_TIME** — сортировка по времени доставки
+            * **DISCOUNT** — сортировка по размеру скидки
+            * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя)
+            * **NOFFERS** — сортировка по количеству предложений
+            * **OPINIONS** — сортировка по количеству отзывов
+            * **POPULARITY** — сортировка по популярности
+            * **PRICE** — сортировка по цене
+            * **QUALITY** — сортировка по рейтингу
+            * **RATING** — сортировка по рейтингу
+            * **RELEVANCY** — сортировка по релевантности
+
         :type sort: str
 
         :param latitude: Широта
@@ -1400,15 +1390,7 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
-                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                         'OFFER_PHOTO',
-                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
         if type:
             for field in type.split(','):
@@ -1437,10 +1419,7 @@ class YMAPI(object):
                 raise HowParamError('"how" param is wrong')
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -1490,6 +1469,19 @@ class YMAPI(object):
         :type how: str
 
         :param sort: Тип сортировки товарных предложений
+
+            * **DATE** — сортировка по дате
+            * **DELIVERY_TIME** — сортировка по времени доставки
+            * **DISCOUNT** — сортировка по размеру скидки
+            * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя)
+            * **NOFFERS** — сортировка по количеству предложений
+            * **OPINIONS** — сортировка по количеству отзывов
+            * **POPULARITY** — сортировка по популярности
+            * **PRICE** — сортировка по цене
+            * **QUALITY** — сортировка по рейтингу
+            * **RATING** — сортировка по рейтингу
+            * **RELEVANCY** — сортировка по релевантности
+
         :type sort: str
 
         :param latitude: Широта
@@ -1519,15 +1511,7 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
-                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                         'OFFER_PHOTO',
-                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
         if type:
             for field in type.split(','):
@@ -1557,10 +1541,7 @@ class YMAPI(object):
             params['how'] = how
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -1592,6 +1573,26 @@ class YMAPI(object):
         :type boundary: str
 
         :param fields: Поля точек продажи, которые попадут в выдачу
+
+            * **OFFER** — Информация о товарнном предложении, соответствующем точке продажи
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP** — Информация о магазине, сортировка по полезности отзыва
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **ALL** = Все значения
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param type: Типы пунктов выдачи товара
@@ -1610,6 +1611,19 @@ class YMAPI(object):
         :type how: str
 
         :param sort: Тип сортировки товарных предложений
+
+            * **DATE** — сортировка по дате
+            * **DELIVERY_TIME** — сортировка по времени доставки
+            * **DISCOUNT** — сортировка по размеру скидки
+            * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя)
+            * **NOFFERS** — сортировка по количеству предложений
+            * **OPINIONS** — сортировка по количеству отзывов
+            * **POPULARITY** — сортировка по популярности
+            * **PRICE** — сортировка по цене
+            * **QUALITY** — сортировка по рейтингу
+            * **RATING** — сортировка по рейтингу
+            * **RELEVANCY** — сортировка по релевантности
+
         :type sort: str
 
         :param latitude: Широта
@@ -1639,15 +1653,7 @@ class YMAPI(object):
             params['boundary'] = boundary
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'OFFER', 'OFFER_ACTIVE_FILTERS',
-                                                         'OFFER_CATEGORY', 'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                         'OFFER_PHOTO',
-                                                         'OFFER_SHOP', 'OFFER_VENDOR', 'SHOP',
-                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'ALL',
-                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
         if type:
             for field in type.split(','):
@@ -1677,10 +1683,7 @@ class YMAPI(object):
             params['how'] = how
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -1705,6 +1708,11 @@ class YMAPI(object):
         Список регионов
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
+
+            * **DECLENSIONS** — Название региона в разных падежах
+            * **PARENT** — Родительский регион
+            * **ALL** = Все значения
+
         :type fields: str or list[str]
 
         :param count: Размер страницы (количество элементов на странице)
@@ -1725,9 +1733,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'DECLENSIONS', 'PARENT', 'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.GEO_FIELDS)
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -1749,6 +1755,11 @@ class YMAPI(object):
         :type region_id: int
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
+
+            * **DECLENSIONS** — Название региона в разных падежах
+            * **PARENT** — Родительский регион
+            * **ALL** = Все значения
+
         :type fields: str or list[str]
 
         :param count: Размер страницы (количество элементов на странице)
@@ -1769,9 +1780,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'DECLENSIONS', 'PARENT', 'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.GEO_FIELDS)
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -1793,6 +1802,11 @@ class YMAPI(object):
         :type region_id: int
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
+
+            * **DECLENSIONS** — Название региона в разных падежах
+            * **PARENT** — Родительский регион
+            * **ALL** = Все значения
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1805,9 +1819,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'DECLENSIONS', 'PARENT', 'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.GEO_FIELDS)
 
         return Region(self._request('geo/regions/{}', region_id, params))
 
@@ -1818,6 +1830,11 @@ class YMAPI(object):
         Текстовый поиск региона
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
+
+            * **DECLENSIONS** — Название региона в разных падежах
+            * **PARENT** — Родительский регион
+            * **ALL** = Все значения
+
         :type fields: str or list[str]
 
         :param types: Тип региона
@@ -1842,8 +1859,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('DECLENSIONS', 'PARENT', 'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.GEO_FIELDS)
 
         if types:
             for field in types.split(','):
@@ -1871,6 +1887,15 @@ class YMAPI(object):
         Список производителей
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
+
+            * **CATEGORIES** — Описание категорий, в которых представлен данный производитель
+            * **CATEGORY_PARENT** — информация о родительской категории.
+            * **CATEGORY_STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории.
+            * **CATEGORY_WARNINGS** — предупреждения, связанные с показом категории.
+            * **TOP_CATEGORIES** — Список наиболее популярных категорий товаров производителя
+            * **ALL** = Все значения
+            * **CATEGORY_ALL** = CATEGORY_LINK, CATEGORY_PARENT, CATEGORY_STATISTICS, CATEGORY_WARNINGS
+
         :type fields: str or list[str]
 
         :param count: Размер страницы (количество элементов на странице)
@@ -1891,10 +1916,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS',
-                                                      'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
-                                                      'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.VENDOR_FIELDS)
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -1916,6 +1938,15 @@ class YMAPI(object):
         :type vendor_id: int
 
         :param fields: Свойства производителя, которые необходимо показать в выходных данных
+
+            * **CATEGORIES** — Описание категорий, в которых представлен данный производитель
+            * **CATEGORY_PARENT** — информация о родительской категории.
+            * **CATEGORY_STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории.
+            * **CATEGORY_WARNINGS** — предупреждения, связанные с показом категории.
+            * **TOP_CATEGORIES** — Список наиболее популярных категорий товаров производителя
+            * **ALL** = Все значения
+            * **CATEGORY_ALL** = CATEGORY_LINK, CATEGORY_PARENT, CATEGORY_STATISTICS, CATEGORY_WARNINGS
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1928,10 +1959,7 @@ class YMAPI(object):
         params = {}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS',
-                                                      'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
-                                                      'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.VENDOR_FIELDS)
 
         return Vendor(self._request('vendors/{}', vendor_id, params))
 
@@ -1943,6 +1971,15 @@ class YMAPI(object):
         :type name: str
 
         :param fields: Свойства производителя, которые необходимо показать в выходных данных
+
+            * **CATEGORIES** — Описание категорий, в которых представлен данный производитель
+            * **CATEGORY_PARENT** — информация о родительской категории.
+            * **CATEGORY_STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории.
+            * **CATEGORY_WARNINGS** — предупреждения, связанные с показом категории.
+            * **TOP_CATEGORIES** — Список наиболее популярных категорий товаров производителя
+            * **ALL** = Все значения
+            * **CATEGORY_ALL** = CATEGORY_LINK, CATEGORY_PARENT, CATEGORY_STATISTICS, CATEGORY_WARNINGS
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1956,10 +1993,7 @@ class YMAPI(object):
 
         if fields:
             # todo добавить всюду CATEGORY_ALL
-            params['fields'] = self._validate_fields(fields,
-                                                     ('CATEGORIES', 'CATEGORY_PARENT', 'CATEGORY_STATISTICS',
-                                                      'CATEGORY_WARNINGS', 'TOP_CATEGORIES',
-                                                      'ALL'))
+            params['fields'] = self._validate_fields(fields, constants.VENDOR_FIELDS)
 
         return Vendor(self._request('vendors/match', None, params))
 
@@ -2026,6 +2060,19 @@ class YMAPI(object):
         :type how: str
 
         :param sort: Тип сортировки товарных предложений
+
+            * **DATE** — сортировка по дате
+            * **DELIVERY_TIME** — сортировка по времени доставки
+            * **DISCOUNT** — сортировка по размеру скидки
+            * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя)
+            * **NOFFERS** — сортировка по количеству предложений
+            * **OPINIONS** — сортировка по количеству отзывов
+            * **POPULARITY** — сортировка по популярности
+            * **PRICE** — сортировка по цене
+            * **QUALITY** — сортировка по рейтингу
+            * **RATING** — сортировка по рейтингу
+            * **RELEVANCY** — сортировка по релевантности
+
         :type sort: str
 
         :param latitude: Широта
@@ -2084,6 +2131,7 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields,
                                                      ('FILTERS', 'FOUND_CATEGORIES',
+
                                                       'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
                                                       'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA',
                                                       'MODEL_NAVIGATION_NODE',
@@ -2173,10 +2221,7 @@ class YMAPI(object):
             params['how'] = how
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
         # Todo Ограничение. Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
@@ -2309,10 +2354,7 @@ class YMAPI(object):
             params['how'] = how
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
@@ -2338,9 +2380,7 @@ class YMAPI(object):
         params = {'text': text}
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     ('ALLVENDORS', 'DESCRIPTION', 'FOUND',
-                                                      'SORTS', 'ALL', 'STANDARD'))
+            params['fields'] = self._validate_fields(fields, constants.SEARCH_FILTERS)
 
         return Filters(self._request('search/filters', None, params))
 
@@ -2444,12 +2484,14 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields,
                                                      ('CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS',
-                                                      'FILTERS', 'FOUND_CATEGORIES', 'MODEL_CATEGORY',
-                                                      'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
+
+                                                      'FILTERS', 'FOUND_CATEGORIES',
+
+                                                      'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
                                                       'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA',
-                                                      'MODEL_NAVIGATION_NODE', 'MODEL_OFFERS',
-                                                      'MODEL_PHOTO', 'MODEL_PHOTOS', 'MODEL_PRICE', 'MODEL_RATING',
-                                                      'MODEL_SPECIFICATION',
+                                                      'MODEL_NAVIGATION_NODE',
+                                                      'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
+                                                      'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
                                                       'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY',
                                                       'OFFER_DELIVERY', 'OFFER_DISCOUNT',
                                                       'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
@@ -2479,10 +2521,7 @@ class YMAPI(object):
             params['how'] = how
 
         if sort:
-            if sort not in (
-                    'DATE', 'DELIVERY_TIME', 'DISCOUNT', 'DISTANCE', 'NOFFERS', 'OPINIONS', 'POPULARITY', 'PRICE',
-                    'QUALITY',
-                    'RATING', 'RELEVANCY'):
+            if sort not in constants.MODEL_SORT:
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
