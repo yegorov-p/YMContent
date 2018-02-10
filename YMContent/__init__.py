@@ -100,7 +100,7 @@ class YMAPI(object):
         :type geo_id: int or str
 
         :param remote_ip: IP-адрес пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :param count: Количество выводимых результатов на странице ответа
         :type count: int
@@ -157,7 +157,7 @@ class YMAPI(object):
         Список подкатегорий
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных:
 
@@ -182,7 +182,7 @@ class YMAPI(object):
         :type geo_id: int or str
 
         :param remote_ip: IP-адрес пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :param count: Количество выводимых результатов на странице ответа
         :type count: int
@@ -236,7 +236,7 @@ class YMAPI(object):
         Информация о категории
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных:
 
@@ -253,7 +253,7 @@ class YMAPI(object):
         :type geo_id: int or str
 
         :param remote_ip: IP-адрес пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :return: Информация о категории
         :rtype: response.Category
@@ -285,7 +285,7 @@ class YMAPI(object):
         Список фильтров категории
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param fields: Параметры категории, которые необходимо показать в выходных данных:
 
@@ -304,7 +304,7 @@ class YMAPI(object):
         :type geo_id: int or str
 
         :param remote_ip: IP-адрес пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :param filter_set: Набор фильтров в выходных данных:
 
@@ -479,7 +479,7 @@ class YMAPI(object):
         :type geo_id: int or str
 
         :param remote_ip: IP-адрес пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :return: Информация о модели
         :rtype: response.Model
@@ -530,7 +530,7 @@ class YMAPI(object):
         Список обзоров на модель
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param count: Количество элементов на странице
         :type count: int
@@ -542,7 +542,7 @@ class YMAPI(object):
         :rtype: response.ModelReview
 
         :raises CountParamError: недопустимое значение параметра count
-        :raises PageParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-reviews-docpage/
         """
@@ -587,7 +587,7 @@ class YMAPI(object):
         :type locale: str
 
         :param price: Цена модели
-        :type price: str
+        :type price: str or int
 
         :param shop_name: Наименование магазина
         :type shop_name: str
@@ -663,7 +663,7 @@ class YMAPI(object):
         Список похожих моделей
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param count: Количество элементов на странице
         :type count: int
@@ -678,7 +678,8 @@ class YMAPI(object):
         :rtype: response.Models
 
         :raises CountParamError: недопустимое значение параметра count
-        :raises PageParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises FieldsParamError: недопустимое значение параметра fields
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-matched-models-docpage/
         """
@@ -722,7 +723,7 @@ class YMAPI(object):
         Лучшие предложения (скидки дня)
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param count: Количество элементов на странице
         :type count: int
@@ -737,7 +738,8 @@ class YMAPI(object):
         :rtype: response.CategoriesLookas
 
         :raises CountParamError: недопустимое значение параметра count
-        :raises PageParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises FieldsParamError: недопустимое значение параметра fields
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-best-deals-docpage/
         """
@@ -781,7 +783,7 @@ class YMAPI(object):
         Список популярных моделей
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param count: Количество элементов на странице
         :type count: int
@@ -793,18 +795,22 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
         :param remote_ip: Идентификатор региона пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :return: популярные на Яндекс.Маркете модели
         :rtype: response.Models
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-popular-models-docpage/
         """
-        params = {'count': count,
-                  'fields': fields}
+        params = {}
 
         if geo_id is None and remote_ip is None:
             raise NoGeoIdOrIP(
@@ -855,7 +861,7 @@ class YMAPI(object):
         Список предложений на модель
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param delivery_included: Признак включения цены доставки в цену товарного предложения
         :type delivery_included: bool or int or str
@@ -890,8 +896,20 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: int or str or float
 
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises GroupByParamError: недопустимое значение параметра group_by
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+        :raises GeoParamError: недопустимое значение параметра latitude
+        :raises GeoParamError: недопустимое значение параметра longitude
+
         :return: Список товарных предложений, соотнесенных с указанной моделью
         :rtype: response.ModelOffers
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-offers-docpage/
         """
         params = {}
 
@@ -971,7 +989,7 @@ class YMAPI(object):
         Товарное предложение по умолчанию
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param fields: Параметры предложений, которые необходимо показать в выходных данных
         :type fields: str or list[str]
@@ -979,8 +997,12 @@ class YMAPI(object):
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
         :type filters: dict
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Товарное предложение по умолчанию
         :rtype: response.ModelOffersDefault
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-default-offer-docpage/
         """
         params = {}
 
@@ -1003,10 +1025,12 @@ class YMAPI(object):
         """
         Количество товарных предложений на модель по регионам
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :return: Информация о количестве товарных предложений на указанную модель по регионам, а также минимальную, максимальную и среднюю стоимость этой модели
         :rtype: response.ModelOffersStat
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-model-offers-stat-docpage/
         """
         params = {}
 
@@ -1016,8 +1040,8 @@ class YMAPI(object):
         """
         Список фильтров для предложений на модель
 
-        :param model_id:
-        :type model_id:
+        :param model_id: Идентификатор модели
+        :type model_id: int or str
 
         :param fields: Группы параметров, которые необходимо отобразить в выходных данных
         :type fields: str or list[str]
@@ -1028,8 +1052,14 @@ class YMAPI(object):
         :param sort: Задает тип сортировки значений в фильтрах
         :type sort: str
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises FilterSetParamError: недопустимое значение параметра filter_set
+        :raises SortParamError: недопустимое значение параметра sort
+
         :return: Cписок фильтров и сортировок, доступных для фильтрации и сортировки товарных предложений указанной модели
         :rtype: response.Filters
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-model-offers-filters-docpage/
         """
         params = {}
 
@@ -1059,10 +1089,15 @@ class YMAPI(object):
         :type delivery_included: bool
 
         :param fields: Параметры предложений, которые необходимо показать в выходных данных
-        :type fields: list or str[list]
+        :type fields: str or list[str]
 
-        :return: Информацияя об указанном товарном предложении
+        :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
+        :raises FieldsParamError: недопустимое значение параметра fields
+
+        :return: Информация об указанном товарном предложении
         :rtype: response.Offer
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/offers-controller-v2-get-offer-docpage/
         """
         params = {}
 
@@ -1090,7 +1125,7 @@ class YMAPI(object):
         Отзывы о модели
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param grade: Оценка, выставленная автором отзыва
         :type grade: int
@@ -1110,8 +1145,16 @@ class YMAPI(object):
         :param sort: Тип сортировки отзывов
         :type sort: str
 
+        :raises GradeParamError: недопустимое значение параметра grade
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+
         :return: Отзывы пользователей о модели
         :rtype: response.ModelOpinions
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/opinions-controller-v2-get-model-opinions-docpage/
         """
         params = {}
 
@@ -1167,8 +1210,16 @@ class YMAPI(object):
         :param sort: Тип сортировки отзывов
         :type sort: str
 
+        :raises GradeParamError: недопустимое значение параметра grade
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+
         :return: Отзывы пользователей о магазине
         :rtype: response.ShopOpinions
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/opinions-controller-v2-get-shop-opinions-docpage/
         """
         params = {}
 
@@ -1212,8 +1263,12 @@ class YMAPI(object):
         :param fields: Свойства магазинов, которые необходимо показать в выходных данных
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Информация об указанном магазине
         :rtype: response.Shop
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-docpage/
         """
         params = {}
 
@@ -1235,10 +1290,15 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
+
+        :raises NoGeoIdOrIP: недопустимое значение параметра geo_id
+        :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация о найденном магазине по указанному в запросе хосту или URL
         :rtype: response.Shops
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-list-docpage/
         """
         params = {'host': host}
 
@@ -1265,8 +1325,12 @@ class YMAPI(object):
         :param fields: Параметры, которые необходимо показать в выдаче
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Информация о количестве магазинов и типах их работы в указанном регионе
         :rtype: response.ShopsSummary
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-summary-docpage/
         """
         params = {}
 
@@ -1277,13 +1341,13 @@ class YMAPI(object):
 
         return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
-    def model_outlets(self, model_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
+    def model_outlets(self, model_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Список пунктов выдачи модели
 
         :param model_id: Идентификатор модели
-        :type model_id: int
+        :type model_id: int or str
 
         :param boundary: Координаты квадрата на местности для выдачи точек продаж на карте.
         :type boundary: str
@@ -1315,8 +1379,19 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: float
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises TypeParamError: недопустимое значение параметра type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+        :raises GeoParamError: недопустимое значение параметра latitude
+        :raises GeoParamError: недопустимое значение параметра longitude
+
         :return: Список пунктов выдачи/точек продаж, в которых представлена указанная модель
         :rtype: response.Outlets
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/outlet-controller-v2-get-model-outlets-docpage/
         """
         params = {}
 
@@ -1340,7 +1415,7 @@ class YMAPI(object):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise TypeParamError('"fields" param is wrong')
+                    raise TypeParamError('"type" param is wrong')
             params['type'] = type
 
         if filters:
@@ -1356,6 +1431,7 @@ class YMAPI(object):
             raise PageParamError('"page" param must be larger than 1')
         else:
             params['page'] = page
+
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -1384,7 +1460,7 @@ class YMAPI(object):
 
         return Outlets(self._request('models/{}/outlets', model_id, params))
 
-    def shop_outlets(self, shop_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
+    def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Пункты выдачи товаров магазина
@@ -1422,8 +1498,19 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: float
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises TypeParamError: недопустимое значение параметра type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+        :raises GeoParamError: недопустимое значение параметра latitude
+        :raises GeoParamError: недопустимое значение параметра longitude
+
         :return: Cписок пунктов выдачи/точек продаж магазина
         :rtype: response.Outlets
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-outlets-docpage/
         """
         params = {}
 
@@ -1493,7 +1580,7 @@ class YMAPI(object):
 
         return Outlets(self._request('shops/{}/outlets', shop_id, params))
 
-    def offer_outlets(self, offer_id, boundary=None, fields='STANDART', type='PICKUP,STORE', filters=None, count=10,
+    def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Список пунктов выдачи товарного предложения
@@ -1531,8 +1618,19 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: float
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises TypeParamError: недопустимое значение параметра type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+        :raises GeoParamError: недопустимое значение параметра latitude
+        :raises GeoParamError: недопустимое значение параметра longitude
+
         :return: Список пунктов выдачи/точек продаж указанного товарного предложения
         :rtype: response.Outlets
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/outlet-controller-v2-get-offer-outlets-docpage/
         """
         params = {}
 
@@ -1615,8 +1713,14 @@ class YMAPI(object):
         :param page: Номер страницы
         :type page: int
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+
         :return: Список регионов
         :rtype: response.Regions
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-region-root-docpage/
         """
         params = {}
 
@@ -1653,8 +1757,14 @@ class YMAPI(object):
         :param page: Номер страницы
         :type page: int
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+
         :return: Список регионов
         :rtype: response.Regions
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-children-docpage/
         """
         params = {}
 
@@ -1685,8 +1795,12 @@ class YMAPI(object):
         :param fields: Параметры региона, которые необходимо включить в выдачу
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Информация о регионе
         :rtype: response.Region
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-region-docpage/
         """
         params = {}
 
@@ -1715,8 +1829,15 @@ class YMAPI(object):
         :param page: Номер страницы
         :type page: int
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises TypeParamError: недопустимое значение параметра type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+
         :return: Список регионов, подходящих под заданные условия поиска
         :rtype: response.Suggests
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-suggest-docpage/
         """
         params = {}
 
@@ -1757,8 +1878,15 @@ class YMAPI(object):
 
         :param page: Номер страницы
         :type page: int
-        :return:
-        :rtype:
+
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+
+        :return: Cписок производителей, товары которых размещаются на Яндекс.Маркете
+        :rtype: response.Vendors
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-get-vendor-list-docpage/
         """
         params = {}
 
@@ -1790,8 +1918,12 @@ class YMAPI(object):
         :param fields: Свойства производителя, которые необходимо показать в выходных данных
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Информация об указанном производителе
         :rtype: response.Vendor
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-get-vendor-docpage/
         """
         params = {}
 
@@ -1813,8 +1945,12 @@ class YMAPI(object):
         :param fields: Свойства производителя, которые необходимо показать в выходных данных
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Производитель, наиболее подходящего под заданное во входных данных название
         :rtype: response.Vendor
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-match-vendor-docpage/
         """
         params = {'name': name}
 
@@ -1875,7 +2011,7 @@ class YMAPI(object):
         :type search_type: str
 
         :param category_id: Идентификаторы категорий
-        :type category_id: int
+        :type category_id: int or str
 
         :param hid: Идентификаторы категорий
         :type hid: int
@@ -1899,13 +2035,30 @@ class YMAPI(object):
         :type longitude: float
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
         :param remote_ip: Идентификатор региона пользователя
-        :type remote_ip: int
+        :type remote_ip: str
+
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises OnstockParamError: недопустимое значение параметра onstock
+        :raises OutletTypesParamError: недопустимое значение параметра outlet_types
+        :raises ResultTypeParamError: недопустимое значение параметра result_type
+        :raises WarrantyParamError: недопустимое значение параметра warranty
+        :raises SearchTypeParamError: недопустимое значение параметра search_type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+        :raises GeoParamError: недопустимое значение параметра latitude
+        :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Список моделей и товарных предложений, удовлетворяющих заданным в запросе условиям поиска
         :rtype: response.Search
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-search-docpage/
         """
         params = {'text': text}
 
@@ -1950,14 +2103,14 @@ class YMAPI(object):
             elif str(onstock).upper() in [1, '1', 'T', 'TRUE', 'Y', 'YES']:
                 onstock = 'TRUE'
             else:
-                raise OnstockParamError('"delivery_included" param is wrong')
+                raise OnstockParamError('"onstock" param is wrong')
             params['onstock'] = onstock
 
         if outlet_types:
             for field in outlet_types.split(','):
                 if field not in (
                         'DELIVERY', 'PICKUP', 'STORE', 'ALL'):
-                    raise FieldsParamError('"fields" param is wrong')
+                    raise OutletTypesParamError('"outlet_types" param is wrong')
             params['outlet_types'] = outlet_types
 
         if price_max:
@@ -2049,13 +2202,13 @@ class YMAPI(object):
         Подбор по параметрам в категории
 
         :param category_id: Идентификатор категории
-        :type category_id: int
+        :type category_id: int or str
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
         :param remote_ip: Идентификатор региона пользователя
-        :type remote_ip: int
+        :type remote_ip: str
 
         :param fields: Поля, которые необходимо показать в выходных данных
         :type fields: str or list[str]
@@ -2084,8 +2237,18 @@ class YMAPI(object):
         :param sort: Тип сортировки товарных предложений
         :type sort: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises ResultTypeParamError: недопустимое значение параметра result_type
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
+
         :return: Список моделей категории и предложений на модели, удовлетворяющих заданным в запросе параметрам
         :rtype: response.Search
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-filter-on-category-docpage/
         """
         params = {}
 
@@ -2165,8 +2328,12 @@ class YMAPI(object):
         :param fields: Поля, которые необходимо показать в выходных данных
         :type fields: str or list[str]
 
+        :raises FieldsParamError: недопустимое значение параметра fields
+
         :return: Список доступных фильтров и сортировок для укзанного поискового запроса
         :rtype: response.Filters
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-get-search-filters-docpage/
         """
         params = {'text': text}
 
@@ -2219,13 +2386,24 @@ class YMAPI(object):
         :type sort: str
 
         :param geo_id: Идентификатор региона
-        :type geo_id: int
+        :type geo_id: int or str
 
         :param remote_ip: Идентификатор региона пользователя
-        :type remote_ip: int
+        :type remote_ip: str
+
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
+        :raises RedirectTypesParamError: недопустимое значение параметра redirect_types
+        :raises SearchTypeParamError: недопустимое значение параметра search_type
+        :raises FieldsParamError: недопустимое значение параметра fields
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises HowParamError: недопустимое значение параметра how
+        :raises SortParamError: недопустимое значение параметра sort
 
         :return: Список параметров редиректа (перенаправления), подходящих под заданные в запросе условия.
         :rtype: response.Redirect
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/redirect-controller-v2-redirect-docpage/
         """
         params = {'text': text}
 
@@ -2254,7 +2432,7 @@ class YMAPI(object):
         if search_type:
             if search_type not in (
                     'BARCODE', 'ISBN', 'TEXT'):
-                raise RedirectTypesParamError('"redirect_types" param is wrong')
+                raise SearchTypeParamError('"search_type" param is wrong')
             params['search_type'] = search_type
 
         if category_id:
@@ -2329,8 +2507,15 @@ class YMAPI(object):
         :param suggest_types: Типы поисковых подсказок
         :type suggest_types: str or list[str]
 
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+        :raises PosParamError: недопустимое значение параметра pos
+        :raises SuggestTypesParamError: недопустимое значение параметра suggest_types
+
         :return: Список поисковых подсказок, подходящих под заданные условия поиска
         :rtype: objects.Suggestions
+
+        .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/suggest-controller-v2-get-suggest-docpage/
         """
         params = {'text': text}
 
@@ -2346,7 +2531,7 @@ class YMAPI(object):
 
         if pos:
             if pos < 0 or pos > 1024:
-                raise PosParamError('"count" param must be between 1 and 30')
+                raise PosParamError('"pos" param must be between 1 and 30')
             else:
                 params['pos'] = pos
 
@@ -2355,7 +2540,7 @@ class YMAPI(object):
                 if field not in (
                         'CATALOG', 'MODEL', 'SEARCH',
                         'VENDOR', 'ALL', 'DEFAULT'):
-                    raise RedirectTypesParamError('"suggest_types" param is wrong')
+                    raise SuggestTypesParamError('"suggest_types" param is wrong')
             params['suggest_types'] = suggest_types
 
         return Suggestions(self._request('redirect', None, params))

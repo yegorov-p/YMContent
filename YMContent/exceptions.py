@@ -7,6 +7,10 @@ class FieldsParamError(BaseException):
     pass
 
 
+class OutletTypesParamError(BaseException):
+    pass
+
+
 class NotAuthorized(BaseException):
     pass
 
@@ -32,6 +36,10 @@ class ResultTypeParamError(BaseException):
 
 
 class RedirectTypesParamError(BaseException):
+    pass
+
+
+class SuggestTypesParamError(BaseException):
     pass
 
 
