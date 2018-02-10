@@ -5,7 +5,7 @@ import socket
 import ssl
 
 import requests
-from requests.exceptions import ConnectionError, ReadTimeout, SSLError
+from requests.exceptions import ReadTimeout, SSLError
 
 from .constants import *
 from .exceptions import *
@@ -61,11 +61,11 @@ class YMAPI(object):
 
     @staticmethod
     def _validate_fields(fields, values):
-        if type(fields) == list:
+        if isinstance(fields, list):
             for field in fields:
                 if field.upper() not in values:
                     raise FieldsParamError('"fields" param is wrong')
-        elif type(fields) == str:
+        elif isinstance(fields, str):
             for field in fields.split(','):
                 if field.strip() not in values:
                     raise FieldsParamError('"fields" param is wrong')
@@ -1529,7 +1529,7 @@ class YMAPI(object):
 
         return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
-    def model_outlets(self, model_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
+    def model_outlets(self, model_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Список пунктов выдачи модели
@@ -1563,13 +1563,13 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
-        :param type: Типы пунктов выдачи товара
+        :param outlet_type: Типы пунктов выдачи товара
 
             * **PICKUP** — Самовывоз
             * **STORE** — Магазин
             * **ALL** = Все значения
 
-        :type type: str or list[str]
+        :type outlet_type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
         :type filters: dict
@@ -1675,7 +1675,7 @@ class YMAPI(object):
 
         return Outlets(self._request('models/{}/outlets', model_id, params))
 
-    def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
+    def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Пункты выдачи товаров магазина
@@ -1709,13 +1709,13 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
-        :param type: Типы пунктов выдачи товара
+        :param outlet_type: Типы пунктов выдачи товара
 
             * **PICKUP** — Самовывоз
             * **STORE** — Магазин
             * **ALL** = Все значения
 
-        :type type: str or list[str]
+        :type outlet_type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
         :type filters: dict
@@ -1822,7 +1822,7 @@ class YMAPI(object):
 
         return Outlets(self._request('shops/{}/outlets', shop_id, params))
 
-    def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', type='PICKUP,STORE', filters=None, count=10,
+    def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Список пунктов выдачи товарного предложения
@@ -1856,13 +1856,13 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
-        :param type: Типы пунктов выдачи товара
+        :param outlet_type: Типы пунктов выдачи товара
 
             * **PICKUP** — Самовывоз
             * **STORE** — Магазин
             * **ALL** = Все значения
 
-        :type type: str or list[str]
+        :type outlet_type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
         :type filters: dict
