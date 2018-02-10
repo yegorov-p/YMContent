@@ -554,10 +554,62 @@ class YMAPI(object):
         :type category_count: int
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
-        :type fields: str or list
+
+            * **CATEGORY** — Информация о категории, к которой относится модель
+            * **DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **DISCOUNTS** — информация о скидках на модель.
+            * **FACTS** — Список достоинств и недостатков модели
+            * **FILTERS** — список фильтров, доступных для отбора модификаций модели.
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODIFICATIONS** — краткая информация о модификациях (для групповой модели).
+            * **NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **NAVIGATION_NODE_DATASOURCE** — источник данных узла навигационного дерева.
+            * **NAVIGATION_NODE_ICONS** — иконки навигационного дерева.
+            * **NAVIGATION_NODE_STATISTICS** — статистика узла навигационного дерева.
+            * **OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **PHOTOS** — все доступные изображения модели.
+            * **PRICE** — информация о ценах на модель.
+            * **RATING** — иформация о рейтинге и оценках модели.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SPECIFICATION** — характеристики модели.
+            * **VENDOR** — информация о производителе.
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_SORTS
+            * **NAVIGATION_NODE_ALL** = NAVIGATION_NODE_DATASOURCE, NAVIGATION_NODE_ICONS, NAVIGATION_NODE_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, OFFERS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, PHOTO, PRICE, RATING, SHOP_RATING, VENDOR
+            * **VENDOR_ALL** = VENDOR_LINK
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
+        :type fields: str or list[str]
 
         :param match_types: Типы поиска
-        :type match_types: str or list
+
+            * **BATCH** — Матчинг пачки офферов. Возвращает в ответ пачку результатов аналогичной длины - по одному результату на оффер
+            * **MULTI** — Мультиматчинг одного оффера. Возвращает в ответ все найденные результаты по одному офферу.
+            * **MULTI_STRING** — Мультиматчинг строки текста. Возвращает в ответ все найденные результаты по исследуемой строке.
+            * **REPORT** — Логика репорта
+            * **STRING** — Матчинг строки текста. Возвращает в ответ ровно один наилучший найденный результат.
+
+        :type match_types: str or list[str]
 
         :param category_name: Наименование категории
         :type category_name: str
@@ -636,6 +688,51 @@ class YMAPI(object):
         :type page: int
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
+
+            * **CATEGORY** — Информация о категории, к которой относится модель
+            * **DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **DISCOUNTS** — информация о скидках на модель.
+            * **FACTS** — Список достоинств и недостатков модели
+            * **FILTERS** — список фильтров, доступных для отбора модификаций модели.
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODIFICATIONS** — краткая информация о модификациях (для групповой модели).
+            * **NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **NAVIGATION_NODE_DATASOURCE** — источник данных узла навигационного дерева.
+            * **NAVIGATION_NODE_ICONS** — иконки навигационного дерева.
+            * **NAVIGATION_NODE_STATISTICS** — статистика узла навигационного дерева.
+            * **OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **PHOTOS** — все доступные изображения модели.
+            * **PRICE** — информация о ценах на модель.
+            * **RATING** — иформация о рейтинге и оценках модели.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SPECIFICATION** — характеристики модели.
+            * **VENDOR** — информация о производителе.
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_SORTS
+            * **NAVIGATION_NODE_ALL** = NAVIGATION_NODE_DATASOURCE, NAVIGATION_NODE_ICONS, NAVIGATION_NODE_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, OFFERS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, PHOTO, PRICE, RATING, SHOP_RATING, VENDOR
+            * **VENDOR_ALL** = VENDOR_LINK
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :return: Cписок моделей, которые похожи на указанную в запросе
@@ -678,6 +775,51 @@ class YMAPI(object):
         :type page: int
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
+
+            * **CATEGORY** — Информация о категории, к которой относится модель
+            * **DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **DISCOUNTS** — информация о скидках на модель.
+            * **FACTS** — Список достоинств и недостатков модели
+            * **FILTERS** — список фильтров, доступных для отбора модификаций модели.
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODIFICATIONS** — краткая информация о модификациях (для групповой модели).
+            * **NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **NAVIGATION_NODE_DATASOURCE** — источник данных узла навигационного дерева.
+            * **NAVIGATION_NODE_ICONS** — иконки навигационного дерева.
+            * **NAVIGATION_NODE_STATISTICS** — статистика узла навигационного дерева.
+            * **OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **PHOTOS** — все доступные изображения модели.
+            * **PRICE** — информация о ценах на модель.
+            * **RATING** — иформация о рейтинге и оценках модели.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SPECIFICATION** — характеристики модели.
+            * **VENDOR** — информация о производителе.
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_SORTS
+            * **NAVIGATION_NODE_ALL** = NAVIGATION_NODE_DATASOURCE, NAVIGATION_NODE_ICONS, NAVIGATION_NODE_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, OFFERS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, PHOTO, PRICE, RATING, SHOP_RATING, VENDOR
+            * **VENDOR_ALL** = VENDOR_LINK
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :return:
@@ -720,6 +862,51 @@ class YMAPI(object):
         :type page: int
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
+
+            * **CATEGORY** — Информация о категории, к которой относится модель
+            * **DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **DISCOUNTS** — информация о скидках на модель.
+            * **FACTS** — Список достоинств и недостатков модели
+            * **FILTERS** — список фильтров, доступных для отбора модификаций модели.
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODIFICATIONS** — краткая информация о модификациях (для групповой модели).
+            * **NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **NAVIGATION_NODE_DATASOURCE** — источник данных узла навигационного дерева.
+            * **NAVIGATION_NODE_ICONS** — иконки навигационного дерева.
+            * **NAVIGATION_NODE_STATISTICS** — статистика узла навигационного дерева.
+            * **OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **PHOTOS** — все доступные изображения модели.
+            * **PRICE** — информация о ценах на модель.
+            * **RATING** — иформация о рейтинге и оценках модели.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SPECIFICATION** — характеристики модели.
+            * **VENDOR** — информация о производителе.
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_SORTS
+            * **NAVIGATION_NODE_ALL** = NAVIGATION_NODE_DATASOURCE, NAVIGATION_NODE_ICONS, NAVIGATION_NODE_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = CATEGORY, OFFERS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_PHOTO, OFFER_SHOP, PHOTO, PRICE, RATING, SHOP_RATING, VENDOR
+            * **VENDOR_ALL** = VENDOR_LINK
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :param geo_id: Идентификатор региона
@@ -777,6 +964,33 @@ class YMAPI(object):
         :type delivery_included: bool or int or str
 
         :param fields: Параметры товарных предложений, которые необходимо показать в выходных данных
+
+            * **FILTERS** — Список фильтров в результатах запроса офферов
+            * **FILTER_ALLVENDORS** — группа параметров для фильтра «Производитель».
+            * **FILTER_DESCRIPTION** — описания фильтров.
+            * **FILTER_FOUND** — количество моделей или товарных предложений:
+            * **FILTER_SORTS** — включение в выдачу доступных фильтров.
+            * **FILTER_STATISTICS** — Обогащение информацией статистикой по фильтрам
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SORTS** — Доступные варианты сортировок для запроса
+            * **ALL** = Все значения
+            * **FILTER_ALL** = FILTER_ALLVENDORS, FILTER_DESCRIPTION, FILTER_FOUND, FILTER_PHOTO_PICKER, FILTER_SORTS, FILTER_STATISTICS
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+            * **VENDOR_ALL** = VENDOR_LINK
+
         :type fields: str or list[str]
 
         :param group_by: Вариант группировки товарных предложений
@@ -856,17 +1070,18 @@ class YMAPI(object):
             params['delivery_included'] = delivery_included
 
         if fields:
-            params['fields'] = self._validate_fields(fields,
-                                                     (
-                                                         'FILTERS', 'FILTER_ALLVENDORS',
-                                                         'FILTER_DESCRIPTION', 'FILTER_FOUND', 'FILTER_SORTS',
-                                                         'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY', 'OFFER_DELIVERY',
-                                                         'OFFER_DISCOUNT',
-                                                         'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                         'OFFER_PHOTO', 'OFFER_SHOP', 'OFFER_VENDOR',
-                                                         'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS', 'ALL',
-                                                         'FILTER_ALL',
-                                                         'OFFER_ALL', 'SHOP_ALL', 'STANDARD', 'VENDOR_ALL'))
+            params['fields'] = self._validate_fields(fields, constants.OFFER + constants.SHOP + ['FILTERS',
+                                                                                                 'FILTER_ALLVENDORS',
+                                                                                                 'FILTER_DESCRIPTION',
+                                                                                                 'FILTER_FOUND',
+                                                                                                 'FILTER_SORTS',
+                                                                                                 'FILTER_STATISTICS',
+                                                                                                 'SORTS',
+                                                                                                 'ALL',
+                                                                                                 'FILTER_ALL',
+                                                                                                 'STANDARD',
+                                                                                                 'VENDOR_ALL'
+                                                                                                 ])
 
         if group_by:
             if group_by not in ('NONE', 'OFFER', 'SHOP'):
@@ -976,6 +1191,16 @@ class YMAPI(object):
         :type model_id: int or str
 
         :param fields: Группы параметров, которые необходимо отобразить в выходных данных
+
+            * **ALLVENDORS** — группа параметров для фильтра «Производитель
+            * **DESCRIPTION** — описания фильтров
+            * **FOUND** — количество моделей или товарных предложений
+            * **SORTS** — включение в выдачу доступных фильтров
+            * **STANDARD** = ALLVENDORS, DESCRIPTION, FOUND, SORTS
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :param filter_set: Набор фильтров в выходных данных:
@@ -1213,9 +1438,9 @@ class YMAPI(object):
 
         :param fields: Свойства магазинов, которые необходимо показать в выходных данных
 
-        * **DATE** — сортировка по дате написания отзыва
-        * **GRADE** — сортировка по оценке пользователем модели
-        * **RANK** — сортировка по полезности отзыва
+            * **DATE** — сортировка по дате написания отзыва
+            * **GRADE** — сортировка по оценке пользователем модели
+            * **RANK** — сортировка по полезности отзыва
 
         :type fields: str or list[str]
 
@@ -1280,6 +1505,12 @@ class YMAPI(object):
         :type region_id: int
 
         :param fields: Параметры, которые необходимо показать в выдаче
+
+            * **DELIVERY_COUNT** — Магазины осуществляющие доставку в регион
+            * **HOME_COUNT** — Магазины находящиеся в регионе физически
+            * **TOTAL_COUNT** — Общее количество магазинов в регионе
+            * **ALL**
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1333,6 +1564,11 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :param type: Типы пунктов выдачи товара
+
+            * **PICKUP** — Самовывоз
+            * **STORE** — Магазин
+            * **ALL** = Все значения
+
         :type type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
@@ -1451,9 +1687,34 @@ class YMAPI(object):
         :type boundary: str
 
         :param fields: Поля точек продажи, которые попадут в выдачу
+
+            * **OFFER** — Информация о товарнном предложении, соответствующем точке продажи
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP** — Информация о магазине, сортировка по полезности отзыва
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **ALL** = Все значения
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param type: Типы пунктов выдачи товара
+
+            * **PICKUP** — Самовывоз
+            * **STORE** — Магазин
+            * **ALL** = Все значения
+
         :type type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
@@ -1596,6 +1857,11 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :param type: Типы пунктов выдачи товара
+
+            * **PICKUP** — Самовывоз
+            * **STORE** — Магазин
+            * **ALL** = Все значения
+
         :type type: str or list[str]
 
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
@@ -1838,6 +2104,24 @@ class YMAPI(object):
         :type fields: str or list[str]
 
         :param types: Тип региона
+
+            * **AIRPORT** — аэропорт.
+            * **CITY** — город.
+            * **CITY_DISTRICT** — район города.
+            * **CONTINENT** — континент.
+            * **COUNTRY** — страна.
+            * **COUNTRY_DISTRICT** — федеральный округ.
+            * **METRO_STATION** — станиция метро.
+            * **MONORAIL_STATION** — станция монорельса.
+            * **OVERSEAS_TERRITORY** — отдельная территория какого-либо государства, расположенная в другой части света (например, Ангилья, Гренландия, Бермудские острова и т. д.).
+            * **REGION** — регион.
+            * **RURAL_SETTLEMENT** — сельское поселение.
+            * **SECONDARY_DISTRICT** — район города второго уровня (например, для ВАО Москвы районами второго уровня являются Измайлово, Новокосино, Перово и т. д.).
+            * **SUBJECT_FEDERATION** — субъект федерации.
+            * **SUBJECT_FEDERATION_DISTRICT** — район субъекта федерации.
+            * **VILLAGE** — село.
+            * **ALL** = Все значения
+
         :type types: str or list[str]
 
         :param count: Размер страницы (количество элементов на странице)
@@ -2012,12 +2296,54 @@ class YMAPI(object):
         :type delivery_included: str or int or bool
 
         :param fields: Праметры модели/товарного предложения, которые необходимо показать в выходных данных.
+
+            * **FILTERS** — Список фильтров в результатах запроса офферов
+            * **FOUND_CATEGORIES** — категории, в которых нашлись результаты по этому запросу
+            * **MODEL_CATEGORY** — Информация о категории, к которой относится модель
+            * **MODEL_DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **MODEL_DISCOUNTS** — информация о скидках на модель.
+            * **MODEL_FACTS** — Список достоинств и недостатков модели
+            * **MODEL_FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **MODEL_MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODEL_NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **MODEL_OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **MODEL_PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **MODEL_PHOTOS** — все доступные изображения модели.
+            * **MODEL_PRICE** — информация о ценах на модель.
+            * **MODEL_RATING** — иформация о рейтинге и оценках модели.
+            * **MODEL_SPECIFICATION** — характеристики модели.
+            * **MODEL_VENDOR** — информация о производителе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SORTS** — Доступные варианты сортировок для запроса
+            * **ALL** = Все значения
+            * **MODEL_ALL** = MODEL_ACTIVE_FILTERS, MODEL_CATEGORY, MODEL_DEFAULT_OFFER, MODEL_DISCOUNTS, MODEL_FACTS, MODEL_FILTER_COLOR, MODEL_LINK, MODEL_MEDIA, MODEL_NAVIGATION_NODE, MODEL_OFFERS, MODEL_PHOTO, MODEL_PHOTOS, MODEL_PRICE, MODEL_RATING, MODEL_SPECIFICATION, MODEL_VENDOR
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = MODEL_CATEGORY, MODEL_OFFERS, MODEL_PHOTO, MODEL_PRICE, MODEL_RATING, MODEL_VENDOR, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param onstock: Признак в наличии
         :type onstock: str or int or bool
 
         :param outlet_types: Типы точек продажи
+
+            * **DELIVERY** — Доставка курьером/почтой
+            * **PICKUP** — Самовывоз
+            * **STORE** — Магазин
+            * **ALL** = Все значения
+
         :type outlet_types: str or list[str]
 
         :param price_max: Максимальная цена
@@ -2130,20 +2456,12 @@ class YMAPI(object):
 
         if fields:
             params['fields'] = self._validate_fields(fields,
-                                                     ('FILTERS', 'FOUND_CATEGORIES',
-
-                                                      'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
-                                                      'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA',
-                                                      'MODEL_NAVIGATION_NODE',
-                                                      'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
-                                                      'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
-                                                      'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY',
-                                                      'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                      'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                      'OFFER_PHOTO',
-                                                      'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING',
-                                                      'SORTS', 'ALL', 'MODEL_ALL',
-                                                      'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
+                                                     constants.MODEL + constants.OFFER + constants.SHOP + ['FILTERS',
+                                                                                                           'FOUND_CATEGORIES',
+                                                                                                           'SORTS',
+                                                                                                           'ALL',
+                                                                                                           'STANDARD'
+                                                                                                           ])
 
         if onstock:
             if str(onstock).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
@@ -2256,6 +2574,39 @@ class YMAPI(object):
         :type remote_ip: str
 
         :param fields: Поля, которые необходимо показать в выходных данных
+
+            * **MODEL_CATEGORY** — Информация о категории, к которой относится модель
+            * **MODEL_DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **MODEL_DISCOUNTS** — информация о скидках на модель.
+            * **MODEL_FACTS** — Список достоинств и недостатков модели
+            * **MODEL_FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **MODEL_MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODEL_NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **MODEL_OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **MODEL_PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **MODEL_PHOTOS** — все доступные изображения модели.
+            * **MODEL_PRICE** — информация о ценах на модель.
+            * **MODEL_RATING** — иформация о рейтинге и оценках модели.
+            * **MODEL_SPECIFICATION** — характеристики модели.
+            * **MODEL_VENDOR** — информация о производителе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **ALL** = Все значения
+            * **MODEL_ALL** = MODEL_ACTIVE_FILTERS, MODEL_CATEGORY, MODEL_DEFAULT_OFFER, MODEL_DISCOUNTS, MODEL_FACTS, MODEL_FILTER_COLOR, MODEL_LINK, MODEL_MEDIA, MODEL_NAVIGATION_NODE, MODEL_OFFERS, MODEL_PHOTO, MODEL_PHOTOS, MODEL_PRICE, MODEL_RATING, MODEL_SPECIFICATION, MODEL_VENDOR
+            * **OFFER_ALL** = OFFER_ACTIVE_FILTERS, OFFER_BUNDLE_SETTINGS, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_DISCOUNT, OFFER_LINK, OFFER_OFFERS_LINK, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, OFFER_VENDOR
+            * **SHOP_ALL** = SHOP_ORGANIZATION, SHOP_RATING
+            * **STANDARD** = MODEL_CATEGORY, MODEL_OFFERS, MODEL_PHOTO, MODEL_PRICE, MODEL_RATING, MODEL_VENDOR, OFFER_CATEGORY, OFFER_DELIVERY, OFFER_OUTLET, OFFER_OUTLET_COUNT, OFFER_PHOTO, OFFER_SHOP, SHOP_RATING
+
         :type fields: str or list[str]
 
         :param result_type: Тип возвращаемых данных
@@ -2309,18 +2660,9 @@ class YMAPI(object):
 
         if fields:
             params['fields'] = self._validate_fields(fields,
-                                                     ('MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
-                                                      'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA',
-                                                      'MODEL_NAVIGATION_NODE',
-                                                      'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
-                                                      'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
-                                                      'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY',
-                                                      'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                      'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                      'OFFER_PHOTO',
-                                                      'OFFER_PHOTO', 'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING',
-                                                      'ALL', 'MODEL_ALL',
-                                                      'OFFER_ALL', 'SHOP_ALL', 'STANDARD'))
+                                                     constants.MODEL + constants.OFFER + constants.SHOP + ['ALL',
+                                                                                                           'STANDARD']
+                                                     )
 
         if result_type:
             if result_type not in (
@@ -2368,6 +2710,16 @@ class YMAPI(object):
         :type text: str
 
         :param fields: Поля, которые необходимо показать в выходных данных
+
+            * **ALLVENDORS** — группа параметров для фильтра «Производитель
+            * **DESCRIPTION** — описания фильтров
+            * **FOUND** — количество моделей или товарных предложений
+            * **SORTS** — включение в выдачу доступных фильтров
+            * **STANDARD** = ALLVENDORS, DESCRIPTION, FOUND, SORTS
+            * **ALL** - Все значения
+
+            .. note:: Значение ALL доступно только для отладки и имеет ограничение по нагрузке – один RPS
+
         :type fields: str or list[str]
 
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -2393,6 +2745,13 @@ class YMAPI(object):
         :type text: str
 
         :param redirect_types: Типы редиректов
+
+            * **CATALOG** — Страница категории
+            * **MODEL** — Страница модели
+            * **SEARCH** — Страница поиска (он же тип по умолчанию, если страница неизвестного типа, и есть текст по которому можно искать)
+            * **VENDOR** — Страница производителя
+            * **ALL** = Все значения
+
         :type redirect_types: str or list[str]
 
         :param barcode: Признак поиска по штрихкоду
@@ -2408,6 +2767,48 @@ class YMAPI(object):
         :type hid: int
 
         :param fields: Праметры модели/товарного предложения, которые необходимо показать в выходных данных.
+
+            * **CATEGORY_PARENT** — информация о родительской категории.
+            * **CATEGORY_STATISTICS** — статистика по категории. Например, количество моделей и товарных предложений в категории.
+            * **CATEGORY_WARNINGS** — предупреждения, связанные с показом категории.
+            * **FILTERS** — Список фильтров в результатах запроса офферов
+            * **FOUND_CATEGORIES** — категории, в которых нашлись результаты по этому запросу
+            * **MODEL_CATEGORY** — Информация о категории, к которой относится модель
+            * **MODEL_DEFAULT_OFFER** — информация о товарном предложении по умолчанию для модели в указанном регионе.
+            * **MODEL_DISCOUNTS** — информация о скидках на модель.
+            * **MODEL_FACTS** — Список достоинств и недостатков модели
+            * **MODEL_FILTER_COLOR** — список фильтров по цвету, доступных для отбора модификаций модели.
+            * **MODEL_MEDIA** — информация об отзывах и обзорах на модель.
+            * **MODEL_NAVIGATION_NODE** — информация о навигационном узле дерева категорий Маркета, к которому относится модель.
+            * **MODEL_OFFERS** — информация о товарных предложениях, соотнесенных с моделью, в указанном регионе.
+            * **MODEL_PHOTO** — Изображение модели, используемое как основное изображение на карточке модели
+            * **MODEL_PHOTOS** — все доступные изображения модели.
+            * **MODEL_PRICE** — информация о ценах на модель.
+            * **MODEL_RATING** — иформация о рейтинге и оценках модели.
+            * **MODEL_SPECIFICATION** — характеристики модели.
+            * **MODEL_VENDOR** — информация о производителе.
+            * **OFFER_ACTIVE_FILTERS** — активные фильтры.
+            * **OFFER_CATEGORY** — информация о категории предложения.
+            * **OFFER_DELIVERY** — информация о доставке.
+            * **OFFER_DISCOUNT** — скидка.
+            * **OFFER_OFFERS_LINK** — Ссылка на страницу с офферами для той же модели в том же магазине.
+            * **OFFER_OUTLET** — информация о точке выдачи производетеля.
+            * **OFFER_OUTLET_COUNT** — Количество точек выдачи предложения
+            * **OFFER_PHOTO** — фото предложения.
+            * **OFFER_SHOP** — магазин от которого поступило предложенение.
+            * **OFFER_VENDOR** — информация о поставщике.
+            * **SHOP_ORGANIZATION** — юридическая информация: юридический и фактический адрес, ОГРН, тип организации, ссылка на реквизиты.
+            * **SHOP_RATING** — рейтинг магазина.
+            * **SORTS** — Доступные варианты сортировок для запроса
+            * **VENDOR_CATEGORIES** — Описание категорий, в которых представлен данный производитель
+            * **VENDOR_TOP_CATEGORIES** — Список наиболее популярных категорий товаров производителя
+            * **ALL** = Все значения
+            * **CATEGORY_ALL** = LINK, PARENT, STATISTICS, WARNINGS
+            * **MODEL_ALL** = FACTS, MEDIA, DEFAULT_OFFER, PRICE, PHOTOS, DISCOUNTS, NAVIGATION_NODE, RATING, LINK, VENDOR, ACTIVE_FILTERS, OFFERS, FILTER_COLOR, SPECIFICATION, CATEGORY, PHOTO
+            * **OFFER_ALL** = DISCOUNT, SHOP, PHOTO, DELIVERY, CATEGORY, VENDOR, OUTLET_COUNT, OUTLET, ACTIVE_FILTERS, LINK, BUNDLE_SETTINGS, OFFERS_LINK
+            * **SHOP_ALL** = ORGANIZATION, RATING
+            * **VENDOR_ALL** = LINK, CATEGORIES, TOP_CATEGORIES
+
         :type fields: str or list[str]
 
         :param user_agent: Признак включения цены доставки в цену товарного предложения
@@ -2483,24 +2884,18 @@ class YMAPI(object):
 
         if fields:
             params['fields'] = self._validate_fields(fields,
-                                                     ('CATEGORY_PARENT', 'CATEGORY_STATISTICS', 'CATEGORY_WARNINGS',
-
-                                                      'FILTERS', 'FOUND_CATEGORIES',
-
-                                                      'MODEL_CATEGORY', 'MODEL_DEFAULT_OFFER', 'MODEL_DISCOUNTS',
-                                                      'MODEL_FACTS', 'MODEL_FILTER_COLOR', 'MODEL_MEDIA',
-                                                      'MODEL_NAVIGATION_NODE',
-                                                      'MODEL_OFFERS', 'MODEL_PHOTO', 'MODEL_PHOTOS',
-                                                      'MODEL_PRICE', 'MODEL_RATING', 'MODEL_SPECIFICATION',
-                                                      'MODEL_VENDOR', 'OFFER_ACTIVE_FILTERS', 'OFFER_CATEGORY',
-                                                      'OFFER_DELIVERY', 'OFFER_DISCOUNT',
-                                                      'OFFER_OFFERS_LINK', 'OFFER_OUTLET', 'OFFER_OUTLET_COUNT',
-                                                      'OFFER_PHOTO', 'OFFER_SHOP',
-                                                      'OFFER_VENDOR', 'SHOP_ORGANIZATION', 'SHOP_RATING', 'SORTS',
+                                                     constants.MODEL + constants.OFFER + constants.SHOP +
+                                                     ['CATEGORY_PARENT',
+                                                      'CATEGORY_STATISTICS',
+                                                      'CATEGORY_WARNINGS',
+                                                      'FILTERS',
+                                                      'FOUND_CATEGORIES',
+                                                      'SORTS',
                                                       'VENDOR_CATEGORIES',
-                                                      'VENDOR_TOP_CATEGORIES', 'ALL', 'CATEGORY_ALL', 'MODEL_ALL',
-                                                      'OFFER_ALL', 'SHOP_ALL',
-                                                      'STANDARD', 'VENDOR_ALL'))
+                                                      'VENDOR_TOP_CATEGORIES',
+                                                      'ALL',
+                                                      'CATEGORY_ALL',
+                                                      'VENDOR_ALL'])
 
         if user_agent:
             params['user_agent'] = user_agent
@@ -2544,6 +2939,14 @@ class YMAPI(object):
         :type pos: int
 
         :param suggest_types: Типы поисковых подсказок
+
+            * **CATALOG** — Страница категории
+            * **MODEL** — Страница модели
+            * **SEARCH** — Страница поиска (он же тип по умолчанию, если страница неизвестного типа, и есть текст по которому можно искать)
+            * **VENDOR** — Страница производителя
+            * **ALL** = Все значения
+            * **DEFAULT** = CATALOG, MODEL, SEARCH, VENDOR
+
         :type suggest_types: str or list[str]
 
         :raises CountParamError: недопустимое значение параметра count
