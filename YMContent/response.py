@@ -138,7 +138,8 @@ class Base(object):
         :return: возможное количество запросов с получением всех полей
         :rtype: int or None
         """
-        return self.headers.get('X-RateLimit-Fields-All-Limit')
+        return int(self.headers.get(
+            'X-RateLimit-Fields-All-Limit')) if 'X-RateLimit-Fields-All-Limit' in self.headers else None
 
     @property
     def fields_all_remaining(self):
@@ -147,7 +148,8 @@ class Base(object):
         :return: оставшееся количество запросов с получением всех полей
         :rtype: int or None
         """
-        return self.headers.get('X-RateLimit-Fields-All-Remaining')
+        return int(self.headers.get(
+            'X-RateLimit-Fields-All-Remaining')) if 'X-RateLimit-Fields-All-Remaining' in self.headers else None
 
     @property
     def fields_all_until(self):
@@ -606,7 +608,7 @@ class Search(Page):
         :return: Список категорий
         :rtype: list[YMSearchCategory]
         """
-        return [YMSearchCategory(category) for category in self.resp.get('categories',[])]
+        return [YMSearchCategory(category) for category in self.resp.get('categories', [])]
 
     @property
     def sorts(self):
@@ -615,7 +617,7 @@ class Search(Page):
         :return: Список доступных сортировок
         :rtype: list[YMSort]
         """
-        return [YMSort(sort) for sort in self.resp.get('sorts',[])]
+        return [YMSort(sort) for sort in self.resp.get('sorts', [])]
 
 
 class Redirect(Page):
@@ -637,7 +639,7 @@ class Redirect(Page):
             return YMRedirectSearch(self.resp.get('redirect'))
 
 
-class Suggestions(Page):
+class Suggestions(Base):
 
     @property
     def input(self):

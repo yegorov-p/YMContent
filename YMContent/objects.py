@@ -3879,7 +3879,7 @@ class YMSuggestion(YMBase):
         """
 
         :return: Ссылка на страницу соответствующую поисковой посдказке
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('url')
 
