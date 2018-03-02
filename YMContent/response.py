@@ -262,7 +262,7 @@ class Page(Base):
         :return: Номер страницы
         :rtype: int
         """
-        return self.resp['context']['page'].get('number')
+        return self.resp['context'].get('page', {}).get('number')
 
     @property
     def page_count(self):
@@ -271,7 +271,7 @@ class Page(Base):
         :return: Размер страницы
         :rtype: int
         """
-        return int(self.resp['context']['page'].get('count'))
+        return int(self.resp['context'].get('page', {}).get('count', 0))
 
     @property
     def page_total(self):
@@ -280,7 +280,7 @@ class Page(Base):
         :return: Количество страниц в результате
         :rtype: int
         """
-        return int(self.resp['context']['page'].get('total'))
+        return int(self.resp['context'].get('page', {}).get('count', 0))
 
     @property
     def page_last(self):
@@ -289,7 +289,7 @@ class Page(Base):
         :return: Признак последней страницы
         :rtype: bool
         """
-        return self.resp['context']['page']['number'] == self.resp['context']['page']['total']
+        return True if self.page_total == 0 else self.page_number == self.page_count
 
 
 class Categories(Page):
