@@ -743,6 +743,7 @@ class YMAPI(object):
         :return: Cписок моделей, которые похожи на указанную в запросе
         :rtype: Models
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -845,6 +846,7 @@ class YMAPI(object):
         :return:
         :rtype: Models
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
         :raises FieldsParamError: недопустимое значение параметра fields
@@ -1185,6 +1187,7 @@ class YMAPI(object):
         :param remote_ip: IP-адрес пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Товарное предложение по умолчанию
@@ -1223,6 +1226,8 @@ class YMAPI(object):
 
         :param remote_ip: IP-адрес пользователя
         :type remote_ip: str
+
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
 
         :return: Информация о количестве товарных предложений на указанную модель по регионам, а также минимальную, максимальную и среднюю стоимость этой модели
         :rtype: ModelOffersStat
@@ -1337,6 +1342,7 @@ class YMAPI(object):
         :param remote_ip: IP-адрес пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
         :raises FieldsParamError: недопустимое значение параметра fields
 
@@ -1687,6 +1693,7 @@ class YMAPI(object):
         :param remote_ip: Идентификатор региона пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises TypeParamError: недопустимое значение параметра type
         :raises CountParamError: недопустимое значение параметра count
@@ -1997,6 +2004,7 @@ class YMAPI(object):
         :param remote_ip: Идентификатор региона пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises TypeParamError: недопустимое значение параметра type
         :raises CountParamError: недопустимое значение параметра count
@@ -2840,6 +2848,7 @@ class YMAPI(object):
         :param remote_ip: Идентификатор региона пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Список доступных фильтров и сортировок для укзанного поискового запроса
@@ -3083,6 +3092,7 @@ class YMAPI(object):
         :param remote_ip: IP-адрес пользователя
         :type remote_ip: str
 
+        :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
         :raises PosParamError: недопустимое значение параметра pos
