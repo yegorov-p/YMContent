@@ -13,6 +13,7 @@ class YMBase(object):
 
 
 class YMRegion(YMBase):
+    """Регион"""
 
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
@@ -23,6 +24,8 @@ class YMRegion(YMBase):
 
         :return: Идентификатор региона
         :rtype: int
+
+        225
         """
         return self.data.get('id')
 
@@ -32,6 +35,8 @@ class YMRegion(YMBase):
 
         :return: Наименование региона
         :rtype: str
+
+        Россия
         """
         return self.data.get('name')
 
@@ -41,6 +46,23 @@ class YMRegion(YMBase):
 
         :return: Тип региона
         :rtype: str
+
+        * **CONTINENT** — континент
+        * **REGION** — регион
+        * **COUNTRY** — страна
+        * **COUNTRY_DISTRICT** — федеральный округ
+        * **SUBJECT_FEDERATION** — субъект федерации
+        * **CITY** — город
+        * **VILLAGE** — село
+        * **CITY_DISTRICT** — район города
+        * **METRO_STATION** — станиция метро
+        * **SUBJECT_FEDERATION_DISTRICT** — район субъекта федерации
+        * **AIRPORT** — аэропорт
+        * **OVERSEAS_TERRITORY** — отдельная территория какого-либо государства, расположенная в другой части света (например, Ангилья, Гренландия, Бермудские острова и т. д.)
+        * **SECONDARY_DISTRICT** — район города второго уровня (например, для ВАО Москвы районами второго уровня являются Измайлово, Новокосино, Перово и т. д.)
+        * **MONORAIL_STATION** — станция монорельса
+        * **RURAL_SETTLEMENT** — сельское поселение
+        * **OTHER** — другой тип населенного пункта
         """
         return self.data.get('type')
 
@@ -50,6 +72,8 @@ class YMRegion(YMBase):
 
         :return: Количество дочерних регионов
         :rtype: int
+
+        14
         """
         return self.data.get('childCount')
 
@@ -271,6 +295,8 @@ class YMSearchCategory(YMCategory):
 
         :return: Количество категорий в результатах поиска
         :rtype: int
+
+        12
         """
         return self.data.get('findCount')
 
@@ -301,8 +327,6 @@ class YMSortOption(YMBase):
 
         * **ASC** — по возрастанию
         * **DESC** — по убыванию
-
-        ASC
         """
         return self.data.get('how')
 
@@ -353,8 +377,6 @@ class YMSort(YMBase):
         * **DATE** — сортировка по дате.
         * **DELIVERY_TIME** — сортировка по времени доставки.
         * **NOFFERS** — сортировка по количеству предложений
-
-        PRICE
         """
         return self.data.get('field')
 
