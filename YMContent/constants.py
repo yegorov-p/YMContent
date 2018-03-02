@@ -4,7 +4,7 @@ API_VERSION = 'v2'
 
 USER_AGENT = 'YMContent'
 
-VERSION = '0.1.3'
+VERSION = '0.2.1'
 
 PROTOCOL = 'https'
 
@@ -31,7 +31,7 @@ RESOURCES = [
     'models/{}/offers/stat',
     'models/{}/offers/filters',
     'models/{}/opinions',
-    'models/{}/outlets'
+    'models/{}/outlets',
 
     # Товарные предложения
     'offers/{}',
@@ -51,7 +51,7 @@ RESOURCES = [
     'geo/suggest',
 
     # Производители
-    'vendor',
+    'vendors',
     'vendors/{}',
     'vendors/match',
 

@@ -15,7 +15,7 @@ class YMBase(object):
 class YMRegion(YMBase):
 
     def __repr__(self):
-        return '<{}: {} ({})>'.format(self.__class__.__name__, self.data.get('name'), self.data.get('id'))
+        return '<{}>'.format(self.__class__.__name__)
 
     @property
     def id(self):
@@ -58,7 +58,7 @@ class YMRegion(YMBase):
         """
 
         :return: Наименование региона в винительном падеже
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('nameAccusative')
 
@@ -67,7 +67,7 @@ class YMRegion(YMBase):
         """
 
         :return: Наименование региона в родительном падеже
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('nameGenitive')
 
@@ -76,7 +76,7 @@ class YMRegion(YMBase):
         """
 
         :return: Страна, к которой относится регион
-        :rtype: objects.YMRegion
+        :rtype: YMRegion or None
         """
         return YMRegion(self.data.get('country'))
 
@@ -85,7 +85,7 @@ class YMRegion(YMBase):
         """
 
         :return: Родительский регион
-        :rtype: objects.YMRegion
+        :rtype: YMRegion or None
         """
         return YMRegion(self.data.get('parent'))
 
@@ -157,7 +157,7 @@ class YMCategory(YMBase):
         """
 
         :return: Полное наименование категории
-        :rtype: str
+        :rtype: str or None
 
         Товары для авто- и мототехники
         """
@@ -168,7 +168,7 @@ class YMCategory(YMBase):
         """
 
         :return: Идентификатор родительской категории
-        :rtype: int
+        :rtype: int or None
 
         90401
         """
@@ -183,14 +183,14 @@ class YMCategory(YMBase):
 
         False
         """
-        return self.data.get('adult')
+        return self.data.get('adult', False)
 
     @property
     def link(self):
         """
 
         :return: Ссылка на карточку категории на Яндекс.Маркете
-        :rtype: str
+        :rtype: str or None
 
         https://market.yandex.ru/catalog/90402/list?hid=90402&onstock=1&pp=1001
         """
@@ -212,7 +212,7 @@ class YMCategory(YMBase):
         """
 
         :return: Количество моделей в категории
-        :rtype: int
+        :rtype: int or None
 
         181170
         """
@@ -223,7 +223,7 @@ class YMCategory(YMBase):
         """
 
         :return: Количество товарных предложений в категории
-        :rtype: int
+        :rtype: int or None
 
         3531718
         """
@@ -234,7 +234,7 @@ class YMCategory(YMBase):
         """
 
         :return: Тип размещения товарных предложений в категории
-        :rtype: str
+        :rtype: str or None
 
         * **CPA** — плата за заказы, оформленные прямо на Яндекс.Маркете
         * **CPC** — плата только за клики по предложению магазина
@@ -247,7 +247,7 @@ class YMCategory(YMBase):
         """
 
         :return: Тип отображения товаров в категории
-        :rtype: str
+        :rtype: str or None
 
         * **LIST** — список
         * **GRID** — сетка
@@ -259,7 +259,7 @@ class YMCategory(YMBase):
         """
 
         :return: Предупреждения, связанные с категорией
-        :rtype: list[objects.YMWarning]
+        :rtype: list[YMWarning]
         """
         return [YMWarning(warning) for warning in self.data.get('warnings', [])]
 
@@ -277,6 +277,7 @@ class YMSearchCategory(YMCategory):
 
 class YMSortOption(YMBase):
     """Опции сортировки"""
+
     def __repr__(self):
         return '<{}: {} ({})>'.format(self.__class__.__name__, self.data.get('id'), self.data.get('how'))
 
@@ -297,6 +298,9 @@ class YMSortOption(YMBase):
 
         :return: Направление сортировки
         :rtype: str
+
+        * **ASC** — по возрастанию
+        * **DESC** — по убыванию
 
         ASC
         """
@@ -335,7 +339,20 @@ class YMSort(YMBase):
         """
 
         :return: Тип сортировки
-        :rtype: str
+        :rtype: str or None
+
+        * **RELEVANCY** — сортировка по релевантности.
+        * **PRICE** — сортировка по цене.
+        * **RATING** — сортировка по рейтингу.
+        * **DISTANCE** — сортировка по расстоянию до ближайшей точки продаж (значение доступно только при указании местоположения пользователя).
+        * **POPULARITY** — сортировка по популярности.
+        * **DISCOUNT** — сортировка по размеру скидки.
+        .. note:: Для sort=DISCOUNT возможна только сортировка по убыванию (how=DESC).
+        * **QUALITY** — сортировка по рейтингу.
+        * **OPINIONS** — сортировка по количеству отзывов.
+        * **DATE** — сортировка по дате.
+        * **DELIVERY_TIME** — сортировка по времени доставки.
+        * **NOFFERS** — сортировка по количеству предложений
 
         PRICE
         """
@@ -346,7 +363,7 @@ class YMSort(YMBase):
         """
 
         :return: Доступные варианты для данного типа сортировки
-        :rtype: [objects.YMSortOption]
+        :rtype: list[YMSortOption]
         """
         return [YMSortOption(option) for option in self.data.get('options', [])]
 
@@ -362,6 +379,8 @@ class YMFilterValue(YMBase):
 
         :return: Идентификатор значения фильтра, используется для установки значения фильтра
         :rtype: str
+
+        12612583
         """
         return self.data.get('id')
 
@@ -371,6 +390,8 @@ class YMFilterValue(YMBase):
 
         :return: Текстовое описание значение фильтра
         :rtype: str
+
+        AGV
         """
         return self.data.get('name')
 
@@ -379,7 +400,9 @@ class YMFilterValue(YMBase):
         """
 
         :return: Количество моделей/офферов в выдаче, попадающих под значение фильтра, при отсутствии других фильтров
-        :rtype: int
+        :rtype: int or None
+
+        56
         """
         return self.data.get('initialFound')
 
@@ -388,16 +411,27 @@ class YMFilterValue(YMBase):
         """
 
         :return: Количество моделей/офферов в выдаче, попадающих под значение фильтра, при текущих условиях фильтрации
-        :rtype: int
+        :rtype: int or None
+
+        56
         """
         return self.data.get('found')
+
+    @property
+    def sku(self):
+        """
+
+        :return: id sku на который переключимся, если проставим это значение в фильтр (карта фильтров)
+        :rtype: str or None
+        """
+        return self.data.get('sku')
 
     @property
     def checked(self):
         """
 
         :return: Признак того, что значение выбрано в соответствии с текущими условиями фильтрации
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('checked')
 
@@ -405,10 +439,10 @@ class YMFilterValue(YMBase):
     def color(self):
         """
 
-        .. note:: Только для фильтра типа COLOR
+        .. note:: Только для фильтров типов COLOR и Filters.FilterType#PHOTO_PICKER
 
         :return: Значение цвета
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('color')
 
@@ -419,33 +453,20 @@ class YMFilterValue(YMBase):
         .. note:: Только для фильтра типа SIZE
 
         :return: Код единицы измерения размера значения фильтра
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('unitId')
 
-
-class YMDatasourceOrder(YMBase):
-
-    def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.data.get('sort'))
-
     @property
-    def sort(self):
+    def photo(self):
         """
 
-        :return: Вариант/параметр, по которому осуществляется сортировка
-        :rtype: str
-        """
-        return self.data.get('sort')
+        .. note:: Только для фильтра типа Filters.FilterType#PHOTO_PICKER
 
-    @property
-    def how(self):
+        :return: Ссылку на картинку для выбора цвета
+        :rtype: str or None
         """
-
-        :return: Направление сортировки
-        :rtype: str
-        """
-        return self.data.get('how')
+        return self.data.get('photo')
 
 
 class YMDatasourceCriteria(YMBase):
@@ -499,7 +520,7 @@ class YMIcon(YMBase):
 class YMDatasource(YMBase):
 
     def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.data.get('id'))
+        return '<{}>'.format(self.__class__.__name__)
 
     @property
     def type(self):
@@ -509,7 +530,7 @@ class YMDatasource(YMBase):
         :rtype: str
         """
         # todo Нет примера
-        return self.data.get('id')
+        return self.data.get('type')
 
     @property
     def hid(self):
@@ -534,13 +555,38 @@ class YMDatasource(YMBase):
         return self.data.get('nid')
 
     @property
-    def order(self):
+    def sort(self):
         """
 
-        :return: Параметры сортировки моделей и товарных предложений источника
-        :rtype: objects.YMDatasourceOrder
+        :return: Вариант/параметр, по которому осуществляется сортировка
+        :rtype: str or None
+
+        * **POPULARITY** — По популярности
+        * **PRICE** — По цене
+        * **DATE** — Сначала новые
+        * **RELEVANCE** — По релевантности
+        * **RATING** — По рейтингу и цене
+        * **DISTANCE** — По удаленности
+        * **DISCOUNT** — По скидке (сортировка работает только по убыванию)
+        * **QUALITY** — По рейтингу
+        * **OPINIONS** — По отзывам
+        * **DELIVERY_TIME** — По времени доставки
         """
-        return YMDatasourceOrder(self.data.get('order'))
+        if self.data.get('order'):
+            return self.data['order'].get('sort')
+
+    @property
+    def how(self):
+        """
+
+        :return: Направление сортировки
+        :rtype: str or None
+
+        * **ASC** — по возрастанию;
+        * **DESC** — по убыванию.
+        """
+        if self.data.get('order'):
+            return self.data['order'].get('how')
 
     @property
     def criteria(self):
@@ -549,7 +595,7 @@ class YMDatasource(YMBase):
         :return: Список условий фильтрации моделей и товарных предложений источника
         :rtype: list[YMDatasourceCriteria]
         """
-        return YMDatasourceCriteria(self.data.get('criteria'))
+        return [YMDatasourceCriteria(criteria) for criteria in self.data.get('criteria', [])]
 
 
 class YMNavigationNode(YMBase):
@@ -605,7 +651,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Количество товарных предложений в категории узла
-        :rtype: int
+        :rtype: int or None
 
         55595
         """
@@ -616,7 +662,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Количество моделей в категории узла
-        :rtype: int
+        :rtype: int or None
 
         3002
         """
@@ -627,7 +673,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Признак визуальной категории
-        :rtype: bool
+        :rtype: bool or None
         """
         # todo нет примера
         return self.data.get('visual')
@@ -637,7 +683,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Максимальная скидка в категории
-        :rtype: str
+        :rtype: str or None
         """
         # todo нет примера
         return self.data.get('maxDiscount')
@@ -658,7 +704,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Информация о источнике данных для узла навигационного дерева
-        :rtype: objects.YMDatasource
+        :rtype: YMDatasource
         """
         return YMDatasource(self.data.get('datasource'))
 
@@ -677,7 +723,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Иерархический список всех родителей узла, начиная с корня
-        :rtype: list[objects.YMNavigationNode]
+        :rtype: list[YMNavigationNode]
         """
         # todo нет примера
         return [YMNavigationNode(node) for node in self.data.get('parents', [])]
@@ -687,7 +733,7 @@ class YMNavigationNode(YMBase):
         """
 
         :return: Список дочерних узлов
-        :rtype: list[objects.YMNavigationNode]
+        :rtype: list[YMNavigationNode]
         """
         # todo нет примера
         return [YMNavigationNode(node) for node in self.data.get('categories', [])]
@@ -695,6 +741,7 @@ class YMNavigationNode(YMBase):
 
 class YMFilter(YMBase):
     """Фильтр"""
+
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__, self.data.get('id'))
 
@@ -734,6 +781,7 @@ class YMFilter(YMBase):
         * **SIZE** — фильтр по размеру, аналогичен ENUM, значения фильтра дополнительно содержат код единиц измерения
         * **RADIO** — аналогичен ENUM, но допускает выбор только одного значения
         * **TEXT** — тип фильтра для фильтрации по поисковой фразе
+        * **PHOTO_PICKER** —
         """
         return self.data.get('type')
 
@@ -742,9 +790,9 @@ class YMFilter(YMBase):
         """
 
         :return: Описание фильтра
-        :rtype: str
+        :rtype: str or None
         """
-        #todo никогда не возвращается
+        # todo нет примера
         return self.data.get('description')
 
     @property
@@ -752,9 +800,9 @@ class YMFilter(YMBase):
         """
 
         :return: Единицы измерения значений фильтра
-        :rtype: str
+        :rtype: str or None
         """
-        # todo никогда не возвращается
+        # todo нет примера
         return self.data.get('unit')
 
     @property
@@ -762,9 +810,9 @@ class YMFilter(YMBase):
         """
 
         :return: Код единиц измерения значений фильтра, используемых по умолчанию
-        :rtype: str
+        :rtype: str or None
         """
-        # todo никогда не возвращается
+        # todo нет примера
         return self.data.get('defaultUnit')
 
     @property
@@ -772,9 +820,9 @@ class YMFilter(YMBase):
         """
 
         :return: Список значений фильтра
-        :rtype: list[objects.YMFilterValue]
+        :rtype: list[YMFilterValue]
         """
-        # todo никогда не возвращается
+        # todo нет примера
         return [YMFilterValue(value) for value in self.data.get('values', [])]
 
     @property
@@ -782,7 +830,7 @@ class YMFilter(YMBase):
         """
 
         :return: Максимальное значение числового фильтра
-        :rtype: str
+        :rtype: str or None
         """
         # todo никогда не возвращается
         return self.data.get('max')
@@ -792,7 +840,7 @@ class YMFilter(YMBase):
         """
 
         :return: Минимальное значение числового фильтра
-        :rtype: str
+        :rtype: str or None
         """
         # todo никогда не возвращается
         return self.data.get('min')
@@ -802,7 +850,7 @@ class YMFilter(YMBase):
         """
 
         :return: Выбранное значение числового фильтра
-        :rtype: str
+        :rtype: str or None
         """
         # todo никогда не возвращается
         return self.data.get('value')
@@ -812,10 +860,101 @@ class YMFilter(YMBase):
         """
 
         :return: Количество знаков поле запятой у значений фильтра
-        :rtype: int
+        :rtype: int or None
         """
         # todo никогда не возвращается
         return self.data.get('precision')
+
+
+class YMThumbnail(YMBase):
+
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__, self.data.get('url'))
+
+    @property
+    def width(self):
+        """
+
+        :return: Ширина изображения
+        :rtype: int
+
+        321
+        """
+        return self.data.get('width')
+
+    @property
+    def height(self):
+        """
+
+        :return: Высота изображения
+        :rtype: int
+
+        620
+        """
+        return self.data.get('height')
+
+    @property
+    def url(self):
+        """
+
+        :return: Ссылка на изображение
+        :rtype: str
+
+        https://avatars.mds.yandex.net/get-mpic/397397/img_id7051974271832358544.png/orig
+        """
+        return self.data.get('url')
+
+    @property
+    def container(self):
+        """
+
+        :return: container
+        :rtype: str
+
+        * **W50xH50** — 50x50
+        * **W100xH100** — 100x100
+        * **W150xH150** — 150x150
+        * **W200xH200** — 200x200
+        * **W300xH300** — 300x300
+        """
+        # todo нет примера
+        return self.data.get('container')
+
+
+class YMCriteria(YMBase):
+
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__, self.data.get('url'))
+
+    @property
+    def id(self):
+        """
+
+        :return: Идентификатор фильтра
+        :rtype: str
+        """
+        # todo нет примера
+        return self.data.get('id')
+
+    @property
+    def value(self):
+        """
+
+        :return: Значение фильтра
+        :rtype: str
+        """
+        # todo нет примера
+        return self.data.get('value')
+
+    @property
+    def text(self):
+        """
+
+        :return: Текст поисковой фразы
+        :rtype: str or None
+        """
+        # todo нет примера
+        return self.data.get('text')
 
 
 class YMModelPhoto(YMBase):
@@ -861,16 +1000,36 @@ class YMModelPhoto(YMBase):
         """
 
         :return: Код значения фильтра по цвету
-        :rtype: str
+        :rtype: str or None
         """
         # todo нет примера
         return self.data.get('colorId')
+
+    @property
+    def thumbnails(self):
+        """
+
+        :return: Уменьшенные копии изображения
+        :rtype: list[YMThumbnail]
+        """
+        # todo нет примера
+        return [YMThumbnail(thumbnail) for thumbnail in self.data.get('thumbnails', [])]
+
+    @property
+    def criteria(self):
+        """
+
+        :return: Критерий фильтрации копии изображения
+        :rtype: list[YMCriteria]
+        """
+        # todo нет примера
+        return [YMCriteria(criteria) for criteria in self.data.get('criteria', [])]
 
 
 class YMPrice(YMBase):
 
     def __repr__(self):
-        return '<{}'.format(self.__class__.__name__)
+        return '<{}>'.format(self.__class__.__name__)
 
     @property
     def max(self):
@@ -904,7 +1063,7 @@ class YMPrice(YMBase):
         """
 
         :return: Скидка
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('discount')
 
@@ -913,7 +1072,7 @@ class YMPrice(YMBase):
         """
 
         :return: Базовое значение цены
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('base')
 
@@ -937,7 +1096,7 @@ class YMShopPrice(YMBase):
         """
 
         :return: Скидка
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('discount')
 
@@ -946,7 +1105,7 @@ class YMShopPrice(YMBase):
         """
 
         :return: Базовая цена
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('base')
 
@@ -955,7 +1114,7 @@ class YMShopPrice(YMBase):
         """
 
         :return: Минимальная цена из всех склеенных офферов в данном магазине
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('shopMin')
 
@@ -964,7 +1123,7 @@ class YMShopPrice(YMBase):
         """
 
         :return: Максимальная цена из всех склеенных офферов в данном магазине
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('shopMax')
 
@@ -985,7 +1144,7 @@ class YMVendorCategory(YMCategory):
         """
 
         :return: Список дочерних категорий
-        :rtype: list[objects.YMVendorCategory]
+        :rtype: list[YMVendorCategory]
         """
         return [YMVendorCategory(category) for category in self.data.get('children', [])]
 
@@ -1018,7 +1177,7 @@ class YMVendor(YMBase):
         """
 
         :return: Ссылка на веб-сайт производителя
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('site')
 
@@ -1027,7 +1186,7 @@ class YMVendor(YMBase):
         """
 
         :return: Ссылка на изображение логотипа производителя
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('picture')
 
@@ -1036,7 +1195,7 @@ class YMVendor(YMBase):
         """
 
         :return: Ссылка на страницу производителя с рекомендованными магазинами
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('recommendedShops')
 
@@ -1045,7 +1204,7 @@ class YMVendor(YMBase):
         """
 
         :return: Ссылка на карточку производителя на большом маркете
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('link')
 
@@ -1054,7 +1213,7 @@ class YMVendor(YMBase):
         """
 
         :return: Список категорий, в которых представлен данный производитель
-        :rtype: list[objects.YMVendorCategory]
+        :rtype: list[YMVendorCategory]
         """
         return [YMVendorCategory(category) for category in self.data.get('categories', [])]
 
@@ -1063,7 +1222,7 @@ class YMVendor(YMBase):
         """
 
         :return: Список наиболее популярных категорий товаров производителя
-        :rtype: list[objects.YMVendorCategory]
+        :rtype: list[YMVendorCategory]
         """
         return [YMVendorCategory(category) for category in self.data.get('topCategories', [])]
 
@@ -1153,7 +1312,7 @@ class YMRating(YMBase):
         """
 
         :return: Информация о распределении оценок
-        :rtype: list[objects.YMRatingDistribution]
+        :rtype: list[YMRatingDistribution]
         """
         return [YMRatingDistribution(d) for d in self.data.get('distribution')]
 
@@ -1162,7 +1321,7 @@ class YMRating(YMBase):
         """
 
         :return: Статус рейтинга
-        :rtype: list[objects.YMRatingStatus]
+        :rtype: list[YMRatingStatus]
         """
         return [YMRatingStatus(d) for d in self.data.get('distribution')]
 
@@ -1279,7 +1438,7 @@ class YMModification(YMBase):
         """
 
         :return: Информация о цене модификации
-        :rtype: objects.YMPrice
+        :rtype: YMPrice
         """
         return YMPrice(self.data.get('price'))
 
@@ -1288,7 +1447,7 @@ class YMModification(YMBase):
         """
 
         :return: Информация о ценах на модификацию в альтернативной валюте запроса
-        :rtype: objects.YMPrice
+        :rtype: YMPrice
         """
         return YMPrice(self.data.get('alternatePrices'))
 
@@ -1333,6 +1492,11 @@ class YMSpecification(YMBase):
 
     @property
     def features(self):
+        """
+
+        :return: -
+        :rtype: list[YMSpecificationFeature]
+        """
         return [YMSpecificationFeature(feature) for feature in self.data.get('features', [])]
 
 
@@ -1433,7 +1597,7 @@ class YMParameter(YMBase):
         """
 
         :return: Список возможных значений параметра
-        :rtype: list[objects.YMParameterOption]
+        :rtype: list[YMParameterOption]
         """
         return [YMParameterOption(parameter) for parameter in self.data.get('options', [])]
 
@@ -1542,11 +1706,10 @@ class YMModel(YMBase):
         """
 
         :return: Ссылка на страницу производителя
-        :rtype: str
+        :rtype: str or None
 
-        https://market.yandex.ru/brands/267101?pp=1001',
+        https://market.yandex.ru/brands/267101?pp=1001
         """
-        # todo нет примера
         return self.data.get('vendorLink')
 
     # todo пустое описание
@@ -1555,7 +1718,7 @@ class YMModel(YMBase):
         """
 
         :return: Штрих-код модели
-        :rtype: str
+        :rtype: str or None
         """
         # todo нет примера
         return self.data.get('barcode')
@@ -1566,7 +1729,7 @@ class YMModel(YMBase):
         """
 
         :return: Общий идентификатор модели
-        :rtype: str
+        :rtype: str or None
         """
         # todo нет примера
         return self.data.get('vendorCode')
@@ -1609,7 +1772,7 @@ class YMModel(YMBase):
         """
 
         :return: Количество модификаций групповой модели. Поле отсутствует в выдаче, если модель не групповая
-        :rtype: int
+        :rtype: int or None
         """
         # todo нет примера
         return self.data.get('modificationCount')
@@ -1619,7 +1782,7 @@ class YMModel(YMBase):
         """
 
         :return: Дата-время последнего обновления модели в спсике стравнения
-        :rtype: int
+        :rtype: int or None
         """
         # todo нет примера
         return self.data.get('lastUpdate')
@@ -1630,20 +1793,20 @@ class YMModel(YMBase):
     def aliases(self):
         """
 
-        :return:
-        :rtype:
+        :return: ---
+        :rtype: str or None
         """
         return self.data.get('aliases')
 
+    # todo нет примера
     @property
     def parent(self):
         """
 
         :return: Идентификатор модели
-        :rtype: int
+        :rtype: int or None
         """
-        # todo нет примера
-        return self.data.get('parent')
+        return self.data.get('parent', {'id': None})['id']
 
     @property
     def description(self):
@@ -1661,7 +1824,7 @@ class YMModel(YMBase):
         """
 
         :return: Основное изображение модели
-        :rtype: objects.YMModelPhoto
+        :rtype: YMModelPhoto
         """
         return YMModelPhoto(self.data.get('photo'))
 
@@ -1670,7 +1833,7 @@ class YMModel(YMBase):
         """
 
         :return: Остальные изображения модели
-        :rtype: list[objects.YMModelPhoto]
+        :rtype: list[YMModelPhoto]
         """
         return [YMModelPhoto(photo) for photo in self.data.get('photos', [])]
 
@@ -1679,7 +1842,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация о категории, к которой относится модель
-        :rtype: objects.YMCategory
+        :rtype: YMCategory
         """
         return YMCategory(self.data.get('category'))
 
@@ -1688,7 +1851,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация об узле навигационного дерева, к которому относится модель
-        :rtype: objects.YMNavigationNode
+        :rtype: YMNavigationNode
         """
         return YMNavigationNode(self.data.get('navigationNode'))
 
@@ -1697,7 +1860,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация о цене модели в основной валюте запроса
-        :rtype: objects.YMPrice
+        :rtype: YMPrice
         """
         return YMPrice(self.data.get('price'))
 
@@ -1706,7 +1869,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация о цене модели в альтернативной валюте запроса
-        :rtype: objects.YMPrice
+        :rtype: YMPrice
         """
         return YMPrice(self.data.get('price'))
 
@@ -1715,7 +1878,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация о производителе модели
-        :rtype: objects.YMVendor
+        :rtype: YMVendor
         """
         return YMVendor(self.data.get('vendor'))
 
@@ -1724,7 +1887,7 @@ class YMModel(YMBase):
         """
 
         :return: Информация о рейтинге модели
-        :rtype: objects.YMRating
+        :rtype: YMRating
         """
         return YMRating(self.data.get('rating'))
 
@@ -1733,7 +1896,7 @@ class YMModel(YMBase):
         """
 
         :return: Факты о модели
-        :rtype: objects.YMFacts
+        :rtype: YMFacts
         """
         return YMFacts(self.data.get('facts'))
 
@@ -1742,7 +1905,7 @@ class YMModel(YMBase):
         """
 
         :return: Дисклеймер, связанный с моделью
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('warning')
 
@@ -1751,7 +1914,7 @@ class YMModel(YMBase):
         """
 
         :return: Строковый код дисклеймера
-        :rtype: list[objects.YMModelWarning]
+        :rtype: list[YMModelWarning]
         """
         return [YMModelWarning(warning) for warning in self.data.get('warnings', [])]
 
@@ -1760,7 +1923,7 @@ class YMModel(YMBase):
         """
 
         :return: Список фильтров, предназначенных для фильтрации моделей/модификаций
-        :rtype: list[objects.YMFilter]
+        :rtype: list[YMFilter]
         """
         return [YMFilter(f) for f in self.data.get('filters', [])]
 
@@ -1769,7 +1932,7 @@ class YMModel(YMBase):
         """
 
         :return: Список модификаций групповой модели
-        :rtype: list[objects.YMModification]
+        :rtype: list[YMModification]
         """
         return [YMModification(modification) for modification in self.data.get('modifications', [])]
 
@@ -1778,7 +1941,7 @@ class YMModel(YMBase):
         """
 
         :return: Основные характеристики модели
-        :rtype: list[objects.YMSpecification]
+        :rtype: list[YMSpecification]
         """
         return [YMSpecification(specification) for specification in self.data.get('specification', [])]
 
@@ -1787,7 +1950,7 @@ class YMModel(YMBase):
         """
 
         :return: Параметры модели
-        :rtype: list[objects.YMParameter]
+        :rtype: list[YMParameter]
         """
         return [YMParameter(parameter) for parameter in self.data.get('parameters', [])]
 
@@ -1796,9 +1959,9 @@ class YMModel(YMBase):
         """
 
         :return: Информация, касающаяся текущего пользователя
-        :rtype: list[objects.YMUserRelated]
+        :rtype: list[YMUserRelated]
         """
-        return YMUserRelated(self.data.get('userRelated'))
+        return [YMUserRelated(userrelated) for userrelated in self.data.get('userRelated', [])]
 
 
 class YMModelReview(YMBase):
@@ -1949,7 +2112,7 @@ class YMShop(YMBase):
         """
 
         :return: Домашний регион
-        :rtype: objects.YMRegion
+        :rtype: YMRegion
         """
         return YMRegion(self.data.get('region'))
 
@@ -1958,7 +2121,7 @@ class YMShop(YMBase):
         """
 
         :return: Информация о рейтинге магазина
-        :rtype: objects.YMRating
+        :rtype: YMRating
         """
         return YMRating(self.data.get('rating'))
 
@@ -1967,7 +2130,7 @@ class YMShop(YMBase):
         """
 
         :return: Информация об организации
-        :rtype: list[objects.YMOrganization]
+        :rtype: list[YMOrganization]
         """
         return [YMOrganization(organization) for organization in self.data.get('organizations', [])]
 
@@ -2000,7 +2163,7 @@ class YMPhone(YMBase):
         """
 
         :return: Ссылка для получения номера телефона
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('call')
 
@@ -2039,7 +2202,7 @@ class YMDeliveryOptionConditions(YMBase):
         """
 
         :return: Стоимость доставки в основной валюте
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('price'))
 
@@ -2048,7 +2211,7 @@ class YMDeliveryOptionConditions(YMBase):
         """
 
         :return: Стоимость доставки в альтернативной валюте
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('alternatePrice'))
 
@@ -2108,7 +2271,7 @@ class YMDeliveryOption(YMBase):
         """
 
         :return: Информация о службе доставки
-        :rtype: objects.YMDeliveryOptionService
+        :rtype: YMDeliveryOptionService
         """
         return YMDeliveryOptionService(self.data.get('service'))
 
@@ -2117,7 +2280,7 @@ class YMDeliveryOption(YMBase):
         """
 
         :return: Информация об условиях доставки
-        :rtype: objects.YMDeliveryOptionConditions
+        :rtype: YMDeliveryOptionConditions
         """
         return YMDeliveryOptionConditions(self.data.get('conditions'))
 
@@ -2150,7 +2313,7 @@ class YMDeliveryPickupOption(YMBase):
         """
 
         :return: Информация о службе доставки
-        :rtype: objects.YMDeliveryOptionService
+        :rtype: YMDeliveryOptionService
         """
         return YMDeliveryOptionService(self.data.get('service'))
 
@@ -2159,7 +2322,7 @@ class YMDeliveryPickupOption(YMBase):
         """
 
         :return: Информация об условиях доставки
-        :rtype: objects.YMDeliveryOptionConditions
+        :rtype: YMDeliveryOptionConditions
         """
         return YMDeliveryOptionConditions(self.data.get('conditions'))
 
@@ -2264,7 +2427,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Стоимость доставки в валюте заказа
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('price'))
 
@@ -2273,7 +2436,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Стоимость доставки в альтернативной или неденоминированной валюте
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('alternatePrice'))
 
@@ -2282,7 +2445,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Свой регион магазина
-        :rtype: objects.YMRegion
+        :rtype: YMRegion
         """
         return YMRegion(self.data.get('shopRegion'))
 
@@ -2291,7 +2454,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Регион пользователя
-        :rtype: objects.YMRegion
+        :rtype: YMRegion
         """
         return YMRegion(self.data.get('userRegion'))
 
@@ -2300,7 +2463,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Описание условий доставки
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('description')
 
@@ -2309,7 +2472,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Информация о службах доставки, с которыми сотрудничает магазин
-        :rtype: list[objects.YMDeliveryOption]
+        :rtype: list[YMDeliveryOption]
         """
         return [YMDeliveryOption(option) for option in self.data.get('options', [])]
 
@@ -2318,7 +2481,7 @@ class YMDelivery(YMBase):
         """
 
         :return: Информация об условиях самовывоза
-        :rtype: list[objects.YMDeliveryPickupOption]
+        :rtype: list[YMDeliveryPickupOption]
         """
         return [YMDeliveryPickupOption(option) for option in self.data.get('pickupOptions', [])]
 
@@ -2330,6 +2493,11 @@ class YMPaymentOption(YMBase):
 
     @property
     def canPayByCard(self):
+        """
+
+        :return: Оплата картой на Маркете
+        :rtype: bool
+        """
         return self.data.get('canPayByCard')
 
 
@@ -2370,7 +2538,7 @@ class YMOffer(YMBase):
         """
 
         :return: Признак, что товар можно купить с промокодом
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('promocode')
 
@@ -2379,7 +2547,7 @@ class YMOffer(YMBase):
         """
 
         :return: Признак, что товар можно заказать на Яндекс.Маркете (в рамках программы «Заказ на Маркете»)
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('cpa')
 
@@ -2397,7 +2565,7 @@ class YMOffer(YMBase):
         """
 
         :return: URL карточки модели на Яндекс.Маркете
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('cpaUrl')
 
@@ -2406,7 +2574,7 @@ class YMOffer(YMBase):
         """
 
         :return: URL карты со списком точек выдачи товара
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('outletUrl')
 
@@ -2415,7 +2583,7 @@ class YMOffer(YMBase):
         """
 
         :return: Признак, что предложение относится к интим-категории (18+)
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('adult')
 
@@ -2424,7 +2592,7 @@ class YMOffer(YMBase):
         """
 
         :return: Возрастные ограничения для предложения
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('age')
 
@@ -2433,7 +2601,7 @@ class YMOffer(YMBase):
         """
 
         :return: Признак наличия товара
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('onStock')
 
@@ -2487,7 +2655,7 @@ class YMOffer(YMBase):
         """
 
         :return: URL предложения на Яндекс.Маркете
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('link')
 
@@ -2496,7 +2664,7 @@ class YMOffer(YMBase):
         """
 
         :return: URL для добавления предложения в корзину на Яндекс.Маркете
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('cartLink')
 
@@ -2505,7 +2673,7 @@ class YMOffer(YMBase):
         """
 
         :return: URL предложений на модификации модели в указанном магазине
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('offersLink')
 
@@ -2514,7 +2682,7 @@ class YMOffer(YMBase):
         """
 
         :return: Количество других предложений на указанный товар в магазине
-        :rtype: int
+        :rtype: int or None
         """
         return self.data.get('variationCount')
 
@@ -2532,7 +2700,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о цене
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('price'))
 
@@ -2541,7 +2709,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о цене в альтернативной валюте
-        :rtype: objects.YMShopPrice
+        :rtype: YMShopPrice
         """
         return YMShopPrice(self.data.get('alternatePrice'))
 
@@ -2550,7 +2718,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о магазине, который разместил предложение
-        :rtype: objects.YMShop
+        :rtype: YMShop
         """
         return YMShop(self.data.get('shop'))
 
@@ -2561,14 +2729,14 @@ class YMOffer(YMBase):
         :return: Идентификатор модели
         :rtype: int
         """
-        return YMModel(self.data.get('model')['id'])
+        return self.data.get('model')['id']
 
     @property
     def phone(self):
         """
 
         :return: Номер телефона магазина
-        :rtype: objects.YMPhone
+        :rtype: YMPhone
         """
         return YMPhone(self.data.get('phone'))
 
@@ -2577,7 +2745,7 @@ class YMOffer(YMBase):
         """
 
         :return: Изображения товара
-        :rtype: list[objects.YMModelPhoto]
+        :rtype: list[YMModelPhoto]
         """
         return [YMModelPhoto(photo) for photo in self.data.get('photos', [])]
 
@@ -2586,7 +2754,7 @@ class YMOffer(YMBase):
         """
 
         :return: Основное изображение товара
-        :rtype: objects.YMModelPhoto
+        :rtype: YMModelPhoto
         """
         return YMModelPhoto(self.data.get('photo'))
 
@@ -2595,7 +2763,7 @@ class YMOffer(YMBase):
         """
 
         :return: Уменьшенные изображения товара
-        :rtype: list[objects.YMModelPhoto]
+        :rtype: list[YMModelPhoto]
         """
         return [YMModelPhoto(photo) for photo in self.data.get('previewPhotos', [])]
 
@@ -2604,7 +2772,7 @@ class YMOffer(YMBase):
         """
 
         :return: Параметры модели, по которым можно отфильтровать предложения на нее в поиске Яндекс.Маркета
-        :rtype: list[objects.YMFilter]
+        :rtype: list[YMFilter]
         """
         return [YMFilter(f) for f in self.data.get('activeFilters', [])]
 
@@ -2613,7 +2781,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о доставке
-        :rtype: objects.YMDelivery
+        :rtype: YMDelivery
         """
         return YMDelivery(self.data.get('delivery'))
 
@@ -2622,7 +2790,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о категории предложения
-        :rtype: objects.YMCategory
+        :rtype: YMCategory
         """
         return YMCategory(self.data.get('category'))
 
@@ -2631,7 +2799,7 @@ class YMOffer(YMBase):
         """
 
         :return: Информация о производителе
-        :rtype: objects.YMVendor
+        :rtype: YMVendor
         """
         return YMVendor(self.data.get('vendor'))
 
@@ -2640,7 +2808,7 @@ class YMOffer(YMBase):
         """
 
         :return: Предупреждение, связанное с предложением
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('warning')
 
@@ -2649,16 +2817,16 @@ class YMOffer(YMBase):
         """
 
         :return: Код предупреждения, связанного с предложением
-        :rtype: list[objects.YMModelWarning]
+        :rtype: list[YMModelWarning]
         """
-        return [YMModelWarning(warn) for warn in self.data.get('warnings')]
+        return [YMModelWarning(warn) for warn in self.data.get('warnings', [])]
 
     @property
     def paymentOptions(self):
         """
 
         :return: Способы оплаты товара
-        :rtype: objects.YMPaymentOption
+        :rtype: YMPaymentOption
         """
         return YMPaymentOption(self.data.get('paymentOptions'))
 
@@ -2722,7 +2890,7 @@ class YMStatistics(YMBase):
         """
 
         :return: Список статистик по регионам
-        :rtype: list[objects.YMStatisticsRegion]
+        :rtype: list[YMStatisticsRegion]
         """
         return [YMStatisticsRegion(region) for region in self.data.get('regions', [])]
 
@@ -2759,7 +2927,7 @@ class YMOpinionAuthor(YMBase):
         """
 
         :return: Имя автора
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('name')
 
@@ -2768,7 +2936,7 @@ class YMOpinionAuthor(YMBase):
         """
 
         :return: Ссылка на аватар
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('avatarUrl')
 
@@ -2777,7 +2945,7 @@ class YMOpinionAuthor(YMBase):
         """
 
         :return: Количество оценок
-        :rtype: int
+        :rtype: int or None
         """
         return self.data.get('grades')
 
@@ -2795,7 +2963,7 @@ class YMOpinionAuthor(YMBase):
         """
 
         :return: Оиформация о профилях автора в социальных сетях
-        :rtype: list[objects.YMOpinionAuthorSocial]
+        :rtype: list[YMOpinionAuthorSocial]
         """
         return [YMOpinionAuthorSocial(social) for social in self.data.get('social', [])]
 
@@ -2922,7 +3090,7 @@ class YMOpinionComment(YMBase):
         """
 
         :return: Информация об авторе комментария
-        :rtype: objects.YMModelOpinionUser
+        :rtype: YMModelOpinionUser
         """
         return YMModelOpinionUser(self.data.get('user'))
 
@@ -2931,7 +3099,7 @@ class YMOpinionComment(YMBase):
         """
 
         :return: Список дочерних комментариев к данному в дереве комментариев
-        :rtype: list[objects.YMOpinionComment]
+        :rtype: list[YMOpinionComment]
         """
         return [YMOpinionComment(comment) for comment in self.data.get('children', [])]
 
@@ -2945,7 +3113,7 @@ class YMModelOpinionModel(YMBase):
         """
 
         :return: Идентификатор модели
-        :rtype: str
+        :rtype: int
         """
         return self.data.get('id')
 
@@ -2954,7 +3122,7 @@ class YMModelOpinionModel(YMBase):
         """
 
         :return: Наименование модели
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('name')
 
@@ -3009,7 +3177,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Мнение текущего пользователя об отзыве
-        :rtype: bool
+        :rtype: bool or None
         """
         return self.data.get('vote')
 
@@ -3027,7 +3195,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Причина отклонения отзыва
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('rejectReason')
 
@@ -3036,7 +3204,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Статус отзыва
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('state')
 
@@ -3063,7 +3231,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Текст отзыва
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('text')
 
@@ -3072,7 +3240,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Описание достоинств
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('pros')
 
@@ -3081,7 +3249,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Описание недостатков
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('cons')
 
@@ -3090,7 +3258,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Информация об авторе
-        :rtype: objects.YMOpinionAuthor
+        :rtype: YMOpinionAuthor
         """
         return YMOpinionAuthor(self.data.get('author'))
 
@@ -3099,7 +3267,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Комментарии
-        :rtype: list[objects.YMOpinionComment]
+        :rtype: list[YMOpinionComment]
         """
         return [YMOpinionComment(comment) for comment in self.data.get('comments', [])]
 
@@ -3108,7 +3276,7 @@ class YMOpinion(YMBase):
         """
 
         :return: Регион
-        :rtype: objects.YMRegion
+        :rtype: YMRegion
         """
         return YMRegion(self.data.get('region'))
 
@@ -3138,7 +3306,7 @@ class YMModelOpinion(YMOpinion):
         """
 
         :return: Модель
-        :rtype: objects.YMModelOpinionModel
+        :rtype: YMModelOpinionModel
         """
         return YMModelOpinionModel(self.data.get('model'))
 
@@ -3150,7 +3318,7 @@ class YMShopOpinion(YMOpinion):
         """
 
         :return: Идентификатор заказа, относящегося к отзыву
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('shopOrderId')
 
@@ -3168,7 +3336,7 @@ class YMShopOpinion(YMOpinion):
         """
 
         :return: Статус решения проблемы пользователя
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('problem')
 
@@ -3177,7 +3345,7 @@ class YMShopOpinion(YMOpinion):
         """
 
         :return: Магазин
-        :rtype: objects.YMModelOpinionShop
+        :rtype: YMModelOpinionShop
         """
         return YMModelOpinionShop(self.data.get('model'))
 
@@ -3200,7 +3368,7 @@ class YMAddress(YMBase):
         """
 
         :return: Тип региона, к которому относится данный адрес
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('type')
 
@@ -3209,7 +3377,7 @@ class YMAddress(YMBase):
         """
 
         :return: Наименование страны
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('country')
 
@@ -3218,7 +3386,7 @@ class YMAddress(YMBase):
         """
 
         :return: Наименование региона
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('region')
 
@@ -3227,7 +3395,7 @@ class YMAddress(YMBase):
         """
 
         :return: Район внутри области
-        :rtype:
+        :rtype: str or None
         """
         return self.data.get('subRegion')
 
@@ -3245,7 +3413,7 @@ class YMAddress(YMBase):
         """
 
         :return: Наименование района
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('subLocality')
 
@@ -3281,7 +3449,7 @@ class YMAddress(YMBase):
         """
 
         :return: Корпус
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('block')
 
@@ -3290,7 +3458,7 @@ class YMAddress(YMBase):
         """
 
         :return: Строение
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('wing')
 
@@ -3299,7 +3467,7 @@ class YMAddress(YMBase):
         """
 
         :return: Владение
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('estate')
 
@@ -3308,7 +3476,7 @@ class YMAddress(YMBase):
         """
 
         :return: Подъезд
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('entrance')
 
@@ -3317,7 +3485,7 @@ class YMAddress(YMBase):
         """
 
         :return: Этаж
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('floor')
 
@@ -3326,7 +3494,7 @@ class YMAddress(YMBase):
         """
 
         :return: Комната, офис
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('room')
 
@@ -3335,7 +3503,7 @@ class YMAddress(YMBase):
         """
 
         :return: Примечание
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('note')
 
@@ -3344,9 +3512,9 @@ class YMAddress(YMBase):
         """
 
         :return: Расстояние
-        :rtype: float
+        :rtype: float or None
         """
-        return self.data.get('geoPoint')['distance']
+        return self.data.get('geoPoint').get('distance')
 
     @property
     def latitude(self):
@@ -3371,7 +3539,7 @@ class YMAddress(YMBase):
         """
 
         :return: Почтовый индекс
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('postcode')
 
@@ -3453,7 +3621,7 @@ class YMOutlet(YMBase):
         """
 
         :return: Информация о магазине, осуществляющем выдачу товара в данной торговой точке
-        :rtype: objects.YMShop
+        :rtype: YMShop
         """
         return YMShop(self.data.get('shop'))
 
@@ -3462,7 +3630,7 @@ class YMOutlet(YMBase):
         """
 
         :return: Список телефонов торговой точки / пункта выдачи товара
-        :rtype: list[objects.YMPhone]
+        :rtype: list[YMPhone]
         """
         return [YMPhone(phone) for phone in self.data.get('phones', [])]
 
@@ -3471,7 +3639,7 @@ class YMOutlet(YMBase):
         """
 
         :return: Адрес торговой точки / пункта выдачи товара
-        :rtype: objects.YMAddress
+        :rtype: YMAddress
         """
         return YMAddress(self.data.get('address'))
 
@@ -3480,7 +3648,7 @@ class YMOutlet(YMBase):
         """
 
         :return: Расписание работы торговой точки / пункта выдачи товара
-        :rtype: list[objects.YMSchedule]
+        :rtype: list[YMSchedule]
         """
         return [YMSchedule(s) for s in self.data.get('schedule', [])]
 
@@ -3489,34 +3657,34 @@ class YMOutlet(YMBase):
         """
 
         :return: Расстояние
-        :rtype: float
+        :rtype: float or None
         """
-        return self.data.get('geoPoint')['distance']
+        return self.data.get('geoPoint', {}).get('distance')
 
     @property
     def latitude(self):
         """
 
         :return: Широта
-        :rtype: float
+        :rtype: float or None
         """
-        return self.data.get('geoPoint')['coordinates']['latitude']
+        return self.data.get('geoPoint', {}).get('coordinates', {}).get('latitude')
 
     @property
     def longitude(self):
         """
 
         :return: Долгота
-        :rtype: float
+        :rtype: float or None
         """
-        return self.data.get('geoPoint')['coordinates']['longitude']
+        return self.data.get('geoPoint', {}).get('coordinates', {}).get('longitude')
 
     @property
     def offer(self):
         """
 
         :return: Товарное предложение в контексте запроса
-        :rtype: objects.YMOffer
+        :rtype: YMOffer
         """
         return YMOffer(self.data.get('offer'))
 
@@ -3560,7 +3728,7 @@ class YMRedirectModel(YMRedirect):
         """
 
         :return: Информация о модели
-        :rtype: objects.YMModel
+        :rtype: YMModel
         """
         return YMModel(self.data.get('content').get('model'))
 
@@ -3581,7 +3749,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Список моделей и/или товарных предложений
-        :rtype: list[objects.YMModel or objects.YMOffer]
+        :rtype: list[YMModel or YMOffer]
         """
         return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in
                 self.data['content'].get('items', [])]
@@ -3591,7 +3759,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Список категорий
-        :rtype: list[objects.YMSearchCategory]
+        :rtype: list[YMSearchCategory]
         """
         return [YMSearchCategory(category) for category in self.data.get('categories', [])]
 
@@ -3600,7 +3768,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Фильтры
-        :rtype: list[objects.YMFilter]
+        :rtype: list[YMFilter]
         """
         return [YMFilter(f) for f in self.data.get('filters', [])]
 
@@ -3609,7 +3777,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Сортировки
-        :rtype: list[objects.YMSort]
+        :rtype: list[YMSort]
         """
         return [YMSort(sort) for sort in self.data.get('sorts', [])]
 
@@ -3618,7 +3786,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Краткая информация об узле навигационного дерева
-        :rtype: objects.YMNavigationNode
+        :rtype: YMNavigationNode
         """
         return YMNavigationNode(self.data.get('navigationNode'))
 
@@ -3627,7 +3795,7 @@ class YMRedirectCatalog(YMRedirect):
         """
 
         :return: Список условий фильтрации, уточняющих поиск
-        :rtype: list[objects.YMDatasourceCriteria]
+        :rtype: list[YMDatasourceCriteria]
         """
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 
@@ -3639,7 +3807,7 @@ class YMRedirectVendor(YMRedirect):
         """
 
         :return: Производитель
-        :rtype: objects.YMVendor
+        :rtype: YMVendor
         """
         return YMVendor(self.data.get('content').get('vendor'))
 
@@ -3660,7 +3828,7 @@ class YMRedirectSearch(YMRedirect):
     #     """
     #
     #     :return: Список моделей и/или товарных предложений
-    #     :rtype: list[objects.YMModel or objects.YMOffer]
+    #     :rtype: list[YMModel or YMOffer]
     #     """
     #     return [YMModel(item) if 'model' in item.keys() else YMOffer(item) for item in
     #             self.data['content'].get('items', [])]
@@ -3670,7 +3838,7 @@ class YMRedirectSearch(YMRedirect):
         """
 
         :return: Фильтры
-        :rtype: list[objects.YMFilter]
+        :rtype: list[YMFilter]
         """
         return [YMFilter(f) for f in self.data.get('filters', [])]
 
@@ -3679,7 +3847,7 @@ class YMRedirectSearch(YMRedirect):
         """
 
         :return: Сортировки
-        :rtype: list[objects.YMSort]
+        :rtype: list[YMSort]
         """
         return [YMSort(sort) for sort in self.data.get('sorts', [])]
 
@@ -3688,7 +3856,7 @@ class YMRedirectSearch(YMRedirect):
         """
 
         :return: Список условий фильтрации, уточняющих поиск
-        :rtype: list[objects.YMDatasourceCriteria]
+        :rtype: list[YMDatasourceCriteria]
         """
         return [YMDatasourceCriteria(c) for c in self.data.get('criteria', [])]
 

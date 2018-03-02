@@ -7,9 +7,9 @@ import ssl
 import requests
 from requests.exceptions import ReadTimeout, SSLError
 
-from .constants import *
-from .exceptions import *
-from .response import *
+from YMContent.constants import *
+from YMContent.response import *
+from YMContent.exceptions import *
 
 __title__ = 'YMContent'
 __version__ = constants.VERSION
@@ -50,9 +50,8 @@ class YMAPI(object):
 
             data = r.json()
 
-            if r.status_code in (401, 404, 422):
-                raise BaseAPIError(
-                    data['errors'][0]['message'])
+            if r.status_code in (401, 403, 404, 422):
+                raise BaseAPIError(data['errors'][0]['message'])
             return r
 
         except (ConnectionError, ReadTimeout, SSLError, ssl.SSLError,
@@ -63,7 +62,7 @@ class YMAPI(object):
     def _validate_fields(fields, values):
         if isinstance(fields, list):
             for field in fields:
-                if field.upper() not in values:
+                if field.strip() not in values:
                     raise FieldsParamError('"fields" param is wrong')
         elif isinstance(fields, str):
             for field in fields.split(','):
@@ -109,7 +108,7 @@ class YMAPI(object):
         :type page: int
 
         :return: Список категорий первого уровня (корневых) товарного дерева
-        :rtype: response.Categories
+        :rtype: Categories
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises SortParamError: неверное значение параметра sort
@@ -191,7 +190,7 @@ class YMAPI(object):
         :type page: int
 
         :return: Список категорий товарного дерева, вложенных в категорию с указанным в запросе идентификатором
-        :rtype: response.CategoriesChildren
+        :rtype: Categories
 
         :raises FieldsParamError: неверное значение параметра fields
         :raises SortParamError: неверное значение параметра sort
@@ -256,7 +255,7 @@ class YMAPI(object):
         :type remote_ip: str
 
         :return: Информация о категории
-        :rtype: response.Category
+        :rtype: Category
 
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: неверное значение параметра fields
@@ -330,7 +329,7 @@ class YMAPI(object):
         :type filters: dict
 
         :return: Cписок фильтров для фильтрации моделей и товарных предложений в указанной категории
-        :rtype: response.Filters
+        :rtype: Filters
 
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: неверное значение параметра fields
@@ -396,7 +395,7 @@ class YMAPI(object):
         :type shop_name: str
 
         :return: Подобранные категории
-        :rtype: response.Category
+        :rtype: Categories
 
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/category-controller-v2-match-docpage/
         """
@@ -414,7 +413,7 @@ class YMAPI(object):
         if shop_name:
             params['shop_name'] = shop_name
 
-        return Category(self._request('categories/match', None, params))
+        return Categories(self._request('categories/match', None, params))
 
     def model(self, model_id, fields='CATEGORY,PHOTO', filters=None, geo_id=None, remote_ip=None):
         """
@@ -481,7 +480,7 @@ class YMAPI(object):
         :type remote_ip: str
 
         :return: Информация о модели
-        :rtype: response.Model
+        :rtype: Model
 
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises FieldsParamError: неверное значение параметра fields
@@ -521,7 +520,7 @@ class YMAPI(object):
         :type page: int
 
         :return: Обзоры на модель
-        :rtype: response.ModelReview
+        :rtype: ModelReview
 
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
@@ -633,7 +632,7 @@ class YMAPI(object):
         :type hid: list[int]
 
         :return: Модель из гуризованной категории по названию и параметрам, удовлетворяющим заданным во входных данных условиям поиска
-        :rtype: response.Models
+        :rtype: Models
 
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises MatchTypeParamError: недопустимое значение параметра match_types
@@ -674,7 +673,7 @@ class YMAPI(object):
 
         return Models(self._request('models/match', None, params))
 
-    def models_lookas(self, model_id, count=10, page=1, fields='CATEGORY,PHOTO'):
+    def models_lookas(self, model_id, count=10, page=1, fields='CATEGORY,PHOTO', geo_id=None, remote_ip=None):
         """
         Список похожих моделей
 
@@ -735,8 +734,14 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :return: Cписок моделей, которые похожи на указанную в запросе
-        :rtype: response.Models
+        :rtype: Models
 
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
@@ -745,6 +750,15 @@ class YMAPI(object):
         .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/models-controller-v2-get-matched-models-docpage/
         """
         params = {}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -761,7 +775,7 @@ class YMAPI(object):
 
         return Models(self._request('models/{}/looksas', model_id, params))
 
-    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1):
+    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
         """
         Лучшие предложения (скидки дня)
 
@@ -822,8 +836,14 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :return:
-        :rtype: response.CategoriesLookas
+        :rtype: Models
 
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
@@ -832,6 +852,15 @@ class YMAPI(object):
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/category-controller-v2-get-best-deals-docpage/
         """
         params = {'fields': fields}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -846,7 +875,7 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return CategoriesLookas(self._request('categories/{}/bestdeals', category_id, params))
+        return Models(self._request('categories/{}/bestdeals', category_id, params))
 
     def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
         """
@@ -916,7 +945,7 @@ class YMAPI(object):
         :type remote_ip: str
 
         :return: популярные на Яндекс.Маркете модели
-        :rtype: response.Models
+        :rtype: Models
 
         :raises NoGeoIdOrIP: не передан обязательный параметр geo_id или remote_ip
         :raises CountParamError: недопустимое значение параметра count
@@ -1044,7 +1073,7 @@ class YMAPI(object):
         :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Список товарных предложений, соотнесенных с указанной моделью
-        :rtype: response.ModelOffers
+        :rtype: ModelOffers
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-offers-docpage/
         """
@@ -1120,7 +1149,7 @@ class YMAPI(object):
 
         return ModelOffers(self._request('models/{}/offers', model_id, params))
 
-    def model_offers_default(self, model_id, fields='STANDARD', filters=None):
+    def model_offers_default(self, model_id, fields='STANDARD', filters=None, geo_id=None, remote_ip=None):
         """
         Товарное предложение по умолчанию
 
@@ -1150,14 +1179,29 @@ class YMAPI(object):
         :param filters: Параметры задают условия фильтрации моделей и предложений на модель
         :type filters: dict
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Товарное предложение по умолчанию
-        :rtype: response.ModelOffersDefault
+        :rtype: ModelOffersDefault
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-default-offer-docpage/
         """
         params = {}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             params['fields'] = self._validate_fields(fields, constants.OFFER_FIELDS)
@@ -1168,20 +1212,35 @@ class YMAPI(object):
 
         return ModelOffersDefault(self._request('models/{}/offers/default', model_id, params))
 
-    def model_offers_stat(self, model_id):
+    def model_offers_stat(self, model_id, geo_id=None, remote_ip=None):
         """
         Количество товарных предложений на модель по регионам
         :param model_id: Идентификатор модели
         :type model_id: int or str
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :return: Информация о количестве товарных предложений на указанную модель по регионам, а также минимальную, максимальную и среднюю стоимость этой модели
-        :rtype: response.ModelOffersStat
+        :rtype: ModelOffersStat
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-model-offers-stat-docpage/
         """
         params = {}
 
-        return ModelOffersStat(self._request('models/{}/offers/default', model_id, params))
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
+
+        return ModelOffersStat(self._request('models/{}/offers/stat', model_id, params))
 
     def model_offers_filters(self, model_id, fields=None, filter_set=None, sort='NONE'):
         """
@@ -1221,7 +1280,7 @@ class YMAPI(object):
         :raises SortParamError: недопустимое значение параметра sort
 
         :return: Cписок фильтров и сортировок, доступных для фильтрации и сортировки товарных предложений указанной модели
-        :rtype: response.Filters
+        :rtype: Filters
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/models-controller-v2-get-model-offers-filters-docpage/
         """
@@ -1242,7 +1301,7 @@ class YMAPI(object):
 
         return Filters(self._request('models/{}/offers/filters', model_id, params))
 
-    def offer(self, offer_id, delivery_included=0, fields='STANDARD'):
+    def offer(self, offer_id, delivery_included=0, fields='STANDARD', geo_id=None, remote_ip=None):
         """
         Информация о товарном предложении
 
@@ -1272,15 +1331,30 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :raises DeliveryIncludedParamError: недопустимое значение параметра delivery_included
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация об указанном товарном предложении
-        :rtype: response.Offer
+        :rtype: Offer
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/offers-controller-v2-get-offer-docpage/
         """
         params = {}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if delivery_included:
             if str(delivery_included).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
@@ -1328,14 +1402,15 @@ class YMAPI(object):
         :raises SortParamError: недопустимое значение параметра sort
 
         :return: Отзывы пользователей о модели
-        :rtype: response.ModelOpinions
+        :rtype: ModelOpinions
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/opinions-controller-v2-get-model-opinions-docpage/
         """
         params = {}
-
-        if grade < 1 or grade > 5:
-            raise GradeParamError('"grade" param must be between 1 and 5')
+        if grade:
+            if grade < 1 or grade > 5:
+                raise GradeParamError('"grade" param must be between 1 and 5')
+            params['grade'] = grade
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -1393,7 +1468,7 @@ class YMAPI(object):
         :raises SortParamError: недопустимое значение параметра sort
 
         :return: Отзывы пользователей о магазине
-        :rtype: response.ShopOpinions
+        :rtype: ShopOpinions
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/opinions-controller-v2-get-shop-opinions-docpage/
         """
@@ -1447,7 +1522,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация об указанном магазине
-        :rtype: response.Shop
+        :rtype: Shop
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-docpage/
         """
@@ -1480,7 +1555,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация о найденном магазине по указанному в запросе хосту или URL
-        :rtype: response.Shops
+        :rtype: Shops
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-list-docpage/
         """
@@ -1516,7 +1591,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация о количестве магазинов и типах их работы в указанном регионе
-        :rtype: response.ShopsSummary
+        :rtype: ShopsSummary
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-summary-docpage/
         """
@@ -1529,8 +1604,9 @@ class YMAPI(object):
 
         return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
-    def model_outlets(self, model_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
-                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+    def model_outlets(self, model_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
+                      count=10,
+                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи модели
 
@@ -1605,6 +1681,12 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: float
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: str
+
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises TypeParamError: недопустимое значение параметра type
         :raises CountParamError: недопустимое значение параметра count
@@ -1615,12 +1697,21 @@ class YMAPI(object):
         :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Список пунктов выдачи/точек продаж, в которых представлена указанная модель
-        :rtype: response.Outlets
+        :rtype: Outlets
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/outlet-controller-v2-get-model-outlets-docpage/
         """
         params = {}
 
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
         # ToDO нужно добавить преобразование типа в эталонный
         if boundary:
             params['boundary'] = boundary
@@ -1628,13 +1719,13 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
-        if type:
-            for field in type.split(','):
+        if outlet_type:
+            for field in outlet_type.split(','):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise TypeParamError('"type" param is wrong')
-            params['type'] = type
+                    raise TypeParamError('"outlet_type" param is wrong')
+            params['outlet_type'] = outlet_type
 
         if filters:
             for (k, v) in filters.items():
@@ -1675,7 +1766,8 @@ class YMAPI(object):
 
         return Outlets(self._request('models/{}/outlets', model_id, params))
 
-    def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
+    def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
+                     count=10,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Пункты выдачи товаров магазина
@@ -1761,7 +1853,7 @@ class YMAPI(object):
         :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Cписок пунктов выдачи/точек продаж магазина
-        :rtype: response.Outlets
+        :rtype: Outlets
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/shops-controller-v2-get-shop-outlets-docpage/
         """
@@ -1774,13 +1866,13 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
-        if type:
-            for field in type.split(','):
+        if outlet_type:
+            for field in outlet_type.split(','):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise TypeParamError('"fields" param is wrong')
-            params['type'] = type
+                    raise TypeParamError('"outlet_type" param is wrong')
+            params['outlet_type'] = outlet_type
 
         if filters:
             for (k, v) in filters.items():
@@ -1822,8 +1914,9 @@ class YMAPI(object):
 
         return Outlets(self._request('shops/{}/outlets', shop_id, params))
 
-    def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None, count=10,
-                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+    def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
+                      count=10,
+                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи товарного предложения
 
@@ -1898,6 +1991,12 @@ class YMAPI(object):
         :param longitude: Долгота
         :type longitude: float
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: str
+
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises TypeParamError: недопустимое значение параметра type
         :raises CountParamError: недопустимое значение параметра count
@@ -1908,11 +2007,21 @@ class YMAPI(object):
         :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Список пунктов выдачи/точек продаж указанного товарного предложения
-        :rtype: response.Outlets
+        :rtype: Outlets
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/outlet-controller-v2-get-offer-outlets-docpage/
         """
         params = {}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         # ToDO нужно добавить преобразование типа в эталонный
         if boundary:
@@ -1921,13 +2030,13 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.OUTLETS_FIELDS)
 
-        if type:
-            for field in type.split(','):
+        if outlet_type:
+            for field in outlet_type.split(','):
                 if field not in (
                         'PICKUP', 'STORE',
                         'ALL'):
-                    raise TypeParamError('"fields" param is wrong')
-            params['type'] = type
+                    raise TypeParamError('"outlet_type" param is wrong')
+            params['outlet_type'] = outlet_type
 
         if filters:
             for (k, v) in filters.items():
@@ -1992,7 +2101,7 @@ class YMAPI(object):
         :raises PageParamError: недопустимое значение параметра page
 
         :return: Список регионов
-        :rtype: response.Regions
+        :rtype: Regions
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-region-root-docpage/
         """
@@ -2039,7 +2148,7 @@ class YMAPI(object):
         :raises PageParamError: недопустимое значение параметра page
 
         :return: Список регионов
-        :rtype: response.Regions
+        :rtype: Regions
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-children-docpage/
         """
@@ -2078,7 +2187,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация о регионе
-        :rtype: response.Region
+        :rtype: Region
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-get-region-docpage/
         """
@@ -2089,11 +2198,14 @@ class YMAPI(object):
 
         return Region(self._request('geo/regions/{}', region_id, params))
 
-    def geo_suggest(self, fields=None,
-                    types='CITY, CITY_DISTRICT, REGION, RURAL_SETTLEMENT, SECONDARY_DISTRICT, VILLAGE',
+    def geo_suggest(self, name_part, fields=None,
+                    types='CITY,CITY_DISTRICT,REGION,RURAL_SETTLEMENT,SECONDARY_DISTRICT,VILLAGE',
                     count=10, page=1):
         """
         Текстовый поиск региона
+
+        :param name_part: Полное или частичное название региона
+        :type name_part: str
 
         :param fields: Параметры региона, которые необходимо включить в выдачу
 
@@ -2136,11 +2248,11 @@ class YMAPI(object):
         :raises PageParamError: недопустимое значение параметра page
 
         :return: Список регионов, подходящих под заданные условия поиска
-        :rtype: response.Suggests
+        :rtype: Suggests
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/geo-controller-v2-suggest-docpage/
         """
-        params = {}
+        params = {'name_part': name_part}
 
         if fields:
             params['fields'] = self._validate_fields(fields, constants.GEO_FIELDS)
@@ -2151,7 +2263,7 @@ class YMAPI(object):
                         'AIRPORT', 'CITY', 'CITY_DISTRICT', 'CONTINENT', 'COUNTRY', 'COUNTRY_DISTRICT', 'METRO_STATION',
                         'MONORAIL_STATION', 'OVERSEAS_TERRITORY', 'REGION', 'RURAL_SETTLEMENT', 'SECONDARY_DISTRICT',
                         'SUBJECT_FEDERATION', 'SUBJECT_FEDERATION_DISTRICT', 'VILLAGE', 'ALL'):
-                    raise TypeParamError('"type" param is wrong')
+                    raise TypeParamError('"types" param is wrong')
             params['types'] = types
 
         if count < 1 or count > 30:
@@ -2193,7 +2305,7 @@ class YMAPI(object):
         :raises PageParamError: недопустимое значение параметра page
 
         :return: Cписок производителей, товары которых размещаются на Яндекс.Маркете
-        :rtype: response.Vendors
+        :rtype: Vendors
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-get-vendor-list-docpage/
         """
@@ -2236,7 +2348,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Информация об указанном производителе
-        :rtype: response.Vendor
+        :rtype: Vendor
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-get-vendor-docpage/
         """
@@ -2269,7 +2381,7 @@ class YMAPI(object):
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Производитель, наиболее подходящего под заданное во входных данных название
-        :rtype: response.Vendor
+        :rtype: Vendor
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/vendor-controller-v2-match-vendor-docpage/
         """
@@ -2429,7 +2541,7 @@ class YMAPI(object):
         :raises GeoParamError: недопустимое значение параметра longitude
 
         :return: Список моделей и товарных предложений, удовлетворяющих заданным в запросе условиям поиска
-        :rtype: response.Search
+        :rtype: Search
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-search-docpage/
         """
@@ -2642,7 +2754,7 @@ class YMAPI(object):
         :raises SortParamError: недопустимое значение параметра sort
 
         :return: Список моделей категории и предложений на модели, удовлетворяющих заданным в запросе параметрам
-        :rtype: response.Search
+        :rtype: Search
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-filter-on-category-docpage/
         """
@@ -2702,7 +2814,7 @@ class YMAPI(object):
 
         return Search(self._request('categories/{}/search', category_id, params))
 
-    def search_filters(self, text, fields=None):
+    def search_filters(self, text, fields=None, geo_id=None, remote_ip=None):
         """
         Фильтры для поискового запроса
 
@@ -2722,14 +2834,30 @@ class YMAPI(object):
 
         :type fields: str or list[str]
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: Идентификатор региона пользователя
+        :type remote_ip: str
+
         :raises FieldsParamError: недопустимое значение параметра fields
 
         :return: Список доступных фильтров и сортировок для укзанного поискового запроса
-        :rtype: response.Filters
+        :rtype: Filters
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/search-controller-v2-get-search-filters-docpage/
         """
         params = {'text': text}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if fields:
             params['fields'] = self._validate_fields(fields, constants.SEARCH_FILTERS)
@@ -2842,7 +2970,7 @@ class YMAPI(object):
         :raises SortParamError: недопустимое значение параметра sort
 
         :return: Список параметров редиректа (перенаправления), подходящих под заданные в запросе условия.
-        :rtype: response.Redirect
+        :rtype: Redirect
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/redirect-controller-v2-redirect-docpage/
         """
@@ -2922,7 +3050,7 @@ class YMAPI(object):
 
         return Redirect(self._request('redirect', None, params))
 
-    def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT'):
+    def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
         """
         Поисковые подсказки
 
@@ -2949,17 +3077,32 @@ class YMAPI(object):
 
         :type suggest_types: str or list[str]
 
+        :param geo_id: Идентификатор региона
+        :type geo_id: int or str
+
+        :param remote_ip: IP-адрес пользователя
+        :type remote_ip: str
+
         :raises CountParamError: недопустимое значение параметра count
         :raises PageParamError: недопустимое значение параметра page
         :raises PosParamError: недопустимое значение параметра pos
         :raises SuggestTypesParamError: недопустимое значение параметра suggest_types
 
         :return: Список поисковых подсказок, подходящих под заданные условия поиска
-        :rtype: objects.Suggestions
+        :rtype: Suggestions
 
         .. seealso:: https://tech.yandex.ru/market/monetization/doc/dg-v2/reference/suggest-controller-v2-get-suggest-docpage/
         """
         params = {'text': text}
+
+        if geo_id is None and remote_ip is None:
+            raise NoGeoIdOrIP(
+                "You must provide either geo_id or remote_ip")
+        if geo_id:
+            params['geo_id'] = geo_id
+
+        if remote_ip:
+            params['remote_ip'] = remote_ip
 
         if count < 1 or count > 30:
             raise CountParamError('"count" param must be between 1 and 30')
@@ -2985,4 +3128,4 @@ class YMAPI(object):
                     raise SuggestTypesParamError('"suggest_types" param is wrong')
             params['suggest_types'] = suggest_types
 
-        return Suggestions(self._request('redirect', None, params))
+        return Suggestions(self._request('suggestions', None, params))
