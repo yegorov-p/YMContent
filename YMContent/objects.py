@@ -63,6 +63,7 @@ class YMRegion(YMBase):
         * **MONORAIL_STATION** — станция монорельса
         * **RURAL_SETTLEMENT** — сельское поселение
         * **OTHER** — другой тип населенного пункта
+        * **HIDDEN** —
         """
         return self.data.get('type')
 
@@ -594,8 +595,7 @@ class YMDatasource(YMBase):
         * **OPINIONS** — По отзывам
         * **DELIVERY_TIME** — По времени доставки
         """
-        if self.data.get('order'):
-            return self.data['order'].get('sort')
+        return self.data.get('order',{}).get('sort')
 
     @property
     def how(self):
@@ -607,8 +607,7 @@ class YMDatasource(YMBase):
         * **ASC** — по возрастанию;
         * **DESC** — по убыванию.
         """
-        if self.data.get('order'):
-            return self.data['order'].get('how')
+        return self.data.get('order', {}).get('how')
 
     @property
     def criteria(self):
@@ -1680,9 +1679,10 @@ class YMModel(YMBase):
         """
 
         :return: Тип товара
-        :rtype: str
+        :rtype: str or None
+
+        автомагнитола
         """
-        # todo нет примера
         return self.data.get('kind')
 
     @property
@@ -1720,7 +1720,6 @@ class YMModel(YMBase):
 
         https://market.yandex.ru/product/1732210983?hid=91491&pp=1001
         """
-        # todo нет примера
         return self.data.get('link')
 
     @property
@@ -1828,7 +1827,7 @@ class YMModel(YMBase):
         :return: Идентификатор модели
         :rtype: int or None
         """
-        return self.data.get('parent', {'id': None})['id']
+        return self.data.get('parent', {}).get('id')
 
     @property
     def description(self):
@@ -2751,7 +2750,7 @@ class YMOffer(YMBase):
         :return: Идентификатор модели
         :rtype: int
         """
-        return self.data.get('model')['id']
+        return self.data.get('model', {}).get('id')
 
     @property
     def phone(self):
@@ -2882,7 +2881,7 @@ class YMStatisticsRegion(YMBase):
         :return: Максимальная цена
         :rtype: str
         """
-        return self.data.get('price')['price_max']
+        return self.data.get('price', {}).get('price_max')
 
     @property
     def price_min(self):
@@ -2891,7 +2890,7 @@ class YMStatisticsRegion(YMBase):
         :return: Минимальная цена
         :rtype: str
         """
-        return self.data.get('price')['price_min']
+        return self.data.get('price', {}).get('price_min')
 
     @property
     def price_median(self):
@@ -2900,7 +2899,7 @@ class YMStatisticsRegion(YMBase):
         :return: Медиана по ценам
         :rtype: str
         """
-        return self.data.get('price')['price_median']
+        return self.data.get('price', {}).get('price_median')
 
 
 class YMStatistics(YMBase):
@@ -3545,7 +3544,7 @@ class YMAddress(YMBase):
         :return: Широта
         :rtype: float
         """
-        return self.data.get('geoPoint')['coordinates']['latitude']
+        return self.data.get('geoPoint', {}).get('coordinates', {}).get('latitude')
 
     @property
     def longitude(self):
@@ -3554,7 +3553,7 @@ class YMAddress(YMBase):
         :return: Долгота
         :rtype: float
         """
-        return self.data.get('geoPoint')['coordinates']['longitude']
+        return self.data.get('geoPoint', {}).get('coordinates', {}).get('longitude')
 
     @property
     def postcode(self):
@@ -3761,7 +3760,7 @@ class YMRedirectModel(YMRedirect):
         :return: Идентификатор модели
         :rtype: int
         """
-        return self.data.get('model')['id']
+        return self.data.get('model',{}).get('id')
 
 
 class YMRedirectCatalog(YMRedirect):
@@ -3840,7 +3839,7 @@ class YMRedirectVendor(YMRedirect):
         :return: Идентификатор производителя
         :rtype: int
         """
-        return self.data.get('vendor')['id']
+        return self.data.get('vendor',{}).get('id')
 
 
 class YMRedirectSearch(YMRedirect):

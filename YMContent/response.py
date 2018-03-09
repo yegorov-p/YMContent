@@ -176,7 +176,7 @@ class Base(object):
         :return: Уникальный идентификатор запроса
         :rtype: str
         """
-        return self.resp['context'].get('id')
+        return self.resp.get('context', {}).get('id')
 
     @property
     def time(self):
@@ -185,7 +185,7 @@ class Base(object):
         :return: Дата и время выполнения запроса в формате ISO 8601
         :rtype: str
         """
-        return self.resp['context'].get('time')
+        return self.resp.get('context', {}).get('time')
 
     @property
     def link(self):
@@ -194,7 +194,7 @@ class Base(object):
         :return: Ссылка на текущий запрос
         :rtype: str or None
         """
-        return self.resp['context'].get('link')
+        return self.resp.get('context', {}).get('link')
 
     @property
     def marketUrl(self):
@@ -203,7 +203,7 @@ class Base(object):
         :return: Ссылка на Яндекс.Маркет
         :rtype: str
         """
-        return self.resp['context'].get('marketUrl')
+        return self.resp.get('context', {}).get('marketUrl')
 
     @property
     def region(self):
@@ -212,8 +212,8 @@ class Base(object):
         :return: Информация о регионе запроса
         :rtype: YMRegion
         """
-        if self.resp['context'].get('region'):
-            return YMRegion(self.resp['context'].get('region'))
+        if self.resp.get('context', {}).get('region'):
+            return YMRegion(self.resp.get('context', {}).get('region'))
 
     @property
     def currency_id(self):
@@ -222,7 +222,7 @@ class Base(object):
         :return: Код валюты
         :rtype: str
         """
-        return self.resp['context']['currency']['id']
+        return self.resp.get('context', {}).get('currency', {}).get('id')
 
     @property
     def currency_name(self):
@@ -231,7 +231,7 @@ class Base(object):
         :return: Название валюты
         :rtype: str
         """
-        return self.resp['context']['currency']['name']
+        return self.resp.get('context', {}).get('currency', {}).get('name')
 
     @property
     def alt_currency_id(self):
@@ -240,8 +240,7 @@ class Base(object):
         :return: Код валюты
         :rtype: str or None
         """
-        if 'alternateCurrency' in self.resp['context']:
-            return self.resp['context']['alternateCurrency']['id']
+        return self.resp.get('context', {}).get('alternateCurrency', {}).get('id')
 
     @property
     def alt_currency_name(self):
@@ -250,8 +249,7 @@ class Base(object):
         :return: Название валюты
         :rtype: str or None
         """
-        if 'alternateCurrency' in self.resp['context']:
-            return self.resp['context']['alternateCurrency']['name']
+        return self.resp.get('context', {}).get('alternateCurrency', {}).get('name')
 
 
 class Page(Base):
@@ -262,7 +260,7 @@ class Page(Base):
         :return: Номер страницы
         :rtype: int
         """
-        return self.resp['context'].get('page', {}).get('number')
+        return self.resp.get('context', {}).get('page', {}).get('number')
 
     @property
     def page_count(self):
@@ -271,7 +269,7 @@ class Page(Base):
         :return: Размер страницы
         :rtype: int
         """
-        return int(self.resp['context'].get('page', {}).get('count', 0))
+        return int(self.resp.get('context', {}).get('page', {}).get('count', 0))
 
     @property
     def page_total(self):
@@ -280,7 +278,7 @@ class Page(Base):
         :return: Количество страниц в результате
         :rtype: int
         """
-        return int(self.resp['context'].get('page', {}).get('count', 0))
+        return int(self.resp.get('context', {}).get('page', {}).get('count', 0))
 
     @property
     def page_last(self):
@@ -300,7 +298,7 @@ class Categories(Page):
         :return: Список категорий
         :rtype: list[YMCategory]
         """
-        return [YMCategory(category) for category in self.resp['categories']]
+        return [YMCategory(category) for category in self.resp.get('categories', [])]
 
 
 class Category(Base):
@@ -313,7 +311,7 @@ class Category(Base):
         :return: Категория
         :rtype: YMCategory
         """
-        return YMCategory(self.resp['category'])
+        return YMCategory(self.resp.get('category'))
 
 
 class Filters(Base):
@@ -326,7 +324,7 @@ class Filters(Base):
         :return: Список сортировок
         :rtype: list[YMSort]
         """
-        return [YMSort(sort) for sort in self.resp['sorts']]
+        return [YMSort(sort) for sort in self.resp.get('sorts')]
 
     @property
     def filters(self):
@@ -335,7 +333,7 @@ class Filters(Base):
         :return: Список фильтров
         :rtype: list[YMFilter]
         """
-        return [YMFilter(f) for f in self.resp['filters']]
+        return [YMFilter(f) for f in self.resp.get('filters')]
 
 
 class Model(Base):
@@ -348,7 +346,7 @@ class Model(Base):
         :return: Модель
         :rtype: YMModel
         """
-        return YMModel(self.resp['model'])
+        return YMModel(self.resp.get('model'))
 
 
 class ModelReview(Page):
@@ -359,7 +357,7 @@ class ModelReview(Page):
         :return: Список отзывов на модель
         :rtype: list[YMModelReview]
         """
-        return [YMModelReview(review) for review in self.resp['reviews']]
+        return [YMModelReview(review) for review in self.resp.get('reviews')]
 
 
 class Models(Base):
@@ -371,7 +369,7 @@ class Models(Base):
         :return: Список моделей
         :rtype: list[YMModel]
         """
-        return [YMModel(model) for model in self.resp['models']]
+        return [YMModel(model) for model in self.resp.get('models',[])]
 
 
 class ModelOffers(Page):
@@ -383,7 +381,7 @@ class ModelOffers(Page):
         :return: Список доступных сортировок товарных предложений модели
         :rtype: list[YMSort]
         """
-        return [YMSort(sort) for sort in self.resp['sorts']]
+        return [YMSort(sort) for sort in self.resp.get('sorts',[])]
 
     @property
     def filters(self):
@@ -392,7 +390,7 @@ class ModelOffers(Page):
         :return: Список фильтров, доступных для фильтрации товарных предложений модели
         :rtype: list[YMFilter]
         """
-        return [YMFilter(f) for f in self.resp['filters']]
+        return [YMFilter(f) for f in self.resp.get('filters',[])]
 
     @property
     def offers(self):
@@ -401,7 +399,7 @@ class ModelOffers(Page):
         :return: Список товарных предложений модели
         :rtype: list[YMOffer]
         """
-        return [YMOffer(offer) for offer in self.resp['offers']]
+        return [YMOffer(offer) for offer in self.resp.get('offers',[])]
 
 
 class ModelOffersDefault(Base):
@@ -413,7 +411,7 @@ class ModelOffersDefault(Base):
         :return: Товарное предложение
         :rtype: YMOffer
         """
-        return YMOffer(self.resp['offer'])
+        return YMOffer(self.resp.get('offer'))
 
 
 class ModelOffersStat(Base):
@@ -425,7 +423,7 @@ class ModelOffersStat(Base):
         :return: Информация о количестве и ценах товарных предложений модели по регионам
         :rtype: YMStatistics
         """
-        return YMStatistics(self.resp['statistics'])
+        return YMStatistics(self.resp.get('statistics'))
 
 
 class Offer(Base):
@@ -437,7 +435,7 @@ class Offer(Base):
         :return: Товарное предложение
         :rtype: YMOffer
         """
-        return YMOffer(self.resp['offer'])
+        return YMOffer(self.resp.get('offer'))
 
 
 class ModelOpinions(Page):
@@ -449,7 +447,7 @@ class ModelOpinions(Page):
         :return: Отзывы
         :rtype: list[YMModelOpinion]
         """
-        return [YMModelOpinion(opinion) for opinion in self.resp['opinions']]
+        return [YMModelOpinion(opinion) for opinion in self.resp.get('opinions',[])]
 
 
 class ShopOpinions(Page):
@@ -461,7 +459,7 @@ class ShopOpinions(Page):
         :return: Отзывы
         :rtype: list[YMShopOpinion]
         """
-        return [YMShopOpinion(opinion) for opinion in self.resp['opinions']]
+        return [YMShopOpinion(opinion) for opinion in self.resp.get('opinions',[])]
 
 
 class Shop(Base):
@@ -473,7 +471,7 @@ class Shop(Base):
         :return: Информация о магазине
         :rtype: YMShop
         """
-        return YMShop(self.resp['shop'])
+        return YMShop(self.resp.get('shop'))
 
 
 class Shops(Base):
@@ -485,7 +483,7 @@ class Shops(Base):
         :return: Информация о магазинах
         :rtype: list[YMShop]
         """
-        return [YMShop(shop) for shop in self.resp['shops']]
+        return [YMShop(shop) for shop in self.resp.get('shops',[])]
 
 
 class ShopsSummary(Base):
@@ -497,7 +495,7 @@ class ShopsSummary(Base):
         :return: Количество магазинов, которые находятся в указанном регионе
         :rtype: int
         """
-        return self.resp['summary'].get('homeCount')
+        return self.resp.get('summary', {}).get('homeCount')
 
     @property
     def deliveryCount(self):
@@ -506,7 +504,7 @@ class ShopsSummary(Base):
         :return: Количество магазинов, которые осуществляют доставку в указанный регион
         :rtype: int
         """
-        return self.resp['summary'].get('deliveryCount')
+        return self.resp.get('summary', {}).get('deliveryCount')
 
     @property
     def totalCount(self):
@@ -515,7 +513,7 @@ class ShopsSummary(Base):
         :return: Общее количество магазинов, которые работают в указанном регионе: находятся в указанном регионе и осуществляют в него доставку
         :rtype: int
         """
-        return self.resp['summary'].get('totalCount')
+        return self.resp.get('summary', {}).get('totalCount')
 
 
 class Outlets(Page):
@@ -599,7 +597,7 @@ class Search(Page):
         :return: Список моделей и/или товарных предложений
         :rtype: list[YMModel or YMOffer]
         """
-        return [YMModel(item) if item['__type'] == 'model' else YMOffer(item) for item in self.resp['items']]
+        return [YMModel(item) if item['__type'] == 'model' else YMOffer(item) for item in self.resp.get('items',[])]
 
     @property
     def categories(self):
@@ -648,7 +646,7 @@ class Suggestions(Base):
         :return: Поисковая подсказка соответствующая введенному тексту
         :rtype: YMSuggestion
         """
-        return YMSuggestion(self.resp['suggestions']['input'])
+        return YMSuggestion(self.resp.get('suggestions',{}).get('input'))
 
     @property
     def completions(self):
@@ -657,7 +655,7 @@ class Suggestions(Base):
         :return: Поисковые подсказки для завершения фразы
         :rtype: list[YMSuggestionCompletion]
         """
-        return [YMSuggestionCompletion(c) for c in self.resp['suggestions']['completions']]
+        return [YMSuggestionCompletion(c) for c in self.resp.get('suggestions',{}).get('completions',[])]
 
     @property
     def pages(self):
@@ -666,4 +664,4 @@ class Suggestions(Base):
         :return: Поисковые подсказки ведущие на конкретные страницы
         :rtype: list[YMSuggestion]
         """
-        return [YMSuggestion(c) for c in self.resp['suggestions']['pages']]
+        return [YMSuggestion(c) for c in self.resp.get('suggestions',{}).get('pages',[])]
