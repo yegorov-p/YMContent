@@ -1,0 +1,11 @@
+language: python
+python:
+- '3'
+- pypy
+
+before_install:
+#- sudo apt-get update -qq
+#- sudo apt-get install -qq sloccount
+- pip install pep8 pip-tools coverage
+script:
+- nosetests --with-coverage 2>test_result
