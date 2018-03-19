@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 from YMContent.objects import *
+from datetime import datetime
+from time import sleep
+import logging
+
+logger = logging.getLogger('YMContent')
 
 
 class Base(object):
@@ -7,6 +12,10 @@ class Base(object):
         self.req = r
         self.resp = r.json()
         self.headers = r.headers
+
+        while datetime.utcnow() < self.next_request:
+            logger.debug('sleep')
+            sleep(1)
 
     def json(self):
         """
@@ -159,6 +168,33 @@ class Base(object):
         :rtype: str or None
         """
         return self.headers.get('X-RateLimit-Fields-All-Until')
+
+    @property
+    def date(self):
+        """
+
+        :return: время выполнения запроса
+        :rtype: str
+        """
+        return self.headers.get('Date')
+
+    @property
+    def next_request(self):
+        """
+
+        :return: ближайшее возможное время выполнения следующего запроса
+        :rtype: datetime.datetime
+        """
+        if self.fields_all_remaining == 0:
+            return datetime.strptime(self.fields_all_until, '%a, %d %b %Y %H:%M:%S %Z')
+        elif self.method_remaining == 0:
+            return datetime.strptime(self.method_until, '%a, %d %b %Y %H:%M:%S %Z')
+        elif self.global_remaining == 0:
+            return datetime.strptime(self.global_until, '%a, %d %b %Y %H:%M:%S %Z')
+        elif self.daily_remaining == 0:
+            return datetime.strptime(self.daily_until, '%a, %d %b %Y %H:%M:%S %Z')
+        else:
+            return datetime.strptime(self.date, '%a, %d %b %Y %H:%M:%S %Z')
 
     @property
     def status(self):
@@ -369,7 +405,7 @@ class Models(Base):
         :return: Список моделей
         :rtype: list[YMModel]
         """
-        return [YMModel(model) for model in self.resp.get('models',[])]
+        return [YMModel(model) for model in self.resp.get('models', [])]
 
 
 class ModelOffers(Page):
@@ -381,7 +417,7 @@ class ModelOffers(Page):
         :return: Список доступных сортировок товарных предложений модели
         :rtype: list[YMSort]
         """
-        return [YMSort(sort) for sort in self.resp.get('sorts',[])]
+        return [YMSort(sort) for sort in self.resp.get('sorts', [])]
 
     @property
     def filters(self):
@@ -390,7 +426,7 @@ class ModelOffers(Page):
         :return: Список фильтров, доступных для фильтрации товарных предложений модели
         :rtype: list[YMFilter]
         """
-        return [YMFilter(f) for f in self.resp.get('filters',[])]
+        return [YMFilter(f) for f in self.resp.get('filters', [])]
 
     @property
     def offers(self):
@@ -399,7 +435,7 @@ class ModelOffers(Page):
         :return: Список товарных предложений модели
         :rtype: list[YMOffer]
         """
-        return [YMOffer(offer) for offer in self.resp.get('offers',[])]
+        return [YMOffer(offer) for offer in self.resp.get('offers', [])]
 
 
 class ModelOffersDefault(Base):
@@ -447,7 +483,7 @@ class ModelOpinions(Page):
         :return: Отзывы
         :rtype: list[YMModelOpinion]
         """
-        return [YMModelOpinion(opinion) for opinion in self.resp.get('opinions',[])]
+        return [YMModelOpinion(opinion) for opinion in self.resp.get('opinions', [])]
 
 
 class ShopOpinions(Page):
@@ -459,7 +495,7 @@ class ShopOpinions(Page):
         :return: Отзывы
         :rtype: list[YMShopOpinion]
         """
-        return [YMShopOpinion(opinion) for opinion in self.resp.get('opinions',[])]
+        return [YMShopOpinion(opinion) for opinion in self.resp.get('opinions', [])]
 
 
 class Shop(Base):
@@ -483,7 +519,7 @@ class Shops(Base):
         :return: Информация о магазинах
         :rtype: list[YMShop]
         """
-        return [YMShop(shop) for shop in self.resp.get('shops',[])]
+        return [YMShop(shop) for shop in self.resp.get('shops', [])]
 
 
 class ShopsSummary(Base):
@@ -597,7 +633,7 @@ class Search(Page):
         :return: Список моделей и/или товарных предложений
         :rtype: list[YMModel or YMOffer]
         """
-        return [YMModel(item) if item['__type'] == 'model' else YMOffer(item) for item in self.resp.get('items',[])]
+        return [YMModel(item) if item['__type'] == 'model' else YMOffer(item) for item in self.resp.get('items', [])]
 
     @property
     def categories(self):
@@ -646,7 +682,7 @@ class Suggestions(Base):
         :return: Поисковая подсказка соответствующая введенному тексту
         :rtype: YMSuggestion
         """
-        return YMSuggestion(self.resp.get('suggestions',{}).get('input'))
+        return YMSuggestion(self.resp.get('suggestions', {}).get('input'))
 
     @property
     def completions(self):
@@ -655,7 +691,7 @@ class Suggestions(Base):
         :return: Поисковые подсказки для завершения фразы
         :rtype: list[YMSuggestionCompletion]
         """
-        return [YMSuggestionCompletion(c) for c in self.resp.get('suggestions',{}).get('completions',[])]
+        return [YMSuggestionCompletion(c) for c in self.resp.get('suggestions', {}).get('completions', [])]
 
     @property
     def pages(self):
@@ -664,4 +700,4 @@ class Suggestions(Base):
         :return: Поисковые подсказки ведущие на конкретные страницы
         :rtype: list[YMSuggestion]
         """
-        return [YMSuggestion(c) for c in self.resp.get('suggestions',{}).get('pages',[])]
+        return [YMSuggestion(c) for c in self.resp.get('suggestions', {}).get('pages', [])]

@@ -3452,7 +3452,7 @@ class YMAddress(YMBase):
         """
 
         :return: Номер дома, строение, участка и тд
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('premiseNumber')
 

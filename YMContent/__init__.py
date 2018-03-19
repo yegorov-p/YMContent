@@ -16,7 +16,6 @@ __license__ = 'Apache 2.0'
 
 logger = logging.getLogger('YMContent')
 
-
 class YMAPI(object):
     """
 

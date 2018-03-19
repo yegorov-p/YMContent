@@ -4,7 +4,7 @@ API_VERSION = 'v2'
 
 USER_AGENT = 'YMContent'
 
-VERSION = '0.2.3'
+VERSION = '0.2.4'
 
 PROTOCOL = 'https'
 
