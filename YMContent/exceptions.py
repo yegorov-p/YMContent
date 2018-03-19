@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+class NetworkAPIError(BaseException):
+    pass
+
 class BaseAPIError(BaseException):
     pass
 

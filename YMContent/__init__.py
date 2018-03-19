@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 import socket
 import ssl
-
+import logging
 import requests
 from requests.exceptions import ReadTimeout, SSLError
 
@@ -15,6 +13,8 @@ __title__ = 'YMContent'
 __version__ = constants.VERSION
 __author__ = 'Pavel Yegorov'
 __license__ = 'Apache 2.0'
+
+logger = logging.getLogger('YMContent')
 
 
 class YMAPI(object):
@@ -43,20 +43,25 @@ class YMAPI(object):
         url = '{}://{}/{}/{}'.format(PROTOCOL, DOMAIN, API_VERSION, resource_path)
 
         try:
+            logger.debug('Requesting resource {}'.format(url))
             r = self.session.get(
                 url=url,
                 params=params
             )
 
-            data = r.json()
-
-            if r.status_code in (401, 403, 404, 422):
-                raise BaseAPIError(data['errors'][0]['message'])
-            return r
-
         except (ConnectionError, ReadTimeout, SSLError, ssl.SSLError,
                 socket.error) as exception:
-            pass
+            logger.error(exception)
+            raise NetworkAPIError()
+        else:
+            data = r.json()
+            logger.debug('Received JSON: {}'.format(data))
+            logger.debug('Received headers: {}'.format(r.headers))
+            if r.status_code in (401, 403, 404, 422):
+                logger.error(data['errors'][0]['message'])
+                raise BaseAPIError(data['errors'][0]['message'])
+
+            return r
 
     @staticmethod
     def _validate_fields(fields, values):
@@ -72,7 +77,7 @@ class YMAPI(object):
             raise FieldsParamError('"fields" param is wrong')
         return fields
 
-    def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10, page=1):
+    def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30, page=1):
         """
         Список категорий
 
@@ -150,7 +155,7 @@ class YMAPI(object):
 
         return Categories(self._request('categories', None, params))
 
-    def categories_children(self, category_id, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=10,
+    def categories_children(self, category_id, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30,
                             page=1):
         """
         Список подкатегорий
@@ -506,7 +511,7 @@ class YMAPI(object):
 
         return Model(self._request('models/{}', model_id, params))
 
-    def models_reviews(self, model_id, count=10, page=1):
+    def models_reviews(self, model_id, count=30, page=1):
         """
         Список обзоров на модель
 
@@ -673,7 +678,7 @@ class YMAPI(object):
 
         return Models(self._request('models/match', None, params))
 
-    def models_lookas(self, model_id, count=10, page=1, fields='CATEGORY,PHOTO', geo_id=None, remote_ip=None):
+    def models_lookas(self, model_id, count=30, page=1, fields='CATEGORY,PHOTO', geo_id=None, remote_ip=None):
         """
         Список похожих моделей
 
@@ -776,7 +781,7 @@ class YMAPI(object):
 
         return Models(self._request('models/{}/looksas', model_id, params))
 
-    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
+    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=30, page=1, geo_id=None, remote_ip=None):
         """
         Лучшие предложения (скидки дня)
 
@@ -879,7 +884,7 @@ class YMAPI(object):
 
         return Models(self._request('categories/{}/bestdeals', category_id, params))
 
-    def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=10, page=1, geo_id=None, remote_ip=None):
+    def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=30, page=1, geo_id=None, remote_ip=None):
         """
         Список популярных моделей
 
@@ -984,7 +989,7 @@ class YMAPI(object):
 
     def model_offers(self, model_id, delivery_included=False, fields=None, group_by=None, shop_regions=None,
                      filters=None,
-                     count=10, page=1, how=None, sort=None, latitude=None, longitude=None):
+                     count=30, page=1, how=None, sort=None, latitude=None, longitude=None):
         """
         Список предложений на модель
 
@@ -1376,7 +1381,7 @@ class YMAPI(object):
 
         return Offer(self._request('offers/{}', offer_id, params))
 
-    def model_opinions(self, model_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
+    def model_opinions(self, model_id, grade=None, max_comments=0, count=30, page=1, how=None, sort='DATE'):
         """
         Отзывы о модели
 
@@ -1442,7 +1447,7 @@ class YMAPI(object):
             params['sort'] = sort
         return ModelOpinions(self._request('models/{}/opinions', model_id, params))
 
-    def shop_opinions(self, shop_id, grade=None, max_comments=0, count=10, page=1, how=None, sort='DATE'):
+    def shop_opinions(self, shop_id, grade=None, max_comments=0, count=30, page=1, how=None, sort='DATE'):
         """
         Отзывы о магазине
 
@@ -1611,7 +1616,7 @@ class YMAPI(object):
         return ShopsSummary(self._request('geo/regions/{}/shops/summary', region_id, params))
 
     def model_outlets(self, model_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
-                      count=10,
+                      count=30,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи модели
@@ -1774,7 +1779,7 @@ class YMAPI(object):
         return Outlets(self._request('models/{}/outlets', model_id, params))
 
     def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
-                     count=10,
+                     count=30,
                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Пункты выдачи товаров магазина
@@ -1922,7 +1927,7 @@ class YMAPI(object):
         return Outlets(self._request('shops/{}/outlets', shop_id, params))
 
     def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
-                      count=10,
+                      count=30,
                       page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи товарного предложения
@@ -2086,7 +2091,7 @@ class YMAPI(object):
 
         return Outlets(self._request('offers/{}/outlets', offer_id, params))
 
-    def geo_regions(self, fields=None, count=10, page=1):
+    def geo_regions(self, fields=None, count=30, page=1):
         """
         Список регионов
 
@@ -2130,7 +2135,7 @@ class YMAPI(object):
 
         return Regions(self._request('geo/regions', None, params))
 
-    def geo_regions_children(self, region_id, fields=None, count=10, page=1):
+    def geo_regions_children(self, region_id, fields=None, count=30, page=1):
         """
         Список дочерних регионов
 
@@ -2208,7 +2213,7 @@ class YMAPI(object):
 
     def geo_suggest(self, name_part, fields=None,
                     types='CITY,CITY_DISTRICT,REGION,RURAL_SETTLEMENT,SECONDARY_DISTRICT,VILLAGE',
-                    count=10, page=1):
+                    count=30, page=1):
         """
         Текстовый поиск региона
 
@@ -2286,7 +2291,7 @@ class YMAPI(object):
 
         return Suggests(self._request('geo/suggest', None, params))
 
-    def vendors(self, fields=None, count=10, page=1):
+    def vendors(self, fields=None, count=30, page=1):
         """
         Список производителей
 
@@ -2404,7 +2409,7 @@ class YMAPI(object):
     def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
                price_min=None, result_type='ALL', shop_id=None, warranty=0, filters=None, barcode=False,
                search_type=None,
-               category_id=None, hid=None, count=10, page=1, how=None, sort=None, latitude=None, longitude=None,
+               category_id=None, hid=None, count=30, page=1, how=None, sort=None, latitude=None, longitude=None,
                geo_id=None, remote_ip=None):
         """
         Текстовый поиск
@@ -2680,7 +2685,7 @@ class YMAPI(object):
 
     def categories_search(self, category_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
                           shop_regions=None, filters=None,
-                          count=10, page=1, how=None, sort=None):
+                          count=30, page=1, how=None, sort=None):
         """
         Подбор по параметрам в категории
 
@@ -2874,7 +2879,7 @@ class YMAPI(object):
         return Filters(self._request('search/filters', None, params))
 
     def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
-                 fields=None, user_agent=None, count=10, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
+                 fields=None, user_agent=None, count=30, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
         """
         Редирект (перенаправление)
 
@@ -3059,7 +3064,7 @@ class YMAPI(object):
 
         return Redirect(self._request('redirect', None, params))
 
-    def suggestions(self, text, count=10, page=1, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
+    def suggestions(self, text, count=30, page=1, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
         """
         Поисковые подсказки
 
