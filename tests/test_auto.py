@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from unittest import TestCase, skip
-from YMContent import YMAPI, constants, exceptions, response, objects
-from pprint import pprint
-from time import sleep
+from unittest import TestCase
+from YMContent import YMAPI, response, objects
 import logging
 import logging.config
 import inspect
@@ -48,15 +46,6 @@ def analyze(obj):
     print(obj.__module__)
     print(obj.__class__)
     # print(re.search(':rtype: (.*)', inspect.getdoc(obj.__class__.__name__)).group(1))
-
-
-def rvars_doc(s):
-    return [r for r in re.findall('\* \*\*(.*)\*\*', s)]
-
-
-def getmembers(test_object):
-    '''Получение свойств объекта'''
-    return [k[0] for k in inspect.getmembers(test_object, lambda x: isinstance(x, property))]
 
 
 def rvars_doc(s):
