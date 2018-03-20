@@ -5,3 +5,4 @@ Yandex.Market Content API SDK
 
 [![Documentation Status](https://readthedocs.org/projects/ymcontent/badge/?version=latest)](http://ymcontent.readthedocs.io/en/latest/?badge=latest)
 
+[![Build Status](https://travis-ci.org/yegorov-p/YMContent.svg?branch=master)](https://travis-ci.org/yegorov-p/YMContent)
