@@ -1189,7 +1189,7 @@ class YMVendor(YMBase):
         """
 
         :return: Наименование производителя
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('name')
 
