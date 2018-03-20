@@ -2748,7 +2748,7 @@ class YMOffer(YMBase):
         """
 
         :return: Идентификатор модели
-        :rtype: int
+        :rtype: int or None
         """
         return self.data.get('model', {}).get('id')
 
