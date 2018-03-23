@@ -8,11 +8,8 @@ logger = logging.getLogger('YMContent')
 
 
 class Base(object):
-    def __init__(self, r):
-        self.req = r
-        self.resp = r.json()
-        self.headers = r.headers
-
+    def __init__(self, data):
+        (self.curl_command, self.headers, self.status_code, self.resp) = data
         while datetime.utcnow() < self.next_request:
             logger.debug('sleep')
             sleep(1)
@@ -31,16 +28,7 @@ class Base(object):
         :return: Эквивалент команды curl
         :rtype: str
         """
-        headers = ["'{0}: {1}'".format(k, v) for k, v in self.req.request.headers.items()]
-        headers = " -H ".join(sorted(headers))
-
-        command = "curl -X {method} -H {headers} -d '{data}' '{uri}'".format(
-            data=self.req.request.body or "",
-            headers=headers,
-            method=self.req.request.method,
-            uri=self.req.request.url,
-        )
-        return command
+        return self.curl_command
 
     def is_ok(self):
         """
@@ -57,7 +45,7 @@ class Base(object):
         :return: HTTP статус обработки запроса
         :rtype: int
         """
-        return self.req.status_code
+        return self.status_code
 
     @property
     def daily_limit(self):

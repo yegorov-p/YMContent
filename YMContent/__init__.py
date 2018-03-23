@@ -16,6 +16,7 @@ __license__ = 'Apache 2.0'
 
 logger = logging.getLogger('YMContent')
 
+
 class YMAPI(object):
     """
 
@@ -54,13 +55,23 @@ class YMAPI(object):
             raise NetworkAPIError()
         else:
             data = r.json()
+            headers = ["'{0}: {1}'".format(k, v) for k, v in r.request.headers.items()]
+            headers = " -H ".join(sorted(headers))
+            command = "curl -H {headers} -d '{data}' '{uri}'".format(
+                data=r.request.body or "",
+                headers=headers,
+                uri=r.request.url,
+            )
+
+            logger.debug('CURL: {}'.format(command))
             logger.debug('Received JSON: {}'.format(data))
             logger.debug('Received headers: {}'.format(r.headers))
+
             if r.status_code in (401, 403, 404, 422):
                 logger.error(data['errors'][0]['message'])
                 raise BaseAPIError(data['errors'][0]['message'])
 
-            return r
+            return (command, r.headers, r.status_code, r.json())
 
     @staticmethod
     def _validate_fields(fields, values):
