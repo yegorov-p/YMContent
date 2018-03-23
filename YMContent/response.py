@@ -10,9 +10,6 @@ logger = logging.getLogger('YMContent')
 class Base(object):
     def __init__(self, data):
         (self.curl_command, self.headers, self.status_code, self.resp) = data
-        while datetime.utcnow() < self.next_request:
-            logger.debug('sleep')
-            sleep(1)
 
     def json(self):
         """
@@ -167,24 +164,6 @@ class Base(object):
         return self.headers.get('Date')
 
     @property
-    def next_request(self):
-        """
-
-        :return: ближайшее возможное время выполнения следующего запроса
-        :rtype: datetime.datetime
-        """
-        if self.fields_all_remaining == 0:
-            return datetime.strptime(self.fields_all_until, '%a, %d %b %Y %H:%M:%S %Z')
-        elif self.method_remaining == 0:
-            return datetime.strptime(self.method_until, '%a, %d %b %Y %H:%M:%S %Z')
-        elif self.global_remaining == 0:
-            return datetime.strptime(self.global_until, '%a, %d %b %Y %H:%M:%S %Z')
-        elif self.daily_remaining == 0:
-            return datetime.strptime(self.daily_until, '%a, %d %b %Y %H:%M:%S %Z')
-        else:
-            return datetime.strptime(self.date, '%a, %d %b %Y %H:%M:%S %Z')
-
-    @property
     def status(self):
         """
 
@@ -198,7 +177,7 @@ class Base(object):
         """
 
         :return: Уникальный идентификатор запроса
-        :rtype: str
+        :rtype: str or list
         """
         return self.resp.get('context', {}).get('id')
 
@@ -207,7 +186,7 @@ class Base(object):
         """
 
         :return: Дата и время выполнения запроса в формате ISO 8601
-        :rtype: str
+        :rtype: str or list
         """
         return self.resp.get('context', {}).get('time')
 
@@ -282,7 +261,7 @@ class Page(Base):
         """
 
         :return: Номер страницы
-        :rtype: int
+        :rtype: int or None
         """
         return self.resp.get('context', {}).get('page', {}).get('number')
 
@@ -291,7 +270,7 @@ class Page(Base):
         """
 
         :return: Размер страницы
-        :rtype: int
+        :rtype: int or None
         """
         return int(self.resp.get('context', {}).get('page', {}).get('count', 0))
 
@@ -300,7 +279,7 @@ class Page(Base):
         """
 
         :return: Количество страниц в результате
-        :rtype: int
+        :rtype: int or None
         """
         return int(self.resp.get('context', {}).get('page', {}).get('count', 0))
 
@@ -309,7 +288,7 @@ class Page(Base):
         """
 
         :return: Признак последней страницы
-        :rtype: bool
+        :rtype: bool or None
         """
         return True if self.page_total == 0 else self.page_number == self.page_count
 

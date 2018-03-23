@@ -595,7 +595,7 @@ class YMDatasource(YMBase):
         * **OPINIONS** — По отзывам
         * **DELIVERY_TIME** — По времени доставки
         """
-        return self.data.get('order',{}).get('sort')
+        return self.data.get('order', {}).get('sort')
 
     @property
     def how(self):
@@ -3760,7 +3760,7 @@ class YMRedirectModel(YMRedirect):
         :return: Идентификатор модели
         :rtype: int
         """
-        return self.data.get('model',{}).get('id')
+        return self.data.get('model', {}).get('id')
 
 
 class YMRedirectCatalog(YMRedirect):
@@ -3839,7 +3839,7 @@ class YMRedirectVendor(YMRedirect):
         :return: Идентификатор производителя
         :rtype: int
         """
-        return self.data.get('vendor',{}).get('id')
+        return self.data.get('vendor', {}).get('id')
 
 
 class YMRedirectSearch(YMRedirect):

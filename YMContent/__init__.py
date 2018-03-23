@@ -35,6 +35,23 @@ class YMAPI(object):
             'User-agent': USER_AGENT,
         }
 
+    def _next_request(self, headers):
+        """
+
+        :return: ближайшее возможное время выполнения следующего запроса
+        :rtype: datetime.datetime
+        """
+        if (int(headers.get('X-RateLimit-Fields-All-Remaining')) if 'X-RateLimit-Fields-All-Remaining' in headers else None) == 0:
+            return datetime.strptime(headers.get('X-RateLimit-Fields-All-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+        elif int(headers.get('X-RateLimit-Method-Remaining')) == 0:
+            return datetime.strptime(headers.get('X-RateLimit-Method-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+        elif int(headers.get('X-RateLimit-Global-Remaining')) == 0:
+            return datetime.strptime(headers.get('X-RateLimit-Global-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+        elif int(headers.get('X-RateLimit-Daily-Remaining')) == 0:
+            return datetime.strptime(headers.get('X-RateLimit-Daily-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+        else:
+            return datetime.strptime(headers.get('Date'), '%a, %d %b %Y %H:%M:%S %Z')
+
     def _request(self, resource, req_id, params):
         if resource not in RESOURCES:
             raise Exception('Resource "%s" unsupported' % resource)
@@ -71,6 +88,10 @@ class YMAPI(object):
                 logger.error(data['errors'][0]['message'])
                 raise BaseAPIError(data['errors'][0]['message'])
 
+            while datetime.utcnow() < self._next_request(r.headers):
+                logger.debug('sleep')
+                sleep(1)
+
             return (command, r.headers, r.status_code, r.json())
 
     @staticmethod
@@ -87,7 +108,36 @@ class YMAPI(object):
             raise FieldsParamError('"fields" param is wrong')
         return fields
 
-    def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30, page=1):
+    def _pager(self, page, params, obj, res, object_id):
+        if page:
+            if page < 1:
+                raise PageParamError('"page" param must be larger than 1')
+            else:
+                params['page'] = page
+
+            return obj(self._request(res, object_id, params))
+        else:
+            params['page'] = 1
+            data = self._request(res, object_id, params)
+            result = data[3]
+            result['context']['id'] = [result['context']['id']]
+            result['context']['time'] = [result['context']['time']]
+            while True:
+                page_info = data[3].get('context', {}).get('page', {})
+                # todo у маркета неправильно работает пагинатор
+                if page_info.get('number') == page_info.get('total') or page_info.get('count') == 0:
+                    del result['context']['page']
+                    return obj((data[0], data[1], data[2], result))
+                    break
+                else:
+                    params['page'] += 1
+                    data = self._request(res, object_id, params)
+                    result['context']['id'].append(data[3]['context']['id'])
+                    result['context']['time'].append(data[3]['context']['time'])
+                    for e in filter(lambda x: x not in ('status', 'context'), data[3]):
+                        result[e] += data[3][e]
+
+    def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30, page=None):
         """
         Список категорий
 
@@ -120,7 +170,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None or None
 
         :return: Список категорий первого уровня (корневых) товарного дерева
         :rtype: Categories
@@ -158,15 +208,10 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Categories(self._request('categories', None, params))
+        return self._pager(page, params, Categories, 'categories', None)
 
     def categories_children(self, category_id, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30,
-                            page=1):
+                            page=None):
         """
         Список подкатегорий
 
@@ -202,7 +247,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :return: Список категорий товарного дерева, вложенных в категорию с указанным в запросе идентификатором
         :rtype: Categories
@@ -238,12 +283,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Categories(self._request('categories/{}/children', category_id, params))
+        return self._pager(page, params, Categories, 'categories/{}/children', category_id)
 
     def category(self, category_id, fields=None, geo_id=None, remote_ip=None):
         """
@@ -521,7 +561,7 @@ class YMAPI(object):
 
         return Model(self._request('models/{}', model_id, params))
 
-    def models_reviews(self, model_id, count=30, page=1):
+    def models_reviews(self, model_id, count=30, page=None):
         """
         Список обзоров на модель
 
@@ -532,7 +572,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :return: Обзоры на модель
         :rtype: ModelReview
@@ -548,12 +588,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return ModelReview(self._request('models/{}/reviews', model_id, params))
+        return self._pager(page, params, ModelReview, 'models/{}/reviews', model_id)
 
     def models_match(self, name, category_count=1, fields='CATEGORY,PHOTO', match_types='MULTI,REPORT',
                      category_name=None, description=None, locale='RU_ru', price=None, shop_name=None, category_id=None,
@@ -688,7 +723,7 @@ class YMAPI(object):
 
         return Models(self._request('models/match', None, params))
 
-    def models_lookas(self, model_id, count=30, page=1, fields='CATEGORY,PHOTO', geo_id=None, remote_ip=None):
+    def models_lookas(self, model_id, count=30, page=None, fields='CATEGORY,PHOTO', geo_id=None, remote_ip=None):
         """
         Список похожих моделей
 
@@ -699,7 +734,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
 
@@ -781,17 +816,12 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return Models(self._request('models/{}/looksas', model_id, params))
+        return self._pager(page, params, Models, 'models/{}/looksas', model_id)
 
-    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=30, page=1, geo_id=None, remote_ip=None):
+    def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=30, page=None, geo_id=None, remote_ip=None):
         """
         Лучшие предложения (скидки дня)
 
@@ -802,7 +832,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
 
@@ -884,17 +914,12 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return Models(self._request('categories/{}/bestdeals', category_id, params))
+        return self._pager(page, params, Models, 'categories/{}/bestdeals', category_id)
 
-    def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=30, page=1, geo_id=None, remote_ip=None):
+    def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=30, page=None, geo_id=None, remote_ip=None):
         """
         Список популярных моделей
 
@@ -905,7 +930,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param fields: Параметры моделей, которые необходимо показать в выходных данных
 
@@ -987,19 +1012,14 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return Models(self._request('categories/{}/populars', category_id, params))
+        return self._pager(page, params, Models, 'categories/{}/populars', category_id)
 
     def model_offers(self, model_id, delivery_included=False, fields=None, group_by=None, shop_regions=None,
                      filters=None,
-                     count=30, page=1, how=None, sort=None, latitude=None, longitude=None):
+                     count=30, page=None, how=None, sort=None, latitude=None, longitude=None):
         """
         Список предложений на модель
 
@@ -1052,7 +1072,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -1100,11 +1120,6 @@ class YMAPI(object):
             raise CountParamError('"count" param must be between 1 and 30')
         else:
             params['count'] = count
-
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
 
         if delivery_included:
             if str(delivery_included).upper() in [0, '0', 'F', 'FALSE', 'N', 'NO']:
@@ -1164,7 +1179,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return ModelOffers(self._request('models/{}/offers', model_id, params))
+        return self._pager(page, params, ModelOffers, 'models/{}/offers', model_id)
 
     def model_offers_default(self, model_id, fields='STANDARD', filters=None, geo_id=None, remote_ip=None):
         """
@@ -1391,7 +1406,7 @@ class YMAPI(object):
 
         return Offer(self._request('offers/{}', offer_id, params))
 
-    def model_opinions(self, model_id, grade=None, max_comments=0, count=30, page=1, how=None, sort='DATE'):
+    def model_opinions(self, model_id, grade=None, max_comments=0, count=30, page=None, how=None, sort='DATE'):
         """
         Отзывы о модели
 
@@ -1408,7 +1423,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -1438,11 +1453,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if max_comments:
             params['max_comments'] = max_comments
 
@@ -1455,9 +1465,10 @@ class YMAPI(object):
             if sort not in ('DATE', 'GRADE', 'RANK'):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
-        return ModelOpinions(self._request('models/{}/opinions', model_id, params))
 
-    def shop_opinions(self, shop_id, grade=None, max_comments=0, count=30, page=1, how=None, sort='DATE'):
+        return self._pager(page, params, ModelOpinions, 'models/{}/opinions', model_id)
+
+    def shop_opinions(self, shop_id, grade=None, max_comments=0, count=30, page=None, how=None, sort='DATE'):
         """
         Отзывы о магазине
 
@@ -1474,7 +1485,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -1505,11 +1516,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if max_comments:
             params['max_comments'] = max_comments
 
@@ -1523,7 +1529,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return ShopOpinions(self._request('shops/{}/opinions', shop_id, params))
+        return self._pager(page, params, ShopOpinions, 'shops/{}/opinions', shop_id)
 
     def shop(self, shop_id, fields=None):
         """
@@ -1627,7 +1633,7 @@ class YMAPI(object):
 
     def model_outlets(self, model_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
                       count=30,
-                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
+                      page=None, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи модели
 
@@ -1675,7 +1681,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -1758,11 +1764,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -1786,11 +1787,11 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self._request('models/{}/outlets', model_id, params))
+        return self._pager(page, params, Outlets, 'models/{}/outlets', model_id)
 
     def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
                      count=30,
-                     page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None):
+                     page=None, how=None, sort='RELEVANCY', latitude=None, longitude=None):
         """
         Пункты выдачи товаров магазина
 
@@ -1838,7 +1839,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -1905,11 +1906,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -1934,11 +1930,11 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self._request('shops/{}/outlets', shop_id, params))
+        return self._pager(page, params, Outlets, 'shops/{}/outlets', shop_id)
 
     def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
                       count=30,
-                      page=1, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
+                      page=None, how=None, sort='RELEVANCY', latitude=None, longitude=None, geo_id=None, remote_ip=None):
         """
         Список пунктов выдачи товарного предложения
 
@@ -1986,7 +1982,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -2070,11 +2066,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -2099,9 +2090,9 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Outlets(self._request('offers/{}/outlets', offer_id, params))
+        return self._pager(page, params, Outlets, 'offers/{}/outlets', offer_id)
 
-    def geo_regions(self, fields=None, count=30, page=1):
+    def geo_regions(self, fields=None, count=30, page=None):
         """
         Список регионов
 
@@ -2117,7 +2108,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises CountParamError: недопустимое значение параметра count
@@ -2138,14 +2129,9 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
+        return self._pager(page, params, Regions, 'geo/regions', None)
 
-        return Regions(self._request('geo/regions', None, params))
-
-    def geo_regions_children(self, region_id, fields=None, count=30, page=1):
+    def geo_regions_children(self, region_id, fields=None, count=30, page=None):
         """
         Список дочерних регионов
 
@@ -2164,7 +2150,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises CountParamError: недопустимое значение параметра count
@@ -2185,12 +2171,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Regions(self._request('geo/regions/{}/children', region_id, params))
+        return self._pager(page, params, Regions, 'geo/regions/{}/children', region_id)
 
     def geo_region(self, region_id, fields=None):
         """
@@ -2223,7 +2204,7 @@ class YMAPI(object):
 
     def geo_suggest(self, name_part, fields=None,
                     types='CITY,CITY_DISTRICT,REGION,RURAL_SETTLEMENT,SECONDARY_DISTRICT,VILLAGE',
-                    count=30, page=1):
+                    count=30, page=None):
         """
         Текстовый поиск региона
 
@@ -2263,7 +2244,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises TypeParamError: недопустимое значение параметра type
@@ -2294,14 +2275,9 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
+        return self._pager(page, params, Suggests, 'geo/suggest', None)
 
-        return Suggests(self._request('geo/suggest', None, params))
-
-    def vendors(self, fields=None, count=30, page=1):
+    def vendors(self, fields=None, count=30, page=None):
         """
         Список производителей
 
@@ -2321,7 +2297,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :raises FieldsParamError: недопустимое значение параметра fields
         :raises CountParamError: недопустимое значение параметра count
@@ -2342,12 +2318,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
-        return Vendors(self._request('vendors', None, params))
+        return self._pager(page, params, Vendors, 'vendors', None)
 
     def vendor(self, vendor_id, fields=None):
         """
@@ -2419,7 +2390,7 @@ class YMAPI(object):
     def search(self, text, delivery_included=False, fields=None, onstock=0, outlet_types=None, price_max=None,
                price_min=None, result_type='ALL', shop_id=None, warranty=0, filters=None, barcode=False,
                search_type=None,
-               category_id=None, hid=None, count=30, page=1, how=None, sort=None, latitude=None, longitude=None,
+               category_id=None, hid=None, count=30, page=None, how=None, sort=None, latitude=None, longitude=None,
                geo_id=None, remote_ip=None):
         """
         Текстовый поиск
@@ -2515,7 +2486,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -2663,11 +2634,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -2691,11 +2657,11 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return Search(self._request('search', None, params))
+        return self._pager(page, params, Search, 'search', None)
 
     def categories_search(self, category_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
                           shop_regions=None, filters=None,
-                          count=30, page=1, how=None, sort=None):
+                          count=30, page=None, how=None, sort=None):
         """
         Подбор по параметрам в категории
 
@@ -2760,7 +2726,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -2820,11 +2786,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -2835,7 +2796,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return Search(self._request('categories/{}/search', category_id, params))
+        return self._pager(page, params, Search, 'categories/{}/search', category_id)
 
     def search_filters(self, text, fields=None, geo_id=None, remote_ip=None):
         """
@@ -2889,7 +2850,7 @@ class YMAPI(object):
         return Filters(self._request('search/filters', None, params))
 
     def redirect(self, text, redirect_types='SEARCH', barcode=False, search_type=None, category_id=None, hid=None,
-                 fields=None, user_agent=None, count=30, page=1, how=None, sort=None, geo_id=None, remote_ip=None):
+                 fields=None, user_agent=None, count=30, page=None, how=None, sort=None, geo_id=None, remote_ip=None):
         """
         Редирект (перенаправление)
 
@@ -2970,7 +2931,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param how: Направление сортировки
         :type how: str
@@ -3057,11 +3018,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if how:
             if how not in ('ASC', 'DESC'):
                 raise HowParamError('"how" param is wrong')
@@ -3072,9 +3028,9 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return Redirect(self._request('redirect', None, params))
+        return self._pager(page, params, Redirect, 'redirect', None)
 
-    def suggestions(self, text, count=30, page=1, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
+    def suggestions(self, text, count=30, page=None, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
         """
         Поисковые подсказки
 
@@ -3085,7 +3041,7 @@ class YMAPI(object):
         :type count: int
 
         :param page: Номер страницы
-        :type page: int
+        :type page: int or None
 
         :param pos: Позиция курсора в поисковой подсказке
         :type pos: int
@@ -3134,11 +3090,6 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        if page < 1:
-            raise PageParamError('"page" param must be larger than 1')
-        else:
-            params['page'] = page
-
         if pos:
             if pos < 0 or pos > 1024:
                 raise PosParamError('"pos" param must be between 1 and 30')
@@ -3153,4 +3104,4 @@ class YMAPI(object):
                     raise SuggestTypesParamError('"suggest_types" param is wrong')
             params['suggest_types'] = suggest_types
 
-        return Suggestions(self._request('suggestions', None, params))
+        return self._pager(page, params, Suggestions, 'suggestions', None)

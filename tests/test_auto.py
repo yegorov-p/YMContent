@@ -152,11 +152,22 @@ class TestYMAPI(TestCase):
                   api.categories(geo_id=213, fields='ALL')
                   )
 
+    def test_categories_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories)).group(1),
+                  api.categories(geo_id=213, fields='ALL', page=1)
+                  )
+
     # @skip("testing skipping")
     def test_categories_children(self):
         for category in CATEGORIES:
             self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_children)).group(1),
                       api.categories_children(category, geo_id=213, fields='ALL')
+                      )
+
+    def test_categories_children_single(self):
+        for category in CATEGORIES:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_children)).group(1),
+                      api.categories_children(category, geo_id=213, fields='ALL', page=1)
                       )
 
     # @skip("testing skipping")
@@ -193,6 +204,12 @@ class TestYMAPI(TestCase):
                       api.models_reviews(model)
                       )
 
+    def test_models_reviews_single(self):
+        for model in MODELS:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.models_reviews)).group(1),
+                      api.models_reviews(model, page=1)
+                      )
+
     # @skip("testing skipping")
     def test_models_match(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.models_match)).group(1),
@@ -206,11 +223,23 @@ class TestYMAPI(TestCase):
                       api.models_lookas(model, fields='ALL', geo_id=213)
                       )
 
+    def test_models_lookas_single(self):
+        for model in MODELS:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.models_lookas)).group(1),
+                      api.models_lookas(model, fields='ALL', geo_id=213, page=1)
+                      )
+
     # @skip("testing skipping")
     def test_categories_bestdeals(self):
         for category in CATEGORIES:
             self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_bestdeals)).group(1),
                       api.categories_bestdeals(category, fields='ALL', geo_id=213)
+                      )
+
+    def test_categories_bestdeals_single(self):
+        for category in CATEGORIES:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_bestdeals)).group(1),
+                      api.categories_bestdeals(category, fields='ALL', geo_id=213, page=1)
                       )
 
     # @skip("testing skipping")
@@ -220,11 +249,23 @@ class TestYMAPI(TestCase):
                       api.categories_popular(category, fields='ALL', geo_id=213)
                       )
 
+    def test_categories_popular_single(self):
+        for category in CATEGORIES:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_popular)).group(1),
+                      api.categories_popular(category, fields='ALL', geo_id=213, page=1)
+                      )
+
     # @skip("testing skipping")
     def test_model_offers(self):
         for model in MODELS:
             self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.model_offers)).group(1),
                       api.model_offers(model, fields='ALL')
+                      )
+
+    def test_model_offers_single(self):
+        for model in MODELS:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.model_offers)).group(1),
+                      api.model_offers(model, fields='ALL', page=1)
                       )
 
     # @skip("testing skipping")
@@ -263,10 +304,21 @@ class TestYMAPI(TestCase):
                       api.model_opinions(model)
                       )
 
+    def test_model_opinions_single(self):
+        for model in MODELS:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.model_opinions)).group(1),
+                      api.model_opinions(model, page=1)
+                      )
+
     # @skip("testing skipping")
     def test_shop_opinions(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_opinions)).group(1),
                   api.shop_opinions(155)
+                  )
+
+    def test_shop_opinions_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_opinions)).group(1),
+                  api.shop_opinions(155, page=1)
                   )
 
     # @skip("testing skipping")
@@ -294,10 +346,21 @@ class TestYMAPI(TestCase):
                       api.model_outlets(model, fields='ALL', geo_id=213)
                       )
 
+    def test_model_outlets_single(self):
+        for model in MODELS:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.model_outlets)).group(1),
+                      api.model_outlets(model, fields='ALL', geo_id=213, page=1)
+                      )
+
     # @skip("testing skipping")
     def test_shop_outlets(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_outlets)).group(1),
                   api.shop_outlets(155, fields='ALL')
+                  )
+
+    def test_shop_outlets_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_outlets)).group(1),
+                  api.shop_outlets(155, fields='ALL', page=1)
                   )
 
     # @skip("testing skipping")
@@ -314,10 +377,20 @@ class TestYMAPI(TestCase):
                   api.geo_regions(fields='ALL')
                   )
 
+    def test_geo_regions_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.geo_regions)).group(1),
+                  api.geo_regions(fields='ALL', page=1)
+                  )
+
     # @skip("testing skipping")
     def test_geo_regions_children(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.geo_regions_children)).group(1),
                   api.geo_regions_children(213, fields='ALL')
+                  )
+
+    def test_geo_regions_children_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.geo_regions_children)).group(1),
+                  api.geo_regions_children(213, fields='ALL', page=1)
                   )
 
     # @skip("testing skipping")
@@ -332,10 +405,20 @@ class TestYMAPI(TestCase):
                   api.geo_suggest('Москв', fields='ALL')
                   )
 
+    def test_geo_suggest_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.geo_suggest)).group(1),
+                  api.geo_suggest('Москв', fields='ALL', page=1)
+                  )
+
     # @skip("testing skipping")
     def test_vendors(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.vendors)).group(1),
                   api.vendors(fields='ALL')
+                  )
+
+    def test_vendors_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.vendors)).group(1),
+                  api.vendors(fields='ALL', page=1)
                   )
 
     # @skip("testing skipping")
@@ -360,11 +443,26 @@ class TestYMAPI(TestCase):
                   api.search('Samsung', fields='ALL', geo_id=213)
                   )
 
+    def test_search_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.search)).group(1),
+                  api.search('Apple', fields='ALL', geo_id=213, page=1)
+                  )
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.search)).group(1),
+                  api.search('Samsung', fields='ALL', geo_id=213, page=1)
+                  )
+
     # @skip("testing skipping")
     def test_categories_search(self):
         for category in CATEGORIES:
             self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_search)).group(1),
                       api.categories_search(category, fields='ALL', geo_id=213)
+                      )
+
+    # @skip("testing skipping")
+    def test_categories_search_single(self):
+        for category in CATEGORIES:
+            self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.categories_search)).group(1),
+                      api.categories_search(category, fields='ALL', geo_id=213, page=1)
                       )
 
     # @skip("testing skipping")
@@ -379,10 +477,20 @@ class TestYMAPI(TestCase):
                   api.redirect('phone', fields='ALL', geo_id=213)
                   )
 
+    def test_redirect_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.redirect)).group(1),
+                  api.redirect('phone', fields='ALL', geo_id=213, page=1)
+                  )
+
     # @skip("testing skipping")
     def test_suggestions(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.suggestions)).group(1),
                   api.suggestions('iphone', geo_id=213)
+                  )
+
+    def test_suggestions_single(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.suggestions)).group(1),
+                  api.suggestions('iphone', geo_id=213, page=1)
                   )
 
     # def test_everything(self):
