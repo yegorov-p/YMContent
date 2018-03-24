@@ -31,7 +31,7 @@ class YMAPI(object):
         self.headers = {
             'Host': DOMAIN,
             'Authorization': authorization_key,
-            'User-agent': USER_AGENT,
+            'User-agent': '{} v{}'.format(USER_AGENT, VERSION)
         }
 
     def _next_request(self, headers):
