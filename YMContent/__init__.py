@@ -41,13 +41,13 @@ class YMAPI(object):
         :return: ближайшее возможное время выполнения следующего запроса
         :rtype: datetime.datetime
         """
-        if (int(headers.get('X-RateLimit-Fields-All-Remaining')) if 'X-RateLimit-Fields-All-Remaining' in headers else None) == 0:
+        if headers.get('X-RateLimit-Fields-All-Remaining') == '0':
             return datetime.strptime(headers.get('X-RateLimit-Fields-All-Until'), '%a, %d %b %Y %H:%M:%S %Z')
-        elif int(headers.get('X-RateLimit-Method-Remaining')) == 0:
+        elif headers.get('X-RateLimit-Method-Remaining') == '0':
             return datetime.strptime(headers.get('X-RateLimit-Method-Until'), '%a, %d %b %Y %H:%M:%S %Z')
-        elif int(headers.get('X-RateLimit-Global-Remaining')) == 0:
+        elif headers.get('X-RateLimit-Global-Remaining') == '0':
             return datetime.strptime(headers.get('X-RateLimit-Global-Until'), '%a, %d %b %Y %H:%M:%S %Z')
-        elif int(headers.get('X-RateLimit-Daily-Remaining')) == 0:
+        elif headers.get('X-RateLimit-Daily-Remaining') == '0':
             return datetime.strptime(headers.get('X-RateLimit-Daily-Until'), '%a, %d %b %Y %H:%M:%S %Z')
         else:
             return datetime.strptime(headers.get('Date'), '%a, %d %b %Y %H:%M:%S %Z')
@@ -83,13 +83,14 @@ class YMAPI(object):
             logger.debug('Received JSON: {}'.format(data))
             logger.debug('Received headers: {}'.format(r.headers))
 
+            if r.status_code in (401, 403, 404, 422):
+                logger.error(data['errors'][0]['message'])
+                sleep(1)
+                raise BaseAPIError(data['errors'][0]['message'])
+
             while datetime.utcnow() < self._next_request(r.headers):
                 logger.debug('sleep')
                 sleep(1)
-
-            if r.status_code in (401, 403, 404, 422):
-                logger.error(data['errors'][0]['message'])
-                raise BaseAPIError(data['errors'][0]['message'])
 
             return (command, r.headers, r.status_code, r.json())
 
