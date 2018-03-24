@@ -83,13 +83,13 @@ class YMAPI(object):
             logger.debug('Received JSON: {}'.format(data))
             logger.debug('Received headers: {}'.format(r.headers))
 
-            if r.status_code in (401, 403, 404, 422):
-                logger.error(data['errors'][0]['message'])
-                raise BaseAPIError(data['errors'][0]['message'])
-
             while datetime.utcnow() < self._next_request(r.headers):
                 logger.debug('sleep')
                 sleep(1)
+
+            if r.status_code in (401, 403, 404, 422):
+                logger.error(data['errors'][0]['message'])
+                raise BaseAPIError(data['errors'][0]['message'])
 
             return (command, r.headers, r.status_code, r.json())
 
