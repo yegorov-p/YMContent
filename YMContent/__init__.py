@@ -74,8 +74,7 @@ class YMAPI(object):
             data = r.json()
             headers = ["'{0}: {1}'".format(k, v) for k, v in r.request.headers.items()]
             headers = " -H ".join(sorted(headers))
-            command = "curl -H {headers} -d '{data}' '{uri}'".format(
-                data=r.request.body or "",
+            command = "curl -H {headers} '{uri}'".format(
                 headers=headers,
                 uri=r.request.url,
             )
