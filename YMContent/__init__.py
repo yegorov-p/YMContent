@@ -28,8 +28,7 @@ class YMAPI(object):
         if not authorization_key:
             raise NotAuthorized(
                 "You must provide authorization key to access Yandex.Market API!")
-        self.session = requests.Session()
-        self.session.headers = {
+        self.headers = {
             'Host': DOMAIN,
             'Authorization': authorization_key,
             'User-agent': USER_AGENT,
@@ -61,9 +60,10 @@ class YMAPI(object):
 
         try:
             logger.debug('Requesting resource {}'.format(url))
-            r = self.session.get(
+            r = requests.get(
                 url=url,
-                params=params
+                params=params,
+                headers=self.headers
             )
 
         except (ConnectionError, ReadTimeout, SSLError, ssl.SSLError,
