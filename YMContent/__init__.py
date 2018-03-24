@@ -4,7 +4,7 @@ import ssl
 import logging
 import requests
 from requests.exceptions import ReadTimeout, SSLError
-
+from math import ceil
 from YMContent.constants import *
 from YMContent.response import *
 from YMContent.exceptions import *
@@ -89,8 +89,9 @@ class YMAPI(object):
                 raise BaseAPIError(data['errors'][0]['message'])
 
             while datetime.utcnow() < self._next_request(r.headers):
-                logger.debug('sleep')
-                sleep(1)
+                delta = ceil((self._next_request(r.headers) - datetime.utcnow()).total_seconds())
+                logger.debug('sleeping {} seconds'.format(delta))
+                sleep(delta)
 
             return (command, r.headers, r.status_code, r.json())
 
