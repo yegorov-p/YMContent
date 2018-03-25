@@ -8,6 +8,8 @@ from math import ceil
 from YMContent.constants import *
 from YMContent.response import *
 from YMContent.exceptions import *
+from datetime import datetime, timedelta
+from time import sleep
 
 __title__ = 'YMContent'
 __version__ = constants.VERSION
@@ -40,16 +42,17 @@ class YMAPI(object):
         :return: ближайшее возможное время выполнения следующего запроса
         :rtype: datetime.datetime
         """
+        delta = ceil((datetime.strptime(headers.get('Date'), '%a, %d %b %Y %H:%M:%S %Z') - datetime.utcnow()).total_seconds())
         if headers.get('X-RateLimit-Fields-All-Remaining') == '0':
-            return datetime.strptime(headers.get('X-RateLimit-Fields-All-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+            return datetime.strptime(headers.get('X-RateLimit-Fields-All-Until'), '%a, %d %b %Y %H:%M:%S %Z')-timedelta(seconds=delta)
         elif headers.get('X-RateLimit-Method-Remaining') == '0':
-            return datetime.strptime(headers.get('X-RateLimit-Method-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+            return datetime.strptime(headers.get('X-RateLimit-Method-Until'), '%a, %d %b %Y %H:%M:%S %Z')-timedelta(seconds=delta)
         elif headers.get('X-RateLimit-Global-Remaining') == '0':
-            return datetime.strptime(headers.get('X-RateLimit-Global-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+            return datetime.strptime(headers.get('X-RateLimit-Global-Until'), '%a, %d %b %Y %H:%M:%S %Z')-timedelta(seconds=delta)
         elif headers.get('X-RateLimit-Daily-Remaining') == '0':
-            return datetime.strptime(headers.get('X-RateLimit-Daily-Until'), '%a, %d %b %Y %H:%M:%S %Z')
+            return datetime.strptime(headers.get('X-RateLimit-Daily-Until'), '%a, %d %b %Y %H:%M:%S %Z')-timedelta(seconds=delta)
         else:
-            return datetime.strptime(headers.get('Date'), '%a, %d %b %Y %H:%M:%S %Z')
+            return datetime.strptime(headers.get('Date'), '%a, %d %b %Y %H:%M:%S %Z')-timedelta(seconds=delta)
 
     def _request(self, resource, req_id, params):
         if resource not in RESOURCES:
@@ -88,8 +91,8 @@ class YMAPI(object):
                 sleep(1)
                 raise BaseAPIError(data['errors'][0]['message'])
 
-            while datetime.utcnow() < self._next_request(r.headers):
-                delta = ceil((self._next_request(r.headers) - datetime.utcnow()).total_seconds())
+            delta = ceil((self._next_request(r.headers) - datetime.utcnow()).total_seconds())
+            if delta>0:
                 logger.debug('sleeping {} seconds'.format(delta))
                 sleep(delta)
 

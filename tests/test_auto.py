@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest import TestCase
+from unittest import TestCase, skip
 from YMContent import YMAPI, response, objects
 import logging
 import logging.config
@@ -289,6 +289,7 @@ class TestYMAPI(TestCase):
                       api.model_opinions(model, page=1)
                       )
 
+    @skip('')
     def test_shop_opinions(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_opinions)).group(1),
                   api.shop_opinions(155)

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from YMContent.objects import *
-from datetime import datetime
-from time import sleep
 import logging
 
 logger = logging.getLogger('YMContent')
