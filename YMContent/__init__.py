@@ -83,7 +83,7 @@ class YMAPI(object):
             logger.debug('Received JSON: {}'.format(data))
             logger.debug('Received headers: {}'.format(r.headers))
 
-            if r.status_code in (401, 403, 404, 422):
+            if r.status_code in (401, 403, 404, 422, 500):
                 logger.error(data['errors'][0]['message'])
                 sleep(1)
                 raise BaseAPIError(data['errors'][0]['message'])
@@ -109,10 +109,12 @@ class YMAPI(object):
             raise FieldsParamError('"fields" param is wrong')
         return fields
 
-    def _pager(self, page, params, obj, res, object_id):
+    def _pager(self, page, params, obj, res, object_id, max_page):
         if page:
             if page < 1:
                 raise PageParamError('"page" param must be larger than 1')
+            if max_page and page>max_page:
+                raise PageParamError('"page" param must be smaller than {}'.format(max_page))
             else:
                 params['page'] = page
 
@@ -126,7 +128,7 @@ class YMAPI(object):
             while True:
                 page_info = data[3].get('context', {}).get('page', {})
                 # todo у маркета неправильно работает пагинатор
-                if page_info.get('number') == page_info.get('total') or page_info.get('count') == 0:
+                if page_info.get('number') == page_info.get('total') or page_info.get('count') == 0 or page_info.get('total') == 0:
                     del result['context']['page']
                     return obj((data[0], data[1], data[2], result))
                     break
@@ -209,7 +211,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Categories, 'categories', None)
+        return self._pager(page, params, Categories, 'categories', None, None)
 
     def categories_children(self, category_id, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30,
                             page=None):
@@ -284,7 +286,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Categories, 'categories/{}/children', category_id)
+        return self._pager(page, params, Categories, 'categories/{}/children', category_id, None)
 
     def category(self, category_id, fields=None, geo_id=None, remote_ip=None):
         """
@@ -589,7 +591,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, ModelReview, 'models/{}/reviews', model_id)
+        return self._pager(page, params, ModelReview, 'models/{}/reviews', model_id, None)
 
     def models_match(self, name, category_count=1, fields='CATEGORY,PHOTO', match_types='MULTI,REPORT',
                      category_name=None, description=None, locale='RU_ru', price=None, shop_name=None, category_id=None,
@@ -820,7 +822,7 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return self._pager(page, params, Models, 'models/{}/looksas', model_id)
+        return self._pager(page, params, Models, 'models/{}/looksas', model_id, None)
 
     def categories_bestdeals(self, category_id, fields='CATEGORY,PHOTO', count=30, page=None, geo_id=None, remote_ip=None):
         """
@@ -918,7 +920,7 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return self._pager(page, params, Models, 'categories/{}/bestdeals', category_id)
+        return self._pager(page, params, Models, 'categories/{}/bestdeals', category_id, None)
 
     def categories_popular(self, category_id, fields='CATEGORY,PHOTO', count=30, page=None, geo_id=None, remote_ip=None):
         """
@@ -1016,7 +1018,7 @@ class YMAPI(object):
         if fields:
             params['fields'] = self._validate_fields(fields, constants.MODEL_FIELDS)
 
-        return self._pager(page, params, Models, 'categories/{}/populars', category_id)
+        return self._pager(page, params, Models, 'categories/{}/populars', category_id, None)
 
     def model_offers(self, model_id, delivery_included=False, fields=None, group_by=None, shop_regions=None,
                      filters=None,
@@ -1180,7 +1182,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return self._pager(page, params, ModelOffers, 'models/{}/offers', model_id)
+        return self._pager(page, params, ModelOffers, 'models/{}/offers', model_id, None)
 
     def model_offers_default(self, model_id, fields='STANDARD', filters=None, geo_id=None, remote_ip=None):
         """
@@ -1467,7 +1469,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return self._pager(page, params, ModelOpinions, 'models/{}/opinions', model_id)
+        return self._pager(page, params, ModelOpinions, 'models/{}/opinions', model_id, None)
 
     def shop_opinions(self, shop_id, grade=None, max_comments=0, count=30, page=None, how=None, sort='DATE'):
         """
@@ -1530,7 +1532,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return self._pager(page, params, ShopOpinions, 'shops/{}/opinions', shop_id)
+        return self._pager(page, params, ShopOpinions, 'shops/{}/opinions', shop_id, None)
 
     def shop(self, shop_id, fields=None):
         """
@@ -1788,7 +1790,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return self._pager(page, params, Outlets, 'models/{}/outlets', model_id)
+        return self._pager(page, params, Outlets, 'models/{}/outlets', model_id, 50)
 
     def shop_outlets(self, shop_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
                      count=30,
@@ -1931,7 +1933,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return self._pager(page, params, Outlets, 'shops/{}/outlets', shop_id)
+        return self._pager(page, params, Outlets, 'shops/{}/outlets', shop_id, None)
 
     def offer_outlets(self, offer_id, boundary=None, fields='STANDARD', outlet_type='PICKUP,STORE', filters=None,
                       count=30,
@@ -2091,7 +2093,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return self._pager(page, params, Outlets, 'offers/{}/outlets', offer_id)
+        return self._pager(page, params, Outlets, 'offers/{}/outlets', offer_id, None)
 
     def geo_regions(self, fields=None, count=30, page=None):
         """
@@ -2130,7 +2132,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Regions, 'geo/regions', None)
+        return self._pager(page, params, Regions, 'geo/regions', None, None)
 
     def geo_regions_children(self, region_id, fields=None, count=30, page=None):
         """
@@ -2172,7 +2174,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Regions, 'geo/regions/{}/children', region_id)
+        return self._pager(page, params, Regions, 'geo/regions/{}/children', region_id, None)
 
     def geo_region(self, region_id, fields=None):
         """
@@ -2276,7 +2278,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Suggests, 'geo/suggest', None)
+        return self._pager(page, params, Suggests, 'geo/suggest', None, None)
 
     def vendors(self, fields=None, count=30, page=None):
         """
@@ -2319,7 +2321,7 @@ class YMAPI(object):
         else:
             params['count'] = count
 
-        return self._pager(page, params, Vendors, 'vendors', None)
+        return self._pager(page, params, Vendors, 'vendors', None, None)
 
     def vendor(self, vendor_id, fields=None):
         """
@@ -2658,7 +2660,7 @@ class YMAPI(object):
                 raise GeoParamError('"longitude" param must be between -180 and 180')
             params['longitude'] = longitude
 
-        return self._pager(page, params, Search, 'search', None)
+        return self._pager(page, params, Search, 'search', None, None)
 
     def categories_search(self, category_id, geo_id=None, remote_ip=None, fields=None, result_type='ALL', rs=None,
                           shop_regions=None, filters=None,
@@ -2797,7 +2799,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return self._pager(page, params, Search, 'categories/{}/search', category_id)
+        return self._pager(page, params, Search, 'categories/{}/search', category_id, None)
 
     def search_filters(self, text, fields=None, geo_id=None, remote_ip=None):
         """
@@ -3029,7 +3031,7 @@ class YMAPI(object):
                 raise SortParamError('"sort" param is wrong')
             params['sort'] = sort
 
-        return self._pager(page, params, Redirect, 'redirect', None)
+        return self._pager(page, params, Redirect, 'redirect', None, None)
 
     def suggestions(self, text, count=30, page=None, pos=None, suggest_types='DEFAULT', geo_id=None, remote_ip=None):
         """
@@ -3105,4 +3107,4 @@ class YMAPI(object):
                     raise SuggestTypesParamError('"suggest_types" param is wrong')
             params['suggest_types'] = suggest_types
 
-        return self._pager(page, params, Suggestions, 'suggestions', None)
+        return self._pager(page, params, Suggestions, 'suggestions', None, None)
