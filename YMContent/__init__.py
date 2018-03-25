@@ -96,7 +96,12 @@ class YMAPI(object):
                 logger.debug('sleeping {} seconds'.format(delta))
                 sleep(delta)
 
-            return (command, r.headers, r.status_code, r.json())
+            return {'curl': command,
+                    'url': url,
+                    'params': params,
+                    'headers': r.headers,
+                    'status_code': r.status_code,
+                    'json': r.json()}
 
     @staticmethod
     def _validate_fields(fields, values):
@@ -125,11 +130,11 @@ class YMAPI(object):
         else:
             params['page'] = 1
             data = self._request(res, object_id, params)
-            result = data[3]
+            result = data['json']
             result['context']['id'] = [result['context']['id']]
             result['context']['time'] = [result['context']['time']]
             while True:
-                page_info = data[3].get('context', {}).get('page', {})
+                page_info = data['json'].get('context', {}).get('page', {})
                 # todo у маркета неправильно работает пагинатор
                 if page_info.get('number') == page_info.get('total') or page_info.get('count') == 0 or page_info.get('total') == 0:
                     del result['context']['page']
@@ -138,10 +143,10 @@ class YMAPI(object):
                 else:
                     params['page'] += 1
                     data = self._request(res, object_id, params)
-                    result['context']['id'].append(data[3]['context']['id'])
-                    result['context']['time'].append(data[3]['context']['time'])
-                    for e in filter(lambda x: x not in ('status', 'context'), data[3]):
-                        result[e] += data[3][e]
+                    result['context']['id'].append(data['json']['context']['id'])
+                    result['context']['time'].append(data['json']['context']['time'])
+                    for e in filter(lambda x: x not in ('status', 'context'), data['json']):
+                        result[e] += data['json'][e]
 
     def categories(self, fields=None, sort='NONE', geo_id=None, remote_ip=None, count=30, page=None):
         """
