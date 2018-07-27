@@ -1525,6 +1525,56 @@ class YMAPI(object):
 
         return ShopOpinions(self._request('shops/{}/opinions', shop_id, params))
 
+    def shop_opinions_chronological(self, shop_id, grade=None, max_comments=0, count=20, page=1):
+        """
+        Отзывы о магазине в хронологическом порядке
+
+        :param shop_id: Идентификатор магазина
+        :type shop_id: int
+
+        :param grade: Оценка, выставленная автором отзыва
+        :type grade: int
+
+        :param max_comments: Максимальное количество комментариев, возвращаемых для каждого отзыва
+        :type max_comments: int
+
+        :param count: IP-адрес пользователя
+        :type count: int
+
+        :param page: Номер страницы
+        :type page: int
+
+        :raises GradeParamError: недопустимое значение параметра grade
+        :raises CountParamError: недопустимое значение параметра count
+        :raises PageParamError: недопустимое значение параметра page
+
+        :return: Отзывы пользователей о магазине
+        :rtype: ShopOpinions
+
+        .. seealso:: https://tech.yandex.ru/market/content-data/doc/dg-v2/reference/opinions-controller-v2-get-shop-opinions-chronological-docpage/
+        """
+        params = {}
+
+        if grade:
+            if grade < 1 or grade > 5:
+                raise GradeParamError('"grade" param must be between 1 and 5')
+            params['grade'] = grade
+
+        if count < 1 or count > 20:
+            raise CountParamError('"count" param must be between 1 and 20')
+        else:
+            params['count'] = count
+
+        if page < 1:
+            raise PageParamError('"page" param must be larger than 1')
+        else:
+            params['page'] = page
+
+        if max_comments:
+            params['max_comments'] = max_comments
+
+        return ShopOpinions(self._request('shops/{}/opinions/chronological', shop_id, params))
+
     def shop(self, shop_id, fields=None):
         """
         Информация о магазине

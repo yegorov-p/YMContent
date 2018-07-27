@@ -270,6 +270,12 @@ class TestYMAPI(TestCase):
                   )
 
     # @skip("testing skipping")
+    def test_shop_opinions_chronological(self):
+        self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop_opinions_chronological)).group(1),
+                  api.shop_opinions_chronological(155)
+                  )
+
+    # @skip("testing skipping")
     def test_shop(self):
         self.insp(re.search(':rtype: (.*)', inspect.getdoc(YMAPI.shop)).group(1),
                   api.shop(155)
