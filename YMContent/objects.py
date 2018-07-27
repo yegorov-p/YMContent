@@ -1057,7 +1057,7 @@ class YMPrice(YMBase):
         """
 
         :return: Максимальная цена
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('max')
 
@@ -1066,7 +1066,7 @@ class YMPrice(YMBase):
         """
 
         :return: Минимальная цена
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('min')
 
@@ -1075,7 +1075,7 @@ class YMPrice(YMBase):
         """
 
         :return: Среднее значение цены
-        :rtype: str
+        :rtype: str or None
         """
         return self.data.get('avg')
 
@@ -1315,7 +1315,7 @@ class YMRating(YMBase):
         """
 
         :return: Средняя оценка рейтинга
-        :rtype: float
+        :rtype: float or int
         """
         return self.data.get('value')
 
