@@ -42,6 +42,7 @@ YMContent
         ~YMContent.YMAPI.offer
         ~YMContent.YMAPI.model_opinions
         ~YMContent.YMAPI.shop_opinions
+        ~YMContent.YMAPI.shop_opinions_chronological
         ~YMContent.YMAPI.shop
         ~YMContent.YMAPI.shops
         ~YMContent.YMAPI.geo_regions_shops_summary
